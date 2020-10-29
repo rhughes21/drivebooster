@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1027028784810",
+    "firebase_url": "https://drivebooster-b82c6.firebaseio.com",
+    "project_id": "drivebooster-b82c6",
+    "storage_bucket": "drivebooster-b82c6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027028784810:android:91a86bd06440f19e0922d3",
+        "android_client_info": {
+          "package_name": "com.personal.drivebooster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027028784810-nto25ld83mjfbo6f0r4okgq5r86u3d37.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCL0RhHuqd8n0osUpY1YdrA_tP_zmSJ5-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027028784810-nto25ld83mjfbo6f0r4okgq5r86u3d37.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
