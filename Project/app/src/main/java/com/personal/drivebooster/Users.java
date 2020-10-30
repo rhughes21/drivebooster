@@ -8,18 +8,11 @@ public class Users {
     public String userType;
     public String instructorName;
 
-    public Users(String name, String email, String password, String userType) {
+    public Users(String name, String email, String password, String userType, String instructorName) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.userType = userType;
+        this.instructorName =instructorName;
     }
-
-    public Users(String instructorName){
-
-        this.instructorName = instructorName;
-    }
-
-
-
 }
