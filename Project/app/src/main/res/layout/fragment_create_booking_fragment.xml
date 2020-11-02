@@ -6,14 +6,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".create_booking_fragment">
 
-    <CalendarView
-        android:id="@+id/calender_view"
+    <com.harrywhewell.scrolldatepicker.DayScrollDatePicker
+        android:id="@+id/horizontal_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/value_text_view"
+        app:layout_constraintStart_toStartOf="parent"/>
 
+    <TextView
+        android:id="@+id/value_text_view"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/horizontal_calendar"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <ListView
+        android:id="@+id/time_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/value_text_view"
+        app:layout_constraintStart_toStartOf="parent"/>
 
 
 
