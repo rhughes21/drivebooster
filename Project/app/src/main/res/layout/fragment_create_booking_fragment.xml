@@ -10,6 +10,7 @@
         android:id="@+id/horizontal_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/value_text_view"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -26,9 +27,20 @@
     <ListView
         android:id="@+id/time_list_view"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="350dp"
+        android:divider="@color/light_yellow"
         app:layout_constraintTop_toBottomOf="@id/value_text_view"
+        android:dividerHeight="2dp"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+        android:id="@+id/create_booking_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Booking"
+        app:layout_constraintTop_toBottomOf="@id/time_list_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 
