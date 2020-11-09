@@ -31,24 +31,31 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     View view;
     FirebaseAuth auth;
-    Button logoutButton;
+    Button logoutButton, chooseInstructorButton;
     DatabaseReference databaseRef, dbUserRef;
     Spinner instructorChoiceSpinner;
+    Boolean hasPickedInstructor;
     String instructorName;
     ArrayList<String> instructorArray = new ArrayList<String>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.home_fragment, container, false);
         logoutButton = view.findViewById(R.id.logout_button);
-        getInstructors();
+        chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
+        auth = FirebaseAuth.getInstance();
         instructorChoiceSpinner = view.findViewById(R.id.choose_instructor_spinner);
-
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, instructorArray);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        instructorChoiceSpinner.setAdapter(spinnerArrayAdapter);
+        getInstructors();
+        checkInstructorChosen();
         instructorChoiceSpinner.setOnItemSelectedListener(this);
 
+        chooseInstructorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseInstructor();
+            }
+        });
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,14 +68,19 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     public void getInstructors(){
+
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, instructorArray);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        instructorChoiceSpinner.setAdapter(spinnerArrayAdapter);
+
         databaseRef = FirebaseDatabase.getInstance().getReference().child("Instructors");
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds: snapshot.getChildren()){
-                    String uId = (String) ds.getKey();
                     String name = ds.child("name").getValue(String.class);
                     instructorArray.add(name);
+                    spinnerArrayAdapter.notifyDataSetChanged();
                 }
             }
             @Override
@@ -82,32 +94,46 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
         instructorName = item;
-        Toast.makeText(getContext(), "Instructor chosen", Toast.LENGTH_SHORT).show();
-        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
-
-        Users userObj = new Users(instructorName);
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-
-        dbUserRef.child(firebaseUser.getUid()).setValue(userObj)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(getContext(), "Instructor chosen", Toast.LENGTH_SHORT).show();
-
-                            instructorChoiceSpinner.setVisibility(View.GONE);
-                        }
-                        else{
-                            Toast.makeText(getContext(), "Could not choose instructor", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
 
     }
 
+    public void checkInstructorChosen(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser.getUid();
+        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId).child("instructorName");
+
+        dbUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String instructorChosen = snapshot.getValue(String.class);
+                if(instructorChosen == "not chosen"){
+                    hasPickedInstructor = false;
+
+                    chooseInstructorButton.setVisibility(View.VISIBLE);
+                    instructorChoiceSpinner.setVisibility(View.VISIBLE);
+                }else{
+                    hasPickedInstructor = true;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+    }
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
+    public void chooseInstructor(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser.getUid();
+        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        dbUserRef.child(userId).child("instructorName").setValue(instructorName);
+
+        chooseInstructorButton.setVisibility(View.GONE);
+        instructorChoiceSpinner.setVisibility(View.GONE);
+        hasPickedInstructor = true;
+        Toast.makeText(getContext(), "Instructor chosen", Toast.LENGTH_SHORT).show();
+    }
 }
