@@ -8,16 +8,26 @@
         android:id="@+id/choose_instructor_spinner"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/logout_button"/>
+
+    <Button
+        android:id="@+id/instructor_choice_button"
+        app:layout_constraintTop_toBottomOf="@id/choose_instructor_spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="choose instructor"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/logout_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Logout"
-        app:layout_constraintTop_toBottomOf="@id/choose_instructor_spinner"
+        app:layout_constraintTop_toBottomOf="@id/instructor_choice_button"
         app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     EditText editTextUsername, editTextEmail, editTextPassword, editTextPasswordCnf;
     FirebaseAuth auth;
     DatabaseReference databaseUsersReference, databaseInstructorsReference, databaseRef, dbUserRef;
-    String userType;
+    String userType, instructorName;
     Spinner userSpinner;
     ArrayList<String> instructorArray = new ArrayList<String>();
 
@@ -100,9 +100,10 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
 
+        instructorName = "not chosen";
         databaseUsersReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        Users user_obj = new Users(name, email, password, userType);
+        Users user_obj = new Users(name, email, password, userType, instructorName);
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         databaseUsersReference.child(firebaseUser.getUid()).setValue(user_obj)
