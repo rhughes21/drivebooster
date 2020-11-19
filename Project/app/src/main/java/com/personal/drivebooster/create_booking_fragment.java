@@ -2,16 +2,29 @@ package com.personal.drivebooster;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.harrywhewell.scrolldatepicker.DayScrollDatePicker;
 import com.harrywhewell.scrolldatepicker.OnDateSelectedListener;
 
@@ -23,16 +36,38 @@ import java.util.Locale;
 
 public class create_booking_fragment extends Fragment  {
         View view;
+        FirebaseUser currentUser;
+        String userId;
+        String instructorName;
+        DatabaseReference dbUserRef,databaseBookingRef;
         DayScrollDatePicker dayPicker;
         TextView datePickedText;
         ListView timeListView;
-        String dateString;
+        String dateString, timeString;
+        Button createBookingButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_create_booking_fragment, container, false);
         initViews();
         getDateValue(dateString);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        userId = currentUser.getUid();
+        getInstructorNameFromFirebase();
+
+        timeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                timeString = parent.getItemAtPosition(position).toString();
+            }
+        });
+
+        createBookingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createBooking();
+            }
+        });
         // Inflate the layout for this fragment
         return view;
     }
@@ -41,8 +76,10 @@ public class create_booking_fragment extends Fragment  {
         dayPicker = view.findViewById(R.id.horizontal_calendar);
         datePickedText = view.findViewById(R.id.value_text_view);
         timeListView = view.findViewById(R.id.time_list_view);
+        createBookingButton = view.findViewById(R.id.create_booking_button);
         setUpPicker();
         setUpListView();
+
     }
 
     private void setUpPicker(){
@@ -77,6 +114,43 @@ public class create_booking_fragment extends Fragment  {
         setUpTimes();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, setUpTimes());
         timeListView.setAdapter(adapter);
+    }
+
+    public String getInstructorNameFromFirebase(){
+        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId).child("instructorName");
+        dbUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        return instructorName;
+    }
+    public void createBooking(){
+
+
+        getInstructorNameFromFirebase();
+
+        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
+
+        Bookings bookingObj = new Bookings(userId, instructorName, timeString, dateString);
+
+        databaseBookingRef.push().setValue(bookingObj)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(getContext(), "Booking complete", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(getContext(), "could  not complete booking", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
     }
 }
