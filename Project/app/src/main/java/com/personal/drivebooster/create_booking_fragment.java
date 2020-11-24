@@ -38,7 +38,6 @@ public class create_booking_fragment extends Fragment  {
         View view;
         FirebaseUser currentUser;
         String userId;
-        String instructorName;
         DatabaseReference dbUserRef,databaseBookingRef;
         DayScrollDatePicker dayPicker;
         TextView datePickedText;
@@ -53,7 +52,6 @@ public class create_booking_fragment extends Fragment  {
         getDateValue(dateString);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userId = currentUser.getUid();
-        getInstructorNameFromFirebase();
 
         timeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -116,41 +114,39 @@ public class create_booking_fragment extends Fragment  {
         timeListView.setAdapter(adapter);
     }
 
-    public String getInstructorNameFromFirebase(){
-        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId).child("instructorName");
+    public void createBooking(){
+
+        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
+
+        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
         dbUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                DataSnapshot ds = snapshot.child("instructorName");
+
+                String instructorName = ds.getValue(String.class);
+
+                Bookings bookingObj = new Bookings(userId, instructorName, timeString, dateString);
+
+                databaseBookingRef.push().setValue(bookingObj)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()) {
+                                    Toast.makeText(getContext(), "Booking complete", Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    Toast.makeText(getContext(), "could  not complete booking", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
 
-        return instructorName;
-    }
-    public void createBooking(){
-
-
-        getInstructorNameFromFirebase();
-
-        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
-
-        Bookings bookingObj = new Bookings(userId, instructorName, timeString, dateString);
-
-        databaseBookingRef.push().setValue(bookingObj)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()) {
-                            Toast.makeText(getContext(), "Booking complete", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(getContext(), "could  not complete booking", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
 
     }
 }

@@ -34,20 +34,20 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     Button logoutButton, chooseInstructorButton;
     DatabaseReference databaseRef, dbUserRef;
     Spinner instructorChoiceSpinner;
-    Boolean hasPickedInstructor;
+    Boolean hasPickedInstructor = false;
     String instructorName;
     ArrayList<String> instructorArray = new ArrayList<String>();
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        checkInstructorChosen();
         view = inflater.inflate(R.layout.home_fragment, container, false);
         logoutButton = view.findViewById(R.id.logout_button);
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();
         instructorChoiceSpinner = view.findViewById(R.id.choose_instructor_spinner);
         getInstructors();
-        checkInstructorChosen();
         instructorChoiceSpinner.setOnItemSelectedListener(this);
 
         chooseInstructorButton.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +65,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             }
         });
         return view;
+    }
+
+    public String getInstName(){
+        return instructorName;
+    }
+
+    public void setInstName(String instructorName){
+        this.instructorName = instructorName;
     }
 
     public void getInstructors(){
@@ -90,6 +98,17 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         });
     }
 
+    public void setChooseInstructorVisibility(){
+
+        if(getInstName() == "not chosen"){
+            chooseInstructorButton.setVisibility(View.VISIBLE);
+            instructorChoiceSpinner.setVisibility(View.VISIBLE);
+        }else {
+            chooseInstructorButton.setVisibility(View.GONE);
+            instructorChoiceSpinner.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
@@ -105,15 +124,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         dbUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String instructorChosen = snapshot.getValue(String.class);
-                if(instructorChosen == "not chosen"){
-                    hasPickedInstructor = false;
-
-                    chooseInstructorButton.setVisibility(View.VISIBLE);
-                    instructorChoiceSpinner.setVisibility(View.VISIBLE);
-                }else{
-                    hasPickedInstructor = true;
-                }
+                setInstName(snapshot.getValue(String.class));
+                setChooseInstructorVisibility();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
