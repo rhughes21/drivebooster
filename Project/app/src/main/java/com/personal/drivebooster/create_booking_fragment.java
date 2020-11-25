@@ -37,12 +37,12 @@ import java.util.Locale;
 public class create_booking_fragment extends Fragment  {
         View view;
         FirebaseUser currentUser;
-        String userId;
-        DatabaseReference dbUserRef,databaseBookingRef;
+        String userId, bookingPupilId, existingBookingDate;
+        DatabaseReference dbUserRef,databaseBookingRef, databaseCreateBookingRef;
         DayScrollDatePicker dayPicker;
-        TextView datePickedText;
+        TextView datePickedText, timePickedText;
         ListView timeListView;
-        String dateString, timeString;
+        String dateString, timeString, instructorName;
         Button createBookingButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +57,7 @@ public class create_booking_fragment extends Fragment  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 timeString = parent.getItemAtPosition(position).toString();
+                timePickedText.setText(timeString);
             }
         });
 
@@ -74,6 +75,7 @@ public class create_booking_fragment extends Fragment  {
         dayPicker = view.findViewById(R.id.horizontal_calendar);
         datePickedText = view.findViewById(R.id.value_text_view);
         timeListView = view.findViewById(R.id.time_list_view);
+        timePickedText = view.findViewById(R.id.time_value_text_view);
         createBookingButton = view.findViewById(R.id.create_booking_button);
         setUpPicker();
         setUpListView();
@@ -114,6 +116,29 @@ public class create_booking_fragment extends Fragment  {
         timeListView.setAdapter(adapter);
     }
 
+    public String getInstName(){
+        return instructorName;
+    }
+
+    public void setInstName(String instructorName){
+        this.instructorName = instructorName;
+    }
+
+    public String getExistingBookingDate(){
+        return existingBookingDate;
+    }
+
+    public void setExistingBookingDate(String existingBookingDate){
+        this.existingBookingDate = existingBookingDate;
+    }
+
+    public String getBookingPupilId(){
+        return bookingPupilId;
+    }
+
+    public void setBookingPupilId(String bookingPupilId){
+        this.bookingPupilId = bookingPupilId;
+    }
     public void createBooking(){
 
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
@@ -124,29 +149,75 @@ public class create_booking_fragment extends Fragment  {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 DataSnapshot ds = snapshot.child("instructorName");
-
-                String instructorName = ds.getValue(String.class);
-
-                Bookings bookingObj = new Bookings(userId, instructorName, timeString, dateString);
-
-                databaseBookingRef.push().setValue(bookingObj)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()) {
-                                    Toast.makeText(getContext(), "Booking complete", Toast.LENGTH_SHORT).show();
-                                }
-                                else{
-                                    Toast.makeText(getContext(), "could  not complete booking", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                setInstName(ds.getValue(String.class));
+                checkDatabaseForUserBooking();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
 
+
+    }
+
+    public void checkDatabaseForBookingDate(){
+        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
+        databaseCreateBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
+        databaseBookingRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    setExistingBookingDate(ds.child("bookingDate").getValue(String.class));
+
+                    if (getExistingBookingDate().equals(dateString)){
+                        Toast.makeText(getContext(), "You already have an upcoming booking", Toast.LENGTH_LONG).show();
+                    }else{
+                        Bookings bookingObj = new Bookings(userId, getInstName(), timeString, dateString);
+
+                        databaseCreateBookingRef.push().setValue(bookingObj)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()) {
+                                            Toast.makeText(getContext(), "Booking complete", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else{
+                                            Toast.makeText(getContext(), "could  not complete booking", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void checkDatabaseForUserBooking(){
+        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
+        databaseBookingRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds: snapshot.getChildren())
+                    setBookingPupilId(ds.child("pupilId").getValue(String.class));
+
+                if(getBookingPupilId().equals(userId)){
+                    checkDatabaseForBookingDate();
+                }else{
+                    createBooking();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 }

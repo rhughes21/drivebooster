@@ -11,17 +11,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/value_text_view"
+        app:layout_constraintBottom_toTopOf="@id/time_date_chosen_layout"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <TextView
-        android:id="@+id/value_text_view"
-        android:textSize="18sp"
+    <LinearLayout
+        android:id="@+id/time_date_chosen_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/horizontal_calendar"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/value_text_view"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"/>
+
+        <TextView
+            android:id="@+id/time_value_text_view"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:gravity="start"/>
+    </LinearLayout>
+
 
 
     <ListView
@@ -29,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:divider="@color/light_yellow"
-        app:layout_constraintTop_toBottomOf="@id/value_text_view"
+        app:layout_constraintTop_toBottomOf="@id/time_date_chosen_layout"
         android:dividerHeight="2dp"
         app:layout_constraintStart_toStartOf="parent"/>
 
