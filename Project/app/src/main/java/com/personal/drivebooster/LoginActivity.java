@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         if(user != null){
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
+            finish();
         }
 
         editTextEmail = findViewById(R.id.email_edit_text);

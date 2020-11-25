@@ -79,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                finish();
                                 Toast.makeText(getApplicationContext(), "User created", Toast.LENGTH_SHORT).show();
                                 if(userType.equals("Pupil")){
                                     registerPupil(name, email, password);
