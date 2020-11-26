@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,20 +33,23 @@ import com.harrywhewell.scrolldatepicker.OnDateSelectedListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class create_booking_fragment extends Fragment  {
         View view;
         FirebaseUser currentUser;
-        String userId, bookingPupilId, existingBookingDate;
+        String userId;
         DatabaseReference dbUserRef,databaseBookingRef, databaseCreateBookingRef;
         DayScrollDatePicker dayPicker;
         TextView datePickedText, timePickedText;
         ListView timeListView;
         String dateString, timeString, instructorName;
         Button createBookingButton;
-        ArrayList<String> pupilIdArray = new ArrayList<String>();
+        boolean canBookLesson;
+        final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,7 +58,7 @@ public class create_booking_fragment extends Fragment  {
         getDateValue(dateString);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userId = currentUser.getUid();
-        checkDatabaseForUserBooking();
+        getBookings();
         timeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -126,13 +130,7 @@ public class create_booking_fragment extends Fragment  {
         this.instructorName = instructorName;
     }
 
-    public String getBookingPupilId(){
-        return bookingPupilId;
-    }
 
-    public void setBookingPupilId(String bookingPupilId){
-        this.bookingPupilId = bookingPupilId;
-    }
     public void createBooking(){
 
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
@@ -145,8 +143,15 @@ public class create_booking_fragment extends Fragment  {
 
                 DataSnapshot ds = snapshot.child("instructorName");
                 setInstName(ds.getValue(String.class));
+                canBookLesson = true;
+                for(int i=0; i < bookingsFromFirebase.size(); i++){
+                    if(bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).pupilId.equals(userId)){
+                        Toast.makeText(getContext(), "You have a booking already on that day", Toast.LENGTH_SHORT).show();
+                        canBookLesson = false;
+                    }
+                }
 
-                if (!pupilIdArray.contains(userId)) {
+                if(canBookLesson){
                     Bookings bookingObj = new Bookings(userId, getInstName(), timeString, dateString);
 
                     databaseCreateBookingRef.push().setValue(bookingObj)
@@ -160,11 +165,8 @@ public class create_booking_fragment extends Fragment  {
                                     }
                                 }
                             });
-                }else{
-                    Toast.makeText(getContext(), "You have a booking already", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -173,25 +175,23 @@ public class create_booking_fragment extends Fragment  {
 
     }
 
-    public void checkDatabaseForUserBooking(){
-        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
 
+    public void getBookings(){
+        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds: snapshot.getChildren()) {
-                    setBookingPupilId(ds.child("pupilId").getValue(String.class));
-                    pupilIdArray.add(getBookingPupilId());
+                Iterable<DataSnapshot> children = snapshot.getChildren();
+                for (DataSnapshot child: children) {
+                    Bookings bookings = child.getValue(Bookings.class);
+                    bookingsFromFirebase.add(bookings);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
     }
 
-    //TODO GET THE BOOKING ID, CHECK THAT FOR PUPIL.
 }

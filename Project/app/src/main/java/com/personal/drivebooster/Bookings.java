@@ -16,6 +16,8 @@ public class Bookings {
     }
 
 
+    public Bookings(){
 
+    }
 
 }
