@@ -7,4 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyTheme.ActionBar.TitleTextStyles" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

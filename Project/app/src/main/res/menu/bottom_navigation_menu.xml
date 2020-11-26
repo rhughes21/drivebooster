@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/homeFragment2"
-        android:title="Home"/>
+        android:title="Home" />
     <item android:id="@+id/navigation_booking"
         android:title="Create Booking"/>
 </menu>

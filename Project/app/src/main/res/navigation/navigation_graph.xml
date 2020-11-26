@@ -8,11 +8,11 @@
     <fragment
         android:id="@+id/homeFragment2"
         android:name="com.personal.drivebooster.HomeFragment"
-        android:label="HomeFragment"
+        android:label="Home"
         tools:layout="@layout/home_fragment"/>
     <fragment
         android:id="@+id/navigation_booking"
         android:name="com.personal.drivebooster.create_booking_fragment"
-        android:label="CreateBooking"
+        android:label="Create a Booking"
         tools:layout="@layout/fragment_create_booking_fragment" />
 </navigation>
