@@ -148,6 +148,10 @@ public class create_booking_fragment extends Fragment  {
                     if(bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).pupilId.equals(userId)){
                         Toast.makeText(getContext(), "You have a booking already on that day", Toast.LENGTH_SHORT).show();
                         canBookLesson = false;
+                    }else if (bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).bookingTime.equals(timeString)
+                            && bookingsFromFirebase.get(i).instructorName.equals(getInstName())){
+                        Toast.makeText(getContext(), "Your instructor already has a booking at that time", Toast.LENGTH_SHORT).show();
+                        canBookLesson = false;
                     }
                 }
 
