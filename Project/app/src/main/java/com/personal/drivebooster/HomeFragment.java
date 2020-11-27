@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     public void setChooseInstructorVisibility(){
 
-        if(getInstName() == "not chosen"){
+        if(getInstName() .equals("not chosen")){
             chooseInstructorButton.setVisibility(View.VISIBLE);
             instructorChoiceSpinner.setVisibility(View.VISIBLE);
         }else {
