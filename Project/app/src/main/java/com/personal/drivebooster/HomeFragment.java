@@ -62,6 +62,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                 FirebaseAuth.getInstance().signOut();
 
                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
             }
         });
         return view;
