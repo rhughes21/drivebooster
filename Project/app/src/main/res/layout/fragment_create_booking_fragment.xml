@@ -44,7 +44,7 @@
         android:id="@+id/time_list_view"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:divider="@color/light_yellow"
+        android:divider="@color/gold"
         app:layout_constraintTop_toBottomOf="@id/time_date_chosen_layout"
         android:dividerHeight="2dp"
         app:layout_constraintStart_toStartOf="parent"/>
