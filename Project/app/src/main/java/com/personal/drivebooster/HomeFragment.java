@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     View view;
     FirebaseAuth auth;
     Button logoutButton, chooseInstructorButton;
+    TextView noInstructorsText;
     DatabaseReference databaseRef, dbUserRef;
     Spinner instructorChoiceSpinner;
     Boolean hasPickedInstructor = false;
@@ -47,6 +49,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();
         instructorChoiceSpinner = view.findViewById(R.id.choose_instructor_spinner);
+        noInstructorsText = view.findViewById(R.id.no_instructors_available);
         getInstructors();
         instructorChoiceSpinner.setOnItemSelectedListener(this);
 
@@ -86,10 +89,15 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    String name = ds.child("name").getValue(String.class);
-                    instructorArray.add(name);
-                    spinnerArrayAdapter.notifyDataSetChanged();
+                if(snapshot.hasChildren()) {
+                    noInstructorsText.setVisibility(View.GONE);
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String name = ds.child("name").getValue(String.class);
+                        instructorArray.add(name);
+                        spinnerArrayAdapter.notifyDataSetChanged();
+                    }
+                }else if(!snapshot.hasChildren()){
+                    noInstructorsText.setVisibility(View.VISIBLE);
                 }
             }
             @Override
@@ -101,10 +109,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     public void setChooseInstructorVisibility(){
 
-        if(getInstName() .equals("not chosen")){
+        if(getInstName().equals("not chosen") && !noInstructorsText.isShown()){
             chooseInstructorButton.setVisibility(View.VISIBLE);
             instructorChoiceSpinner.setVisibility(View.VISIBLE);
-        }else {
+        }else if(!getInstName().equals("not chosen") && noInstructorsText.isShown()){
+            noInstructorsText.setVisibility(View.GONE);
+            chooseInstructorButton.setVisibility(View.GONE);
+            instructorChoiceSpinner.setVisibility(View.GONE);
+        }else{
             chooseInstructorButton.setVisibility(View.GONE);
             instructorChoiceSpinner.setVisibility(View.GONE);
         }
@@ -120,13 +132,17 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     public void checkInstructorChosen(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
-        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId).child("instructorName");
+        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
 
         dbUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                setInstName(snapshot.getValue(String.class));
-                setChooseInstructorVisibility();
+                if(!snapshot.equals(null)) {
+                    setInstName(snapshot.child("instructorName").getValue(String.class));
+                    setChooseInstructorVisibility();
+                }else if(snapshot.equals(null)){
+                    Toast.makeText(getContext(), "You are an instructor", Toast.LENGTH_SHORT).show();
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
