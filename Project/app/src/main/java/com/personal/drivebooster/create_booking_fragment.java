@@ -185,10 +185,12 @@ public class create_booking_fragment extends Fragment  {
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Iterable<DataSnapshot> children = snapshot.getChildren();
-                for (DataSnapshot child: children) {
-                    Bookings bookings = child.getValue(Bookings.class);
-                    bookingsFromFirebase.add(bookings);
+                if(snapshot.hasChildren()) {
+                    Iterable<DataSnapshot> children = snapshot.getChildren();
+                    for (DataSnapshot child : children) {
+                        Bookings bookings = child.getValue(Bookings.class);
+                        bookingsFromFirebase.add(bookings);
+                    }
                 }
             }
             @Override
