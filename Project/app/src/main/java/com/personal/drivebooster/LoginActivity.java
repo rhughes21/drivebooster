@@ -16,6 +16,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -23,7 +28,10 @@ public class LoginActivity extends AppCompatActivity {
     Button loginButton;
     Button buttonRegister;
     FirebaseAuth auth;
+    boolean userIsPupil;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String userId;
+    DatabaseReference dbReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_activity);
 
         if(user != null){
-            Intent i = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(i);
-            LoginActivity.this.finish();
+            userId = user.getUid();
+            getUserType();
         }
 
         editTextEmail = findViewById(R.id.email_edit_text);
@@ -52,8 +59,8 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
-                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(i);
+                                userId = auth.getUid();
+                                getUserType();
                                 Toast.makeText(getApplicationContext(), "Successfully signed in", Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(getApplicationContext(), "Unable to sign in", Toast.LENGTH_SHORT).show();
@@ -66,5 +73,30 @@ public class LoginActivity extends AppCompatActivity {
 
     public void showRegistrationScreen(View v){
         startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+    }
+
+    public void getUserType(){
+        dbReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        dbReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChild(userId)){
+                    userIsPupil = true;
+                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(i);
+                    LoginActivity.this.finish();
+                }else if(!snapshot.hasChild(userId)){
+                    userIsPupil = false;
+                    Intent j = new Intent(LoginActivity.this, InstructorMainActivity.class);
+                    startActivity(j);
+                    LoginActivity.this.finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
