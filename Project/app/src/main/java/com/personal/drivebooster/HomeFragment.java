@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        checkInstructorChosen();
+
         view = inflater.inflate(R.layout.home_fragment, container, false);
         logoutButton = view.findViewById(R.id.logout_button);
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
@@ -80,7 +80,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         this.instructorName = instructorName;
     }
 
+    public boolean getInstructorAvailable(){
+        return instructorAvailable;
+    }
+    public void setInstructorAvailable(boolean instructorAvailable){
+        this.instructorAvailable = instructorAvailable;
+    }
     public void getInstructors(){
+
 
         final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, instructorArray);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -92,14 +99,15 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.hasChildren()) {
                     noInstructorsText.setVisibility(View.GONE);
-                    instructorAvailable = true;
+                    setInstructorAvailable(true);
+                    checkInstructorChosen();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String name = ds.child("name").getValue(String.class);
                         instructorArray.add(name);
                         spinnerArrayAdapter.notifyDataSetChanged();
                     }
                 }else if(!snapshot.hasChildren()){
-                    instructorAvailable  = false;
+                    setInstructorAvailable(false);
                     noInstructorsText.setVisibility(View.VISIBLE);
                 }
             }
@@ -112,10 +120,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     public void setChooseInstructorVisibility(){
 
-        if(getInstName().equals("not chosen") && instructorAvailable){
+
+        if(getInstName().equals("not chosen") && getInstructorAvailable()){
             chooseInstructorButton.setVisibility(View.VISIBLE);
             instructorChoiceSpinner.setVisibility(View.VISIBLE);
-        }else if(!getInstName().equals("not chosen") && instructorAvailable){
+        }else if(!getInstName().equals("not chosen") && getInstructorAvailable()){
             noInstructorsText.setVisibility(View.GONE);
             chooseInstructorButton.setVisibility(View.GONE);
             instructorChoiceSpinner.setVisibility(View.GONE);
