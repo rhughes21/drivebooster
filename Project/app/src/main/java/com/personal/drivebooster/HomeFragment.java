@@ -37,6 +37,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     DatabaseReference databaseRef, dbUserRef;
     Spinner instructorChoiceSpinner;
     Boolean hasPickedInstructor = false;
+    boolean instructorAvailable;
     String instructorName;
     ArrayList<String> instructorArray = new ArrayList<String>();
 
@@ -91,12 +92,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.hasChildren()) {
                     noInstructorsText.setVisibility(View.GONE);
+                    instructorAvailable = true;
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String name = ds.child("name").getValue(String.class);
                         instructorArray.add(name);
                         spinnerArrayAdapter.notifyDataSetChanged();
                     }
                 }else if(!snapshot.hasChildren()){
+                    instructorAvailable  = false;
                     noInstructorsText.setVisibility(View.VISIBLE);
                 }
             }
@@ -109,10 +112,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     public void setChooseInstructorVisibility(){
 
-        if(getInstName().equals("not chosen") && !noInstructorsText.isShown()){
+        if(getInstName().equals("not chosen") && instructorAvailable){
             chooseInstructorButton.setVisibility(View.VISIBLE);
             instructorChoiceSpinner.setVisibility(View.VISIBLE);
-        }else if(!getInstName().equals("not chosen") && noInstructorsText.isShown()){
+        }else if(!getInstName().equals("not chosen") && instructorAvailable){
             noInstructorsText.setVisibility(View.GONE);
             chooseInstructorButton.setVisibility(View.GONE);
             instructorChoiceSpinner.setVisibility(View.GONE);
