@@ -66,6 +66,8 @@
         <Button
             android:id="@+id/user_login_button"
             android:onClick="loginUser"
+            android:textColor="@color/white"
+            android:background="@drawable/large_button_drawable"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Login"/>
@@ -75,6 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="showRegistrationScreen"
+            android:background="@drawable/large_button_drawable"
+            android:textColor="@color/white"
             android:layout_margin="50dp"
             android:text="No Account? Click here to register"
             android:gravity="center"/>
