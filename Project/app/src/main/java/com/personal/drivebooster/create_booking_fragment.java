@@ -50,6 +50,7 @@ public class create_booking_fragment extends Fragment  {
         Button createBookingButton;
         boolean canBookLesson;
         final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -150,6 +151,7 @@ public class create_booking_fragment extends Fragment  {
                 DataSnapshot ds = snapshot.child("instructorName");
                 setInstName(ds.getValue(String.class));
                 canBookLesson = true;
+
                 for(int i=0; i < bookingsFromFirebase.size(); i++){
                     if(bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).pupilId.equals(userId)){
                         Toast.makeText(getContext(), "You have a booking already on that day", Toast.LENGTH_SHORT).show();
@@ -171,20 +173,16 @@ public class create_booking_fragment extends Fragment  {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(getContext(), "Booking complete", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(getContext(), "could  not complete booking", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "could not complete booking", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
                 }
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
-
-
     }
-
 
     //method to get all current bookings from firebase and add these to an Object array
     public void getBookings(){
@@ -201,9 +199,7 @@ public class create_booking_fragment extends Fragment  {
                 }
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 

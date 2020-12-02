@@ -41,7 +41,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     String instructorName;
     ArrayList<String> instructorArray = new ArrayList<String>();
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
@@ -76,23 +75,21 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         });
         return view;
     }
-
     //getter and setter for instructor name
     public String getInstName(){
         return instructorName;
     }
-
     public void setInstName(String instructorName){
         this.instructorName = instructorName;
     }
 
+    //getter and setter to be used when checking the database has instructors
     public boolean getInstructorAvailable(){
         return instructorAvailable;
     }
     public void setInstructorAvailable(boolean instructorAvailable){
         this.instructorAvailable = instructorAvailable;
     }
-
 
     //method to retrieve the current users detail from firebase and show these in the textviews
     public void getUserDetails(){
@@ -166,7 +163,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
         instructorName = item;
-
     }
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
@@ -194,7 +190,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         });
 
     }
-
     //method called when users tap the choose instructor button, changes the value of the instructor name in the database for that user.
     public void chooseInstructor(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();

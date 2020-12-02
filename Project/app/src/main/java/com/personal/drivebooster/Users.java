@@ -16,6 +16,4 @@ public class Users {
         this.userType = userType;
         this.instructorName = instructorName;
     }
-
-
 }

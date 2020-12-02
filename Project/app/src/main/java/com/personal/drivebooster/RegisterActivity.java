@@ -150,17 +150,12 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                     }
                 });
     }
-
-
     //onItemSelected method for the userType spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
         userType = item;
     }
-
-
-
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
