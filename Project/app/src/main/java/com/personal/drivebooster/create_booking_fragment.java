@@ -88,11 +88,13 @@ public class create_booking_fragment extends Fragment  {
 
     }
 
+    //method to set the start and end date shown on the calendar
     private void setUpPicker(){
         dayPicker.setStartDate(2, 11, 2020);
         dayPicker.setEndDate(10,3,2021);
     }
 
+    //method to get the date chosen by user
     private String getDateValue(String dStr){
         dayPicker.getSelectedDate(new OnDateSelectedListener() {
             @Override
@@ -107,6 +109,7 @@ public class create_booking_fragment extends Fragment  {
         return dateString;
     }
 
+    //method to add times to an array
     public List<String> setUpTimes(){
         ArrayList<String> times = new ArrayList<String>();
         for(int i=9; i < 20; i++){
@@ -116,12 +119,14 @@ public class create_booking_fragment extends Fragment  {
         return times;
     }
 
+    //method to set up the ListView using the times array
     public void setUpListView(){
         setUpTimes();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, setUpTimes());
         timeListView.setAdapter(adapter);
     }
 
+    //getter and setter for instructor name from firebase
     public String getInstName(){
         return instructorName;
     }
@@ -131,6 +136,7 @@ public class create_booking_fragment extends Fragment  {
     }
 
 
+    //method used to create a booking and push to firebase. Also include checks for bookings already in the database.
     public void createBooking(){
 
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
@@ -180,6 +186,7 @@ public class create_booking_fragment extends Fragment  {
     }
 
 
+    //method to get all current bookings from firebase and add these to an Object array
     public void getBookings(){
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {

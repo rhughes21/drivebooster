@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
     }
 
+    //method used to login. Check is the user exists in firebase authentication
     public void loginUser(View v){
         if(editTextEmail.getText().toString().equals("") || editTextPassword.getText().toString().equals("")){
             Toast.makeText(getApplicationContext(), "Fields cannot be empty", Toast.LENGTH_SHORT).show();
@@ -71,10 +72,12 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    //method called when user taps the no account button
     public void showRegistrationScreen(View v){
         startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
     }
 
+    //method to check whether the user is a pupil. Checks that the UID exists in the users table
     public void getUserType(){
         dbReference = FirebaseDatabase.getInstance().getReference().child("Users");
         dbReference.addValueEventListener(new ValueEventListener() {

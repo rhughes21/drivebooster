@@ -77,6 +77,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         return view;
     }
 
+    //getter and setter for instructor name
     public String getInstName(){
         return instructorName;
     }
@@ -93,6 +94,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
 
+    //method to retrieve the current users detail from firebase and show these in the textviews
     public void getUserDetails(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
@@ -112,9 +114,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             }
         });
     }
+
+    //method to retrieve all instructor names from firebase. Checks if instructors are available for selection.
     public void getInstructors(){
-
-
         final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, instructorArray);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         instructorChoiceSpinner.setAdapter(spinnerArrayAdapter);
@@ -144,9 +146,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         });
     }
 
+    //method to set whether or not the choose instructor button and spinner should be shown
     public void setChooseInstructorVisibility(){
-
-
         if(getInstName().equals("not chosen") && getInstructorAvailable()){
             chooseInstructorButton.setVisibility(View.VISIBLE);
             instructorChoiceSpinner.setVisibility(View.VISIBLE);
@@ -160,13 +161,18 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         }
     }
 
+    //onItemSelected method for the instructor spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
         instructorName = item;
 
     }
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
 
+    //method to get if the user has picked an instructor or not
     public void checkInstructorChosen(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
@@ -188,10 +194,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         });
 
     }
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
 
+    //method called when users tap the choose instructor button, changes the value of the instructor name in the database for that user.
     public void chooseInstructor(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();

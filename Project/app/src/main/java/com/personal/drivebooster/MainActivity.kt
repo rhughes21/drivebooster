@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
+    //method to determine what the back button does on this screen
     override fun onSupportNavigateUp() = findNavController(R.id.main_navigation_fragment).navigateUp()
 
-
+    //method to set up the bottom navigation
     private fun setUpNavigation(){
         val navController = Navigation.findNavController(this, R.id.main_navigation_fragment)
         setupActionBarWithNavController(navController)

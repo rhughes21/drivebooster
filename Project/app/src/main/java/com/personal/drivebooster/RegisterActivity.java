@@ -60,10 +60,12 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
     }
 
+    //method called when users clicks login button
     public void showLoginScreen(View v){
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
     }
 
+    //method used to register a new user. Checks whether they are an instructor or pupil
     public void registerUser(View v){
         final String name = editTextUsername.getText().toString();
         final String email = editTextEmail.getText().toString();
@@ -96,6 +98,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
+    //method used to register a pupil and store the details in firebase
     public void registerPupil(String name, String email, String password){
 
         name = editTextUsername.getText().toString();
@@ -122,6 +125,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 });
     }
 
+    //method used to register a new instructor and store the details in firebase
     public void registerInstructor(String name, String email, String password){
         name = editTextUsername.getText().toString();
         email = editTextEmail.getText().toString();
@@ -148,6 +152,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
 
+    //onItemSelected method for the userType spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
