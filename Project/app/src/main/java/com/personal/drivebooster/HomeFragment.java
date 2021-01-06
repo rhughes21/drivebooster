@@ -33,7 +33,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     View view;
     FirebaseAuth auth;
     Button logoutButton, chooseInstructorButton;
-    TextView noInstructorsText, userNameView, userEmailView, yourDetailsView, userInstructorTextView;
+    TextView noInstructorsText;
     DatabaseReference databaseRef, dbUserRef;
     Spinner instructorChoiceSpinner;
     Boolean hasPickedInstructor = false;
@@ -46,11 +46,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
         view = inflater.inflate(R.layout.home_fragment, container, false);
-        yourDetailsView = view.findViewById(R.id.your_details_view);
-        userNameView = view.findViewById(R.id.user_name);
-        userEmailView = view.findViewById(R.id.user_email);
-        userInstructorTextView = view.findViewById(R.id.user_instructor);
-        getUserDetails();
+
         logoutButton = view.findViewById(R.id.logout_button);
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();
@@ -91,28 +87,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
     public void setInstructorAvailable(boolean instructorAvailable){
         this.instructorAvailable = instructorAvailable;
-    }
-
-
-    //method to retrieve the current users detail from firebase and show these in the textviews
-    public void getUserDetails(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = currentUser.getUid();
-        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
-
-        dbUserRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userNameView.setText(snapshot.child("name").getValue(String.class));
-                userEmailView.setText(snapshot.child("email").getValue(String.class));
-                userInstructorTextView.setText(snapshot.child("instructorName").getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     //method to retrieve all instructor names from firebase. Checks if instructors are available for selection.
