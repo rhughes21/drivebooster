@@ -32,7 +32,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     View view;
     FirebaseAuth auth;
-    Button logoutButton, chooseInstructorButton;
+    Button chooseInstructorButton;
     TextView noInstructorsText;
     DatabaseReference databaseRef, dbUserRef;
     Spinner instructorChoiceSpinner;
@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
         view = inflater.inflate(R.layout.home_fragment, container, false);
 
-        logoutButton = view.findViewById(R.id.logout_button);
+
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();
         instructorChoiceSpinner = view.findViewById(R.id.choose_instructor_spinner);
@@ -59,15 +59,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             @Override
             public void onClick(View v) {
                 chooseInstructor();
-            }
-        });
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-                getActivity().finish();
             }
         });
         return view;

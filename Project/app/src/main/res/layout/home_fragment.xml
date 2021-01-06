@@ -33,18 +33,4 @@
         app:layout_constraintTop_toBottomOf="@id/choose_instructor_spinner"
         app:layout_constraintBottom_toTopOf="@id/instructor_choice_button"
         app:layout_constraintStart_toStartOf="parent"/>
-
-
-    <Button
-        android:id="@+id/logout_button"
-        android:layout_width="300dp"
-        android:layout_marginTop="50dp"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        android:textColor="@color/white"
-        android:background="@drawable/large_button_drawable"
-        app:layout_constraintTop_toBottomOf="@id/instructor_choice_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
