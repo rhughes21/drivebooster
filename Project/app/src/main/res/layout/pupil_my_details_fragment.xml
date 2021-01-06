@@ -7,16 +7,13 @@
     <LinearLayout
         android:id="@+id/user_details_layout"
         android:layout_marginStart="5dp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/your_details_view"
@@ -28,93 +25,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/user_name_text"
-            android:layout_marginStart="20dp"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:text="Name: "
-            android:layout_below="@id/your_details_view"
-            android:fontFamily="sans-serif"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
-        <TextView
+        <EditText
             android:id="@+id/user_name"
-            android:layout_alignStart="@id/user_name_text"
-            android:layout_marginStart="100dp"
             android:textSize="20sp"
+            android:hint="Username"
             android:layout_below="@id/your_details_view"
             android:textColor="@color/black"
             android:fontFamily="sans-serif"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/user_email_text"
-            android:layout_marginStart="20dp"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:text="Email: "
-            android:layout_below="@id/user_name_text"
-            android:fontFamily="sans-serif"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
+        <EditText
             android:id="@+id/user_email"
-            android:layout_marginStart="100dp"
             android:layout_marginEnd="5dp"
-            android:layout_below="@id/user_name"
-            android:layout_alignStart="@id/user_email_text"
             android:textSize="20sp"
+            android:hint="User Email"
             android:textColor="@color/black"
             android:fontFamily="sans-serif"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/user_address_text"
-            android:layout_marginStart="20dp"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:text="Address: "
-            android:layout_below="@id/user_email_text"
-            android:fontFamily="sans-serif"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
-        <TextView
+        <EditText
             android:id="@+id/user_address"
             android:textSize="20sp"
-            android:layout_marginStart="100dp"
             android:fontFamily="sans-serif"
+            android:hint="User Address"
             android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/user_instructor_text"
-            android:layout_marginStart="20dp"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:text="Instructor: "
-            android:layout_below="@id/user_address_text"
-            android:fontFamily="sans-serif"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
+        <EditText
             android:id="@+id/user_instructor"
-            android:layout_alignStart="@id/user_instructor_text"
-            android:layout_below="@id/user_address_text"
             android:textSize="20sp"
-            android:layout_marginStart="100dp"
+            android:hint="Instructor Name"
             android:fontFamily="sans-serif"
             android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-    </RelativeLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

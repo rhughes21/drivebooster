@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 public class PupilDetailsFragment extends Fragment {
 
     View view;
-    TextView userNameView, userEmailView, yourDetailsView, userInstructorTextView;
+    EditText userNameView, userEmailView, userInstructorTextView;
+    TextView yourDetailsView;
     DatabaseReference  dbUserRef;
     @Nullable
     @Override
