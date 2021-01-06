@@ -15,4 +15,8 @@
         android:name="com.personal.drivebooster.create_booking_fragment"
         android:label="Create a Booking"
         tools:layout="@layout/fragment_create_booking_fragment" />
+    <fragment android:id="@+id/navigation_my_details"
+        android:name="com.personal.drivebooster.PupilDetailsFragment"
+        android:label="Create a Booking"
+        tools:layout="@layout/pupil_my_details_fragment"/>
 </navigation>

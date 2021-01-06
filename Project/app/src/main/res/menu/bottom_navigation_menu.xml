@@ -6,5 +6,6 @@
         />
     <item android:id="@+id/navigation_booking"
         android:title="Create Booking"/>
-
+    <item android:id="@+id/navigation_my_details"
+        android:title="My Details"/>
 </menu>
