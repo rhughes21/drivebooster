@@ -1,9 +1,11 @@
 package com.personal.drivebooster;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,9 +24,10 @@ import com.google.firebase.database.ValueEventListener;
 public class PupilDetailsFragment extends Fragment {
 
     View view;
-    EditText userNameView, userEmailView, userInstructorTextView;
-    TextView yourDetailsView;
+    EditText userNameView;
+    TextView yourDetailsView, userInstructorTextView, userEmailView;
     DatabaseReference  dbUserRef;
+    Button logoutButton, updateDetailsButton;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,7 +36,24 @@ public class PupilDetailsFragment extends Fragment {
         userNameView = view.findViewById(R.id.user_name);
         userEmailView = view.findViewById(R.id.user_email);
         userInstructorTextView = view.findViewById(R.id.user_instructor);
+        logoutButton = view.findViewById(R.id.logout_button);
+        updateDetailsButton = view.findViewById(R.id.update_user_details_button);
         getUserDetails();
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
+            }
+        });
+
+        updateDetailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUserDetails();
+            }
+        });
         return view;
     }
 
@@ -56,4 +76,11 @@ public class PupilDetailsFragment extends Fragment {
             }
         });
     }
+    public void updateUserDetails(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser.getUid();
+        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        dbUserRef.child(userId).child("name").setValue(userNameView.getText().toString());
+    }
+
 }

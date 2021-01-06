@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <EditText
+        <TextView
             android:id="@+id/user_email"
             android:layout_marginEnd="5dp"
             android:textSize="20sp"
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <EditText
+        <TextView
             android:id="@+id/user_instructor"
             android:textSize="20sp"
             android:hint="Instructor Name"
@@ -64,5 +64,30 @@
             android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/update_user_details_button"
+            android:layout_width="300dp"
+            android:layout_marginTop="50dp"
+            android:layout_height="wrap_content"
+            android:text="Update Details"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/large_button_drawable"/>
     </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="300dp"
+        android:layout_marginTop="50dp"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:textColor="@color/white"
+        android:background="@drawable/large_button_drawable"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
