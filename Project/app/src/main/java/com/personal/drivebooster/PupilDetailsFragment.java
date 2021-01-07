@@ -1,5 +1,7 @@
 package com.personal.drivebooster;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -51,7 +53,7 @@ public class PupilDetailsFragment extends Fragment {
         updateDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateUserDetails();
+                updateDialog();
             }
         });
         return view;
@@ -81,6 +83,30 @@ public class PupilDetailsFragment extends Fragment {
         String userId = currentUser.getUid();
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
         dbUserRef.child(userId).child("name").setValue(userNameView.getText().toString());
+    }
+
+    public void updateDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Are you sure you want to update your name?");
+        builder.setMessage("updating details will return you to the home screen as the database has updated your information");
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        updateUserDetails();
+                    }
+                });
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog updateAlert = builder.create();
+        updateAlert.show();
+        updateAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.negative_alert_button));
+        updateAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.positive_alert_button));
     }
 
 }
