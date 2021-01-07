@@ -8,4 +8,6 @@
     <color name="white">#FFFF</color>
     <color name="light_yellow">#FFFF00</color>
     <color name="light_blue">#256CFF</color>
+    <color name="negative_alert_button">#FF0000</color>
+    <color name="positive_alert_button">#00FF00</color>
 </resources>
