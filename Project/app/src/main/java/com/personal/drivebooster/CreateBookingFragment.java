@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class create_booking_fragment extends Fragment  {
+public class CreateBookingFragment extends Fragment  {
         View view;
         FirebaseUser currentUser;
         String userId;

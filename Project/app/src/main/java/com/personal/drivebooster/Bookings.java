@@ -18,7 +18,6 @@ public class Bookings {
 
     //empty constructor for creating object array of bookings from firebase
     public Bookings(){
-
     }
 
 }

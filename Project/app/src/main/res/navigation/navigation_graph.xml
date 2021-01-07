@@ -12,7 +12,7 @@
         tools:layout="@layout/home_fragment"/>
     <fragment
         android:id="@+id/navigation_booking"
-        android:name="com.personal.drivebooster.create_booking_fragment"
+        android:name="com.personal.drivebooster.CreateBookingFragment"
         android:label="Create a Booking"
         tools:layout="@layout/fragment_create_booking_fragment" />
     <fragment android:id="@+id/navigation_my_details"

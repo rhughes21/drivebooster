@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,19 +30,23 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     View view;
+    RecyclerView bookingsRecycler;
     FirebaseAuth auth;
     Button chooseInstructorButton;
     TextView noInstructorsText;
-    DatabaseReference databaseRef, dbUserRef;
+    DatabaseReference databaseRef, dbUserRef,databaseBookingRef;
     Spinner instructorChoiceSpinner;
     Boolean hasPickedInstructor = false;
     boolean instructorAvailable;
     String instructorName;
+    CustomerBookingsAdapter customerBookingsAdapter;
     ArrayList<String> instructorArray = new ArrayList<String>();
+    final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
 
 
     @Override
@@ -51,7 +57,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
+        getBookings();
 
+        bookingsRecycler = view.findViewById(R.id.my_bookings_recycler);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        bookingsRecycler.setLayoutManager(linearLayoutManager);
+
+        customerBookingsAdapter = new CustomerBookingsAdapter(bookingsFromFirebase);
+        bookingsRecycler.setAdapter(customerBookingsAdapter);
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();
         instructorChoiceSpinner = view.findViewById(R.id.choose_instructor_spinner);
@@ -68,6 +81,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         return view;
     }
 
+    public void setUpBookingsRecycler(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        bookingsRecycler.setLayoutManager(linearLayoutManager);
+
+        CustomerBookingsAdapter customerBookingsAdapter = new CustomerBookingsAdapter(bookingsFromFirebase);
+        bookingsRecycler.setAdapter(customerBookingsAdapter);
+    }
     //getter and setter for instructor name
     public String getInstName(){
         return instructorName;
@@ -175,5 +195,27 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         instructorChoiceSpinner.setVisibility(View.GONE);
         hasPickedInstructor = true;
         Toast.makeText(getContext(), "Instructor chosen", Toast.LENGTH_SHORT).show();
+    }
+
+    public void getBookings(){
+        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
+        databaseBookingRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChildren()) {
+                    Iterable<DataSnapshot> children = snapshot.getChildren();
+                    for (DataSnapshot child : children) {
+                        Bookings bookings = child.getValue(Bookings.class);
+                        bookingsFromFirebase.add(bookings);
+                        customerBookingsAdapter.notifyDataSetChanged();
+
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
