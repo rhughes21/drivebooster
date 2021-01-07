@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,7 +47,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
         view = inflater.inflate(R.layout.home_fragment, container, false);
-
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
 
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();

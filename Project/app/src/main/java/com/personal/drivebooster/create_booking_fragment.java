@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,6 +54,10 @@ public class create_booking_fragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
         view = inflater.inflate(R.layout.fragment_create_booking_fragment, container, false);
         initViews();
         getDateValue(dateString);

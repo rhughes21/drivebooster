@@ -1,6 +1,7 @@
 package com.personal.drivebooster
 
 import android.os.Bundle
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -14,7 +15,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setUpNavigation()
-
+        if (supportActionBar != null) {
+            val actionBar: ActionBar? = supportActionBar
+            actionBar?.setDisplayHomeAsUpEnabled(false)
+        }
 
     }
     //method to determine what the back button does on this screen

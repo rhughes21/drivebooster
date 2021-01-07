@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,6 +34,10 @@ public class PupilDetailsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
         view = inflater.inflate(R.layout.pupil_my_details_fragment, container, false);
         yourDetailsView = view.findViewById(R.id.your_details_view);
         userNameView = view.findViewById(R.id.user_name);
