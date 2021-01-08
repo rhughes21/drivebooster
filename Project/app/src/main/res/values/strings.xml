@@ -7,4 +7,22 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="no_account_click_to_reg">No Account? Click here to register</string>
+    <string name="sign_up">Sign up</string>
+    <string name="already_have_account">Already have an account? sign in</string>
+    <string name="choose_instructor_text">choose instructor</string>
+    <string name="no_instructors_available">No instructors available yet</string>
+    <string name="create_booking">Create Booking</string>
+    <string name="create_a_booking">Create a Booking</string>
+    <string name="username">Username</string>
+    <string name="user_email">User email</string>
+    <string name="user_address">User address</string>
+    <string name="instructor_name">Instructor name</string>
+    <string name="update_name">Update name</string>
+    <string name="your_details">Your details</string>
+    <string name="my_details">My details</string>
+    <string name="home_text">Home</string>
+    <string name="my_bookings">My Bookings</string>
 </resources>
