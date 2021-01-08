@@ -1,6 +1,5 @@
 package com.personal.drivebooster;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +17,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -44,7 +40,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     Boolean hasPickedInstructor = false;
     boolean instructorAvailable;
     String instructorName;
-    CustomerBookingsAdapter customerBookingsAdapter;
+    CustomBookingsAdapter customBookingsAdapter;
     ArrayList<String> instructorArray = new ArrayList<String>();
     final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
 
@@ -63,8 +59,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);
 
-        customerBookingsAdapter = new CustomerBookingsAdapter(bookingsFromFirebase);
-        bookingsRecycler.setAdapter(customerBookingsAdapter);
+        customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
+        bookingsRecycler.setAdapter(customBookingsAdapter);
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();
         instructorChoiceSpinner = view.findViewById(R.id.choose_instructor_spinner);
@@ -85,8 +81,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);
 
-        CustomerBookingsAdapter customerBookingsAdapter = new CustomerBookingsAdapter(bookingsFromFirebase);
-        bookingsRecycler.setAdapter(customerBookingsAdapter);
+        CustomBookingsAdapter customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
+        bookingsRecycler.setAdapter(customBookingsAdapter);
     }
     //getter and setter for instructor name
     public String getInstName(){
@@ -198,6 +194,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     public void getBookings(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = currentUser.getUid();
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -206,9 +204,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Bookings bookings = child.getValue(Bookings.class);
-                        bookingsFromFirebase.add(bookings);
-                        customerBookingsAdapter.notifyDataSetChanged();
-
+                        if(bookings.pupilId.equals(userId)) {
+                            bookingsFromFirebase.add(bookings);
+                            customBookingsAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
             }
