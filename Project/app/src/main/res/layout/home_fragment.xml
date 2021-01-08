@@ -4,12 +4,23 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <TextView
+        android:id="@+id/my_bookings_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/my_bookings"
+        android:layout_marginStart="3dp"
+        android:textSize="25sp"
+        android:textColor="@color/gold"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_bookings_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_bookings_header"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
@@ -26,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/white"
-        android:text="choose instructor"
+        android:text="@string/choose_instructor_text"
         android:visibility="gone"
         android:background="@drawable/large_button_drawable"
         android:layout_width="300dp"
@@ -36,7 +47,7 @@
         android:id="@+id/no_instructors_available"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No instructors available yet"
+        android:text="@string/no_instructors_available"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/choose_instructor_spinner"
         app:layout_constraintBottom_toTopOf="@id/instructor_choice_button"

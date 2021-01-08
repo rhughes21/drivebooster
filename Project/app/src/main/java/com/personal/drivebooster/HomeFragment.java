@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     RecyclerView bookingsRecycler;
     FirebaseAuth auth;
     Button chooseInstructorButton;
-    TextView noInstructorsText;
+    TextView noInstructorsText, myBookingsText;
     DatabaseReference databaseRef, dbUserRef,databaseBookingRef;
     Spinner instructorChoiceSpinner;
     Boolean hasPickedInstructor = false;
@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             fm.popBackStack();
         }
         getBookings();
-
+        myBookingsText = view.findViewById(R.id.my_bookings_header);
         bookingsRecycler = view.findViewById(R.id.my_bookings_recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);

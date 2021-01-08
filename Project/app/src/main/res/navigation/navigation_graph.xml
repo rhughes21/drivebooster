@@ -8,15 +8,15 @@
     <fragment
         android:id="@+id/homeFragment2"
         android:name="com.personal.drivebooster.HomeFragment"
-        android:label="Home"
+        android:label="@string/home_text"
         tools:layout="@layout/home_fragment"/>
     <fragment
         android:id="@+id/navigation_booking"
         android:name="com.personal.drivebooster.CreateBookingFragment"
-        android:label="Create a Booking"
+        android:label="@string/create_a_booking"
         tools:layout="@layout/fragment_create_booking_fragment" />
     <fragment android:id="@+id/navigation_my_details"
         android:name="com.personal.drivebooster.PupilDetailsFragment"
-        android:label="My Details"
+        android:label="@string/my_details"
         tools:layout="@layout/pupil_my_details_fragment"/>
 </navigation>

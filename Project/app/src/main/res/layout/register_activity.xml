@@ -54,14 +54,15 @@
 
         <Button
             android:id="@+id/buttonRegister"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:onClick="registerUser"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="SIGN UP"
+            android:text="@string/sign_up"
+            android:background="@drawable/large_button_drawable"
             android:textAllCaps="false"
-            android:textColor="#FE5295"
+            android:textColor="@color/white"
             android:textSize="17sp"/>
 
         <Button
@@ -69,12 +70,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
+            android:background="@drawable/large_button_drawable"
             android:fontFamily="sans-serif"
             android:onClick="showLoginScreen"
             android:padding="10dp"
-            android:text="Already Have an Account?  Sign in"
+            android:text="@string/already_have_account"
             android:textAllCaps="true"
-            android:textColor="#FAD0E1"
+            android:textColor="@color/white"
             android:textSize="13dp"
             android:textStyle="bold" />
 
