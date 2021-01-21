@@ -29,19 +29,14 @@ public class LoginActivity extends AppCompatActivity {
     Button buttonRegister;
     FirebaseAuth auth;
     boolean userIsPupil;
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String userId;
+
     DatabaseReference dbReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
-        if(user != null){
-            userId = user.getUid();
-            getUserType();
-        }
 
         editTextEmail = findViewById(R.id.email_edit_text);
         editTextPassword = findViewById(R.id.password_input_edit_text);
