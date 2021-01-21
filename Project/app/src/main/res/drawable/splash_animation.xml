@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/animation_list_splash"
+    android:oneshot="true">
+    <item
+        android:drawable="@drawable/driving_splash"
+        android:duration="500" />
+    <item
+        android:drawable="@drawable/l_plate_splash"
+        android:duration="500" />
+    <item
+        android:drawable="@drawable/passed_splash"
+        android:duration="500" />
+    <item
+        android:drawable="@drawable/drive_safe_splash"
+        android:duration="500" />
+
+</animation-list>
