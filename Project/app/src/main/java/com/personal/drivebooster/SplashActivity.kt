@@ -11,7 +11,6 @@ import com.google.firebase.database.*
 
 
 class SplashActivity : Activity() {
-    var handler: Handler? = null
     var user = FirebaseAuth.getInstance().currentUser
     var userId: String? = null
     var userIsPupil = false
@@ -37,29 +36,6 @@ class SplashActivity : Activity() {
         checkAnimationStatus(50, animationDrawable)
     }
 
-
-//    fun checkAnimationStatus(time: Long, animationDrawable: AnimationDrawable?) {
-//        val handler = Handler()
-//        handler.postDelayed(Runnable() {
-//            @Override
-//            fun run() {
-//                if (animationDrawable!!.getCurrent() != animationDrawable.getFrame(animationDrawable!!.getNumberOfFrames() - 1))
-//                    checkAnimationStatus(time, animationDrawable);
-//                else {
-//                    if (user != null) {
-//                        userId = user!!.uid
-//                        getUserType()
-//                    } else {
-//                        val intent = Intent(this@SplashActivity, LoginActivity::class.java)
-//                        startActivity(intent)
-//                        this@SplashActivity.finish()
-//                    }
-//                    finish()
-//                }
-//            }
-//        }, time)
-//    }
-
     private fun checkAnimationStatus(time: Int, animationDrawable: AnimationDrawable?) {
         val handler = Handler()
         handler.postDelayed({
@@ -77,8 +53,6 @@ class SplashActivity : Activity() {
             }
         }, time.toLong())
     }
-
-
 
     //method to check whether the user is a pupil. Checks that the UID exists in the users table
     fun getUserType() {
