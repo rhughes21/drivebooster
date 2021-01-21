@@ -44,12 +44,10 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
     }
 
     public class MyViewholder extends RecyclerView.ViewHolder{
-        TextView textTimeSlot, textTimeSlotDescription;
-        CardView cardTimeSlot;
+        TextView textTimeSlot;
         public MyViewholder(@NonNull View itemView){
             super(itemView);
-            textTimeSlot = (TextView)itemView.findViewById(R.id.text_time_slot);
-            textTimeSlotDescription = (TextView)itemView.findViewById(R.id.text_time_slot_description);
+            textTimeSlot = (TextView)itemView.findViewById(R.id.recycler_booking_time);
 
         }
     }

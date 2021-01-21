@@ -51,6 +51,7 @@ public class CreateBookingFragment extends Fragment  {
         Button createBookingButton;
         boolean canBookLesson;
         final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,10 +61,10 @@ public class CreateBookingFragment extends Fragment  {
         }
         view = inflater.inflate(R.layout.fragment_create_booking_fragment, container, false);
         initViews();
+        getBookings();
         getDateValue(dateString);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userId = currentUser.getUid();
-        getBookings();
         timeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -90,7 +91,6 @@ public class CreateBookingFragment extends Fragment  {
         createBookingButton = view.findViewById(R.id.create_booking_button);
         setUpPicker();
         setUpListView();
-
     }
 
     //method to set the start and end date shown on the calendar
@@ -105,15 +105,48 @@ public class CreateBookingFragment extends Fragment  {
             @Override
             public void onDateSelected(@Nullable Date date) {
                 if(date != null){
+
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
                     dateString = dateFormat.format(date);
+                    setUpListView();
                     datePickedText.setText(dateString);
+                    dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+                    dbUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            DataSnapshot ds = snapshot.child("instructorName");
+                            setInstName(ds.getValue(String.class));
+                            for (int j = 0; j < bookingsFromFirebase.size(); j++) {
+                                for (int i = 0; i < timeListView.getLastVisiblePosition(); i++) {
+                                    if (bookingsFromFirebase.get(j).bookingDate.equals(dateString) && bookingsFromFirebase.get(j).instructorName.equals(getInstName()) &&
+                                            bookingsFromFirebase.get(j).bookingTime.equals(timeListView.getItemAtPosition(i))) {
+                                        getViewByPosition(i, timeListView).setVisibility(View.INVISIBLE);
+
+                                    }
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
                 }
             }
         });
         return dateString;
     }
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
 
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
+    }
     //method to add times to an array
     public List<String> setUpTimes(){
         ArrayList<String> times = new ArrayList<String>();
@@ -139,8 +172,6 @@ public class CreateBookingFragment extends Fragment  {
     public void setInstName(String instructorName){
         this.instructorName = instructorName;
     }
-
-
     //method used to create a booking and push to firebase. Also include checks for bookings already in the database.
     public void createBooking(){
 
@@ -158,10 +189,6 @@ public class CreateBookingFragment extends Fragment  {
                 for(int i=0; i < bookingsFromFirebase.size(); i++){
                     if(bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).pupilId.equals(userId)){
                         Toast.makeText(getContext(), "You have a booking already on that day", Toast.LENGTH_SHORT).show();
-                        canBookLesson = false;
-                    }else if (bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).bookingTime.equals(timeString)
-                            && bookingsFromFirebase.get(i).instructorName.equals(getInstName())){
-                        Toast.makeText(getContext(), "Your instructor already has a booking at that time", Toast.LENGTH_SHORT).show();
                         canBookLesson = false;
                     }
                 }
