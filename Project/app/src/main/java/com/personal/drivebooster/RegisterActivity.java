@@ -164,7 +164,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                                     registerPupil(name, email, password, latitude, longitude);
                                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                 } else {
-                                    registerInstructor(name, email, password);
+                                    registerInstructor(name, email, password, latitude, longitude);
                                     startActivity(new Intent(RegisterActivity.this, InstructorMainActivity.class));
                                 }
 
@@ -205,15 +205,16 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
     //method used to register a new instructor and store the details in firebase
-    public void registerInstructor(String name, String email, String password) {
+    public void registerInstructor(String name, String email, String password, String latitude, String longitude) {
         name = editTextUsername.getText().toString();
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
-
+        latitude = latitudeTextView.getText().toString();
+        longitude = longitudeTextView.getText().toString();
 
         databaseInstructorsReference = FirebaseDatabase.getInstance().getReference().child("Instructors");
 
-        Instructors instructor_obj = new Instructors(name, email, password, userType);
+        Instructors instructor_obj = new Instructors(name, email, password, userType, latitude, longitude);
         FirebaseUser fbUser = auth.getCurrentUser();
 
         databaseInstructorsReference.child(fbUser.getUid()).setValue(instructor_obj)
