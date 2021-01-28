@@ -55,6 +55,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
+        instructorsFromFirebase.clear();
         checkInstructorChosen();
         getBookings();
         getInstructorsFromFirebase();
@@ -65,7 +66,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         LinearLayoutManager linearLayoutManagerTwo = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);
         instructorRecycler.setLayoutManager(linearLayoutManagerTwo);
+
         customInstructorAdapter = new CustomInstructorAdapter(instructorsFromFirebase, this);
+
         instructorRecycler.setAdapter(customInstructorAdapter);
         customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
         bookingsRecycler.setAdapter(customBookingsAdapter);
