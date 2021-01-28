@@ -11,6 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 
 public class CustomInstructorAdapter extends RecyclerView.Adapter {
@@ -37,12 +45,12 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
         viewHolder myViewHolder = (viewHolder)holder;
 
         if(!instructorsFromFirebase.get(position).latitude.equals("")){
-            myViewHolder.instructorName.setText(instructorsFromFirebase.get(position).name);
+                myViewHolder.instructorName.setText(instructorsFromFirebase.get(position).name);
         }else{
             Log.d("DIDN'T WORK", "BLAH BLAH");
         }
         if (rowindex == position) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#00FF00"));
+            holder.itemView.setBackgroundColor(Color.parseColor("#40C3F4"));
         } else {
             holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
         }

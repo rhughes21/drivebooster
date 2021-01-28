@@ -38,7 +38,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     DatabaseReference databaseRef, dbUserRef,databaseBookingRef;
     Boolean hasPickedInstructor = false;
     boolean instructorAvailable;
-    String instructorName;
+    double lessThanMyLng, moreThanMyLng;
+    String instructorName, myLng, instLng;
     CustomBookingsAdapter customBookingsAdapter;
     CustomInstructorAdapter customInstructorAdapter;
     final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
@@ -54,6 +55,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
+        checkInstructorChosen();
         getBookings();
         getInstructorsFromFirebase();
         myBookingsText = view.findViewById(R.id.my_bookings_header);
@@ -81,6 +83,12 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         return view;
     }
 
+    public void getMyLongitudeDifference(){
+        double x = Double.parseDouble(getLng());
+
+        lessThanMyLng = x - 1;
+        moreThanMyLng = x + 1;
+    }
     public void setUpBookingsRecycler(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);
@@ -102,6 +110,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
     public void setInstructorAvailable(boolean instructorAvailable){
         this.instructorAvailable = instructorAvailable;
+    }
+    public String getLng(){
+        return myLng;
+    }
+
+    public void setMyLng(String myLng){
+        this.myLng = myLng;
     }
 
     //method to set whether or not the choose instructor button and spinner should be shown
@@ -147,6 +162,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.equals(null)) {
                     setInstName(snapshot.child("instructorName").getValue(String.class));
+                    setMyLng(snapshot.child("longitude").getValue(String.class));
                     setChooseInstructorVisibility();
                 }else if(snapshot.equals(null)){
                     Toast.makeText(getContext(), "You are an instructor", Toast.LENGTH_SHORT).show();
@@ -206,11 +222,15 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                     noInstructorsText.setVisibility(View.GONE);
                     setInstructorAvailable(true);
                     checkInstructorChosen();
+                    getMyLongitudeDifference();
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child: children){
                         Instructors instructors = child.getValue(Instructors.class);
-                        instructorsFromFirebase.add(instructors);
-                        customInstructorAdapter.notifyDataSetChanged();
+                        instLng = instructors.longitude;
+                        if(Double.parseDouble(instLng) > lessThanMyLng && Double.parseDouble(instLng) < moreThanMyLng){
+                            instructorsFromFirebase.add(instructors);
+                            customInstructorAdapter.notifyDataSetChanged();
+                        }
                     }
                 }else if(!snapshot.hasChildren()){
                     setInstructorAvailable(false);
@@ -228,6 +248,5 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onInstructorNameClick(int position) {
         setInstName(instructorsFromFirebase.get(position).name);
-
     }
 }
