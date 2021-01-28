@@ -50,7 +50,7 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
             Log.d("DIDN'T WORK", "BLAH BLAH");
         }
         if (rowindex == position) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#00FF00"));
+            holder.itemView.setBackgroundColor(Color.parseColor("#40C3F4"));
         } else {
             holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
         }
