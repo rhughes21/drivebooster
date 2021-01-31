@@ -30,4 +30,9 @@
         android:name="com.personal.drivebooster.InstructorHomeFragment"
         android:label="@string/home_text"
         tools:layout="@layout/instructor_home_fragment"/>
+    <fragment
+        android:id="@+id/instructor_my_pupils"
+        android:name="com.personal.drivebooster.MyPupilsFragment"
+        android:label="@string/my_pupils"
+        tools:layout="@layout/instructors_my_pupils_fragment"/>
 </navigation>

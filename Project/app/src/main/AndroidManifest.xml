@@ -22,13 +22,12 @@
         <activity android:name=".LoginActivity">
         </activity>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:launchMode="singleTop">
+
         </activity>
 
         <activity android:name=".RegisterActivity">
-        </activity>
-
-        <activity android:name=".InstructorMainActivity">
         </activity>
 
     </application>

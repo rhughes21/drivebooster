@@ -47,16 +47,12 @@ class MainActivity : AppCompatActivity() {
     //method to determine what the back button does on this screen
     override fun onSupportNavigateUp() = findNavController(R.id.main_navigation_fragment).navigateUp()
 
-    val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.homeFragment2, R.id.navigation_booking,
-            R.id.navigation_my_details))
 
     //method to set up the bottom navigation
     private fun setUpNavigation(){
 
         val navHostFragment = main_navigation_fragment as NavHostFragment
         val navController = Navigation.findNavController(this, R.id.main_navigation_fragment)
-        setupActionBarWithNavController(navController, appBarConfiguration)
         val graphInflater = navHostFragment.navController.navInflater
         val navGraph = navController.graph
         val destination = R.id.dummy_frag
@@ -73,6 +69,10 @@ class MainActivity : AppCompatActivity() {
                     navBar.inflateMenu(R.menu.bottom_navigation_menu);
                     navController.graph = navGraph
                     NavigationUI.setupWithNavController(bottom_tab_navigation, navController)
+                    val appBarConfiguration = AppBarConfiguration(setOf(
+                            R.id.homeFragment2, R.id.navigation_booking,
+                            R.id.navigation_my_details))
+                    setupActionBarWithNavController(navController, appBarConfiguration)
                 } else if (!snapshot.hasChild(userId.toString())) {
                     userIsPupil = false
                     val destination = R.id.instructor_home_nav_fragment
@@ -81,6 +81,9 @@ class MainActivity : AppCompatActivity() {
                     navBar.menu.clear()
                     navBar.inflateMenu(R.menu.instructor_bottom_nav)
                     navController.graph = navGraph
+                    val appBarConfiguration = AppBarConfiguration(setOf(
+                            R.id.instructor_home_nav_fragment, R.id.instructor_my_pupils))
+                    setupActionBarWithNavController(navController, appBarConfiguration)
                     NavigationUI.setupWithNavController(bottom_tab_navigation, navController)
                 }
             }

@@ -4,4 +4,6 @@
     <item android:id="@+id/instructor_home_nav_fragment"
         android:title="@string/home_text"
         />
+    <item android:id="@+id/instructor_my_pupils"
+        android:title="@string/my_pupils"/>
 </menu>
