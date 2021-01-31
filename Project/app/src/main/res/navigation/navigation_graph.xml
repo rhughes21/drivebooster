@@ -3,8 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/homeFragment2">
+    app:startDestination="@id/dummy_frag">
 
+    <fragment
+        android:id="@+id/dummy_frag"
+        android:name="com.personal.drivebooster.DummyFrag"
+        android:label="@string/home_text"
+        tools:layout="@layout/dummy_frag"/>
     <fragment
         android:id="@+id/homeFragment2"
         android:name="com.personal.drivebooster.HomeFragment"
@@ -19,4 +24,10 @@
         android:name="com.personal.drivebooster.PupilDetailsFragment"
         android:label="@string/my_details"
         tools:layout="@layout/pupil_my_details_fragment"/>
+
+    <fragment
+        android:id="@+id/instructor_home_nav_fragment"
+        android:name="com.personal.drivebooster.InstructorHomeFragment"
+        android:label="@string/home_text"
+        tools:layout="@layout/instructor_home_fragment"/>
 </navigation>

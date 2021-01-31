@@ -52,6 +52,7 @@ public class PupilDetailsFragment extends Fragment {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 getActivity().finish();
+                System.exit(0);
             }
         });
 

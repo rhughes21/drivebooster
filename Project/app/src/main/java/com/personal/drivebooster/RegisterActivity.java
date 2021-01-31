@@ -165,7 +165,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                 } else {
                                     registerInstructor(name, email, password, latitude, longitude);
-                                    startActivity(new Intent(RegisterActivity.this, InstructorMainActivity.class));
+                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                 }
 
                             } else {
