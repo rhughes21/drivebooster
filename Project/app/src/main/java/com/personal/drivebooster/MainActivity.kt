@@ -8,9 +8,11 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.home_fragment.*
 
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -19,7 +21,6 @@ class MainActivity : AppCompatActivity() {
             val actionBar: ActionBar? = supportActionBar
             actionBar?.setDisplayHomeAsUpEnabled(false)
         }
-
     }
     //method to determine what the back button does on this screen
     override fun onSupportNavigateUp() = findNavController(R.id.main_navigation_fragment).navigateUp()
