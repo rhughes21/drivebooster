@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/instructor_home_nav_fragment"
+        android:title="@string/home_text"
+        />
+    <item android:id="@+id/instructor_my_pupils"
+        android:title="@string/my_pupils"/>
+</menu>

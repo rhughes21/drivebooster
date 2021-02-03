@@ -92,7 +92,7 @@ class SplashActivity : Activity() {
                     this@SplashActivity.finish()
                 } else if (!snapshot.hasChild(userId!!)) {
                     userIsPupil = false
-                    val j = Intent(this@SplashActivity, InstructorMainActivity::class.java)
+                    val j = Intent(this@SplashActivity, MainActivity::class.java)
                     startActivity(j)
                     this@SplashActivity.finish()
                 }
