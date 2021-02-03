@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -50,14 +52,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.personal.drivebooster.Constants.REQUEST_LOCATION;
 
 public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
 
-    EditText editTextUsername, editTextEmail, editTextPassword, editTextPasswordCnf;
+    EditText editTextUsername, editTextEmail, editTextPassword, editTextPasswordCnf, registerFullAddress;
     FirebaseAuth auth;
     DatabaseReference databaseUsersReference, databaseInstructorsReference, databaseRef, dbUserRef;
     String userType, instructorName;
@@ -82,6 +87,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         latitudeTextView = findViewById(R.id.register_latitude);
         longitudeTextView = findViewById(R.id.register_longitude);
         getLocationButton = findViewById(R.id.get_my_coords_button);
+        registerFullAddress = findViewById(R.id.register_full_address);
         auth = FirebaseAuth.getInstance();
 
 
@@ -149,6 +155,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         final String password = editTextPassword.getText().toString();
         final String latitude = latitudeTextView.getText().toString();
         final String longitude = longitudeTextView.getText().toString();
+        final String fullAddress = registerFullAddress.getText().toString();
 
         if (name.equals("") || email.equals("") || password.equals("")) {
             Toast.makeText(getApplicationContext(), "Fields cannot be empty", Toast.LENGTH_SHORT).show();
@@ -161,10 +168,10 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                                 finish();
                                 Toast.makeText(getApplicationContext(), "User created", Toast.LENGTH_SHORT).show();
                                 if (userType.equals("Pupil")) {
-                                    registerPupil(name, email, password, latitude, longitude);
+                                    registerPupil(name, email, password, latitude, longitude, fullAddress);
                                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                 } else {
-                                    registerInstructor(name, email, password, latitude, longitude);
+                                    registerInstructor(name, email, password, latitude, longitude, fullAddress);
                                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                 }
 
@@ -177,18 +184,19 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
     //method used to register a pupil and store the details in firebase
-    public void registerPupil(String name, String email, String password, String latitude, String longitude) {
+    public void registerPupil(String name, String email, String password, String latitude, String longitude, String fullAddress) {
 
         name = editTextUsername.getText().toString();
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
         latitude = latitudeTextView.getText().toString();
         longitude = longitudeTextView.getText().toString();
+        fullAddress = registerFullAddress.getText().toString();
 
         instructorName = "not chosen";
         databaseUsersReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        Users user_obj = new Users(name, email, password, userType, instructorName, latitude, longitude);
+        Users user_obj = new Users(name, email, password, userType, instructorName, latitude, longitude, fullAddress);
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         databaseUsersReference.child(firebaseUser.getUid()).setValue(user_obj)
@@ -205,16 +213,17 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
     //method used to register a new instructor and store the details in firebase
-    public void registerInstructor(String name, String email, String password, String latitude, String longitude) {
+    public void registerInstructor(String name, String email, String password, String latitude, String longitude, String fullAddress) {
         name = editTextUsername.getText().toString();
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
         latitude = latitudeTextView.getText().toString();
         longitude = longitudeTextView.getText().toString();
+        fullAddress = registerFullAddress.getText().toString();
 
         databaseInstructorsReference = FirebaseDatabase.getInstance().getReference().child("Instructors");
 
-        Instructors instructor_obj = new Instructors(name, email, password, userType, latitude, longitude);
+        Instructors instructor_obj = new Instructors(name, email, password, userType, latitude, longitude, fullAddress);
         FirebaseUser fbUser = auth.getCurrentUser();
 
         databaseInstructorsReference.child(fbUser.getUid()).setValue(instructor_obj)
@@ -251,6 +260,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 if(location != null){
                     latitudeTextView.setText(String.valueOf(location.getLatitude()));
                     longitudeTextView.setText(String.valueOf(location.getLongitude()));
+                    registerFullAddress.setText(getAddress(location.getLatitude(), location.getLongitude()));
                 }
             }
         });
@@ -264,8 +274,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         });
 
     }
-
-
 
     @Override
     public void onLocationChanged(Location location) {
@@ -288,6 +296,22 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         Log.d("Latitude","status");
+    }
+
+    private String getAddress(double latitude, double longitude) {
+        StringBuilder result = new StringBuilder();
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                Address address = addresses.get(0);
+                result.append(address.getAddressLine(0));
+            }
+        } catch (IOException e) {
+            Log.e("tag", e.getMessage());
+        }
+
+        return result.toString();
     }
 
 }
