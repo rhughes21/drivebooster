@@ -5,6 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/my_instructors_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
     <TextView
         android:id="@+id/my_bookings_header"
         android:layout_width="wrap_content"
@@ -14,7 +20,7 @@
         android:textSize="25sp"
         android:textColor="@color/gold"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_instructors_recycler"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -37,14 +43,6 @@
         android:background="@color/gold"
         android:orientation="horizontal"/>
 
-    <Spinner
-        android:id="@+id/choose_instructor_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/my_bookings_recycler"
-        app:layout_constraintStart_toStartOf="parent"/>
-
     <Button
         android:id="@+id/instructor_choice_button"
         app:layout_constraintTop_toBottomOf="@id/no_instructors_available"
@@ -53,6 +51,7 @@
         android:textColor="@color/white"
         android:text="@string/choose_instructor_text"
         android:visibility="gone"
+        android:layout_marginTop="5dp"
         android:background="@drawable/large_button_drawable"
         android:layout_width="300dp"
         android:layout_height="wrap_content"/>
@@ -63,7 +62,7 @@
         android:layout_height="wrap_content"
         android:text="@string/no_instructors_available"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/choose_instructor_spinner"
+        app:layout_constraintTop_toBottomOf="@id/my_instructors_recycler"
         app:layout_constraintBottom_toTopOf="@id/instructor_choice_button"
         app:layout_constraintStart_toStartOf="parent"/>
 

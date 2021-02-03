@@ -1,7 +1,20 @@
 package com.personal.drivebooster;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,13 +23,23 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.util.ArrayUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,25 +53,37 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+import static com.personal.drivebooster.Constants.REQUEST_LOCATION;
+
+public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
 
     EditText editTextUsername, editTextEmail, editTextPassword, editTextPasswordCnf;
     FirebaseAuth auth;
     DatabaseReference databaseUsersReference, databaseInstructorsReference, databaseRef, dbUserRef;
     String userType, instructorName;
     Spinner userSpinner;
+    TextView latitudeTextView, longitudeTextView;
+    LocationManager locationManager;
+    Button getLocationButton;
+    LocationListener locationListener;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private String provider;
     ArrayList<String> instructorArray = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
-
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         editTextUsername = findViewById(R.id.edit_text_username);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.edit_text_password);
         editTextPasswordCnf = findViewById(R.id.edit_text_passwordCnf);
+        latitudeTextView = findViewById(R.id.register_latitude);
+        longitudeTextView = findViewById(R.id.register_longitude);
+        getLocationButton = findViewById(R.id.get_my_coords_button);
         auth = FirebaseAuth.getInstance();
+
 
         userSpinner = findViewById(R.id.user_type_spinner);
 
@@ -57,40 +92,83 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         userSpinner.setAdapter(spinnerAdapter);
         userSpinner.setOnItemSelectedListener(this);
 
+        getLocationButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View v) {
+                getLocation();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+            getLocation();
+        }else{
+            askLocationPermission();
+        }
+    }
+
+    private void askLocationPermission(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+            }else{
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_LOCATION){
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                getLocation();
+            }else{
+                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
 
     }
 
     //method called when users clicks login button
-    public void showLoginScreen(View v){
+    public void showLoginScreen(View v) {
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
     }
 
     //method used to register a new user. Checks whether they are an instructor or pupil
-    public void registerUser(View v){
+    public void registerUser(View v) {
         final String name = editTextUsername.getText().toString();
         final String email = editTextEmail.getText().toString();
         final String password = editTextPassword.getText().toString();
+        final String latitude = latitudeTextView.getText().toString();
+        final String longitude = longitudeTextView.getText().toString();
 
-        if(name.equals("") || email.equals("") || password.equals("")){
+        if (name.equals("") || email.equals("") || password.equals("")) {
             Toast.makeText(getApplicationContext(), "Fields cannot be empty", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 finish();
                                 Toast.makeText(getApplicationContext(), "User created", Toast.LENGTH_SHORT).show();
-                                if(userType.equals("Pupil")){
-                                    registerPupil(name, email, password);
+                                if (userType.equals("Pupil")) {
+                                    registerPupil(name, email, password, latitude, longitude);
                                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                } else{
-                                    registerInstructor(name, email, password);
-                                    startActivity(new Intent(RegisterActivity.this, InstructorMainActivity.class));
+                                } else {
+                                    registerInstructor(name, email, password, latitude, longitude);
+                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                 }
 
-                            }else{
+                            } else {
                                 Toast.makeText(getApplicationContext(), "User could not be created at this time", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -99,26 +177,27 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
     //method used to register a pupil and store the details in firebase
-    public void registerPupil(String name, String email, String password){
+    public void registerPupil(String name, String email, String password, String latitude, String longitude) {
 
         name = editTextUsername.getText().toString();
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
+        latitude = latitudeTextView.getText().toString();
+        longitude = longitudeTextView.getText().toString();
 
         instructorName = "not chosen";
         databaseUsersReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        Users user_obj = new Users(name, email, password, userType, instructorName);
+        Users user_obj = new Users(name, email, password, userType, instructorName, latitude, longitude);
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         databaseUsersReference.child(firebaseUser.getUid()).setValue(user_obj)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "User details stored", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
+                        } else {
                             Toast.makeText(getApplicationContext(), "User data could not be saved", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -126,25 +205,25 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
     //method used to register a new instructor and store the details in firebase
-    public void registerInstructor(String name, String email, String password){
+    public void registerInstructor(String name, String email, String password, String latitude, String longitude) {
         name = editTextUsername.getText().toString();
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
-
+        latitude = latitudeTextView.getText().toString();
+        longitude = longitudeTextView.getText().toString();
 
         databaseInstructorsReference = FirebaseDatabase.getInstance().getReference().child("Instructors");
 
-        Instructors instructor_obj = new Instructors(name, email, password, userType);
+        Instructors instructor_obj = new Instructors(name, email, password, userType, latitude, longitude);
         FirebaseUser fbUser = auth.getCurrentUser();
 
         databaseInstructorsReference.child(fbUser.getUid()).setValue(instructor_obj)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "User details stored", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
+                        } else {
                             Toast.makeText(getApplicationContext(), "User data could not be saved", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -160,9 +239,56 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
 
-
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
+
+    public void getLocation() {
+        @SuppressLint("MissingPermission") Task<Location> locationTask = fusedLocationProviderClient.getLastLocation();
+        locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    latitudeTextView.setText(String.valueOf(location.getLatitude()));
+                    longitudeTextView.setText(String.valueOf(location.getLongitude()));
+                }
+            }
+        });
+
+        locationTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                latitudeTextView.setText("Unavailable");
+                longitudeTextView.setText("Unavailable");
+            }
+        });
+
+    }
+
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        latitudeTextView.setText(String.valueOf(location.getLatitude()));
+        longitudeTextView.setText(String.valueOf(location.getLongitude()));
+        Log.i("Location", String.valueOf(location.getLongitude()));
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Latitude","disable");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("Latitude","enable");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("Latitude","status");
+    }
+
 }
 

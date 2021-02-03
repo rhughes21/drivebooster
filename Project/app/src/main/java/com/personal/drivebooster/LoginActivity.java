@@ -37,13 +37,19 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
+        userId = "";
         editTextEmail = findViewById(R.id.email_edit_text);
         editTextPassword = findViewById(R.id.password_input_edit_text);
         buttonRegister = findViewById(R.id.no_account_text);
         loginButton= findViewById(R.id.user_login_button);
         auth = FirebaseAuth.getInstance();
     }
+
+   /*@Override
+    public void onResume(){
+        super.onResume();
+        userId = "";
+    }*/
 
     //method used to login. Check is the user exists in firebase authentication
     public void loginUser(View v){
@@ -85,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                     LoginActivity.this.finish();
                 }else if(!snapshot.hasChild(userId)){
                     userIsPupil = false;
-                    Intent j = new Intent(LoginActivity.this, InstructorMainActivity.class);
+                    Intent j = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(j);
                     LoginActivity.this.finish();
                 }

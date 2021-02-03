@@ -32,25 +32,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener, CustomInstructorAdapter.onInstructorNameListener {
 
     View view;
-    RecyclerView bookingsRecycler, manoeuvreRecycler;
+    RecyclerView bookingsRecycler, manoeuvreRecycler, instructorRecycler;
     FirebaseAuth auth;
     Button chooseInstructorButton;
     TextView noInstructorsText, myBookingsText;
     DatabaseReference databaseRef, dbUserRef,databaseBookingRef;
-    Spinner instructorChoiceSpinner;
     Boolean hasPickedInstructor = false;
     boolean instructorAvailable;
-    String instructorName;
+    double lessThanMyLng, moreThanMyLng;
+    String instructorName, myLng, instLng;
     CustomBookingsAdapter customBookingsAdapter;
+
     ManoeuvresAdapter manoeuvresAdapter;
-    ArrayList<String> instructorArray = new ArrayList<String>();
     final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
     List<Manoeuvres> manoeuvres = new ArrayList<Manoeuvres>();
     YouTubePlayerView manoeuvreYouTubePlayerView;
     Lifecycle lifecycle = getLifecycle();
+
+    CustomInstructorAdapter customInstructorAdapter;
+    final List<Instructors> instructorsFromFirebase = new ArrayList<Instructors>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -62,17 +66,27 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         }
 
         addManoeuvres();
-        getBookings();
 
+        instructorsFromFirebase.clear();
+        checkInstructorChosen();
+        getBookings();
+        getInstructorsFromFirebase();
         myBookingsText = view.findViewById(R.id.my_bookings_header);
         bookingsRecycler = view.findViewById(R.id.my_bookings_recycler);
-        LinearLayoutManager linearLayoutManagerBookings = new LinearLayoutManager(getContext());
-        bookingsRecycler.setLayoutManager(linearLayoutManagerBookings);
+        instructorRecycler = view.findViewById(R.id.my_instructors_recycler);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManagerTwo = new LinearLayoutManager(getContext());
+        bookingsRecycler.setLayoutManager(linearLayoutManager);
+        instructorRecycler.setLayoutManager(linearLayoutManagerTwo);
+
 
         manoeuvreRecycler = view.findViewById(R.id.manoeuvres_recycler);
         LinearLayoutManager linearLayoutManagerManoeuvres = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         manoeuvreRecycler.setLayoutManager(linearLayoutManagerManoeuvres);
 
+        customInstructorAdapter = new CustomInstructorAdapter(instructorsFromFirebase, this);
+
+        instructorRecycler.setAdapter(customInstructorAdapter);
         customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
         bookingsRecycler.setAdapter(customBookingsAdapter);
         manoeuvresAdapter = new ManoeuvresAdapter(manoeuvres, lifecycle);
@@ -80,10 +94,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();
-        instructorChoiceSpinner = view.findViewById(R.id.choose_instructor_spinner);
         noInstructorsText = view.findViewById(R.id.no_instructors_available);
-        getInstructors();
-        instructorChoiceSpinner.setOnItemSelectedListener(this);
 
         chooseInstructorButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +107,12 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         return view;
     }
 
+    public void getMyLongitudeDifference(){
+        double x = Double.parseDouble(getLng());
+
+        lessThanMyLng = x - 1;
+        moreThanMyLng = x + 1;
+    }
     public void setUpBookingsRecycler(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);
@@ -118,50 +135,32 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     public void setInstructorAvailable(boolean instructorAvailable){
         this.instructorAvailable = instructorAvailable;
     }
+    public String getLng(){
+        return myLng;
+    }
 
-    //method to retrieve all instructor names from firebase. Checks if instructors are available for selection.
-    public void getInstructors(){
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, instructorArray);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        instructorChoiceSpinner.setAdapter(spinnerArrayAdapter);
-
-        databaseRef = FirebaseDatabase.getInstance().getReference().child("Instructors");
-        databaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
-                    noInstructorsText.setVisibility(View.GONE);
-                    setInstructorAvailable(true);
-                    checkInstructorChosen();
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        String name = ds.child("name").getValue(String.class);
-                        instructorArray.add(name);
-                        spinnerArrayAdapter.notifyDataSetChanged();
-                    }
-                }else if(!snapshot.hasChildren()){
-                    setInstructorAvailable(false);
-                    noInstructorsText.setVisibility(View.VISIBLE);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+    public void setMyLng(String myLng){
+        this.myLng = myLng;
     }
 
     //method to set whether or not the choose instructor button and spinner should be shown
     public void setChooseInstructorVisibility(){
         if(getInstName().equals("not chosen") && getInstructorAvailable()){
             chooseInstructorButton.setVisibility(View.VISIBLE);
-            instructorChoiceSpinner.setVisibility(View.VISIBLE);
+            instructorRecycler.setVisibility(View.VISIBLE);
+            myBookingsText.setVisibility(View.INVISIBLE);
+            bookingsRecycler.setVisibility(View.INVISIBLE);
         }else if(!getInstName().equals("not chosen") && getInstructorAvailable()){
             noInstructorsText.setVisibility(View.GONE);
             chooseInstructorButton.setVisibility(View.GONE);
-            instructorChoiceSpinner.setVisibility(View.GONE);
+            instructorRecycler.setVisibility(View.GONE);
+            myBookingsText.setVisibility(View.VISIBLE);
+            bookingsRecycler.setVisibility(View.VISIBLE);
         }else{
             chooseInstructorButton.setVisibility(View.GONE);
-            instructorChoiceSpinner.setVisibility(View.GONE);
+            instructorRecycler.setVisibility(View.GONE);
+            myBookingsText.setVisibility(View.VISIBLE);
+            bookingsRecycler.setVisibility(View.VISIBLE);
         }
     }
 
@@ -187,6 +186,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.equals(null)) {
                     setInstName(snapshot.child("instructorName").getValue(String.class));
+                    setMyLng(snapshot.child("longitude").getValue(String.class));
                     setChooseInstructorVisibility();
                 }else if(snapshot.equals(null)){
                     Toast.makeText(getContext(), "You are an instructor", Toast.LENGTH_SHORT).show();
@@ -207,7 +207,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         dbUserRef.child(userId).child("instructorName").setValue(instructorName);
 
         chooseInstructorButton.setVisibility(View.GONE);
-        instructorChoiceSpinner.setVisibility(View.GONE);
+        instructorRecycler.setVisibility(View.GONE);
         hasPickedInstructor = true;
         Toast.makeText(getContext(), "Instructor chosen", Toast.LENGTH_SHORT).show();
     }
@@ -237,7 +237,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         });
     }
 
-    public void addManoeuvres(){
+
+    public void addManoeuvres() {
         Manoeuvres parallelPark = new Manoeuvres("FetKmuscFY8", "Parallel Parking");
         Manoeuvres bayPark = new Manoeuvres("NuDPbDkknRM", "Bay Parking");
         Manoeuvres reverseAroundCorner = new Manoeuvres("ABUeMYQHEoQ", "Reverse Around Corner");
@@ -247,5 +248,42 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         manoeuvres.add(bayPark);
         manoeuvres.add(reverseAroundCorner);
         manoeuvres.add(threePointTurn);
+    }
+
+    public void getInstructorsFromFirebase(){
+        databaseRef = FirebaseDatabase.getInstance().getReference().child("Instructors");
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChildren()){
+                    noInstructorsText.setVisibility(View.GONE);
+                    setInstructorAvailable(true);
+                    checkInstructorChosen();
+                    getMyLongitudeDifference();
+                    Iterable<DataSnapshot> children = snapshot.getChildren();
+                    for (DataSnapshot child: children){
+                        Instructors instructors = child.getValue(Instructors.class);
+                        instLng = instructors.longitude;
+                        if(Double.parseDouble(instLng) > lessThanMyLng && Double.parseDouble(instLng) < moreThanMyLng){
+                            instructorsFromFirebase.add(instructors);
+                            customInstructorAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }else if(!snapshot.hasChildren()){
+                    setInstructorAvailable(false);
+                    noInstructorsText.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onInstructorNameClick(int position) {
+        setInstName(instructorsFromFirebase.get(position).name);
     }
 }
