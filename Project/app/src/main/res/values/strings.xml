@@ -17,13 +17,17 @@
     <string name="create_booking">Create Booking</string>
     <string name="create_a_booking">Create a Booking</string>
     <string name="username">Username</string>
-    <string name="user_email">User email</string>
+    <string name="user_email">user@email.com</string>
     <string name="user_address">User address</string>
     <string name="instructor_name">Instructor name</string>
-    <string name="update_name">Update name</string>
+    <string name="update_details">Update details</string>
     <string name="your_details">Your details</string>
     <string name="my_details">My details</string>
     <string name="home_text">Home</string>
     <string name="my_bookings">My Bookings</string>
     <string name="get_my_coords">Get my Coordinates</string>
+    <string name="name">Name: </string>
+    <string name="email">Email: </string>
+    <string name="address">Address: </string>
+    <string name="instructor">Instructor: </string>
 </resources>

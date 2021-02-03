@@ -2,82 +2,156 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="8dp">
 
-    <LinearLayout
-        android:id="@+id/user_details_layout"
-        android:layout_marginStart="5dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/details_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/logout_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside">
 
         <TextView
-            android:id="@+id/your_details_view"
-            android:text="@string/your_details"
-            android:layout_marginStart="5dp"
-            android:textSize="25sp"
-            android:textColor="@color/gold"
-            android:textStyle="bold"
+            android:id="@+id/name_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-
-        <EditText
-            android:id="@+id/user_name"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp"
-            android:hint="@string/username"
-            android:textColor="@color/black"
-            android:fontFamily="sans-serif"
+            app:layout_constraintBottom_toTopOf="@id/user_name_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/user_name_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:layout_constraintBottom_toTopOf="@id/email_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name_title">
+
+            <EditText
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_transparent"
+                android:hint="@string/username"
+                android:padding="8dp"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/email_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/email"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/user_email"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/user_name_layout" />
 
         <TextView
             android:id="@+id/user_email"
-            android:layout_marginEnd="5dp"
-            android:textSize="20sp"
-            android:layout_marginStart="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:hint="@string/user_email"
-            android:textColor="@color/black"
-            android:fontFamily="sans-serif"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-
-        <EditText
-            android:id="@+id/user_address"
+            android:textColor="@color/colorPrimaryLight"
             android:textSize="20sp"
-            android:fontFamily="sans-serif"
-            android:hint="@string/user_address"
-            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@id/address_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_title"
+            tools:text="fakeaddress@gmail.com" />
+
+        <TextView
+            android:id="@+id/address_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/address"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/user_address_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/user_email" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/user_address_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:layout_constraintBottom_toTopOf="@id/instructor_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/address_title">
+
+            <EditText
+                android:id="@+id/user_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_transparent"
+                android:hint="@string/user_address"
+                android:padding="8dp"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/instructor_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/instructor"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/user_instructor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/user_address_layout" />
 
         <TextView
             android:id="@+id/user_instructor"
-            android:textSize="20sp"
-            android:hint="@string/instructor_name"
-            android:layout_marginStart="3dp"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/black"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="@string/instructor_name"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/update_user_details_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instructor_title" />
 
         <Button
             android:id="@+id/update_user_details_button"
             android:layout_width="wrap_content"
-            android:layout_marginTop="50dp"
             android:layout_height="wrap_content"
-            android:text="@string/update_name"
             android:layout_gravity="end"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/large_button_drawable"
+            android:padding="8dp"
+            android:text="@string/update_details"
             android:textColor="@color/white"
-            android:background="@drawable/large_button_drawable"/>
-    </LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/user_instructor" />
 
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/logout_button"
@@ -90,6 +164,7 @@
         android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_layout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

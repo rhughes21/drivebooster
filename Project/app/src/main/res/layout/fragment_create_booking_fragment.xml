@@ -10,10 +10,10 @@
         android:id="@+id/horizontal_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gold"
+        android:background="@color/colorAccent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/time_date_chosen_layout"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/time_date_chosen_layout"
@@ -45,7 +45,7 @@
         android:id="@+id/time_list_view"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:divider="@color/gold"
+        android:divider="@color/colorPrimary"
         app:layout_constraintTop_toBottomOf="@id/time_date_chosen_layout"
         android:dividerHeight="2dp"
         app:layout_constraintStart_toStartOf="parent"/>

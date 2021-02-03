@@ -28,7 +28,7 @@ public class PupilDetailsFragment extends Fragment {
 
     View view;
     EditText userNameView;
-    TextView yourDetailsView, userInstructorTextView, userEmailView;
+    TextView userInstructorTextView, userEmailView;
     DatabaseReference  dbUserRef;
     Button logoutButton, updateDetailsButton;
     @Nullable
@@ -39,7 +39,6 @@ public class PupilDetailsFragment extends Fragment {
             fm.popBackStack();
         }
         view = inflater.inflate(R.layout.pupil_my_details_fragment, container, false);
-        yourDetailsView = view.findViewById(R.id.your_details_view);
         userNameView = view.findViewById(R.id.user_name);
         userEmailView = view.findViewById(R.id.user_email);
         userInstructorTextView = view.findViewById(R.id.user_instructor);

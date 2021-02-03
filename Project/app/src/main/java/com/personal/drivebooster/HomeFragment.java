@@ -130,14 +130,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             myBookingsText.setVisibility(View.INVISIBLE);
             bookingsRecycler.setVisibility(View.INVISIBLE);
         }else if(!getInstName().equals("not chosen") && getInstructorAvailable()){
-            noInstructorsText.setVisibility(View.GONE);
-            chooseInstructorButton.setVisibility(View.GONE);
-            instructorRecycler.setVisibility(View.GONE);
+//            noInstructorsText.setVisibility(View.GONE);
+//            chooseInstructorButton.setVisibility(View.GONE);
+//            instructorRecycler.setVisibility(View.GONE);
             myBookingsText.setVisibility(View.VISIBLE);
             bookingsRecycler.setVisibility(View.VISIBLE);
         }else{
-            chooseInstructorButton.setVisibility(View.GONE);
-            instructorRecycler.setVisibility(View.GONE);
+//            chooseInstructorButton.setVisibility(View.GONE);
+//            instructorRecycler.setVisibility(View.GONE);
             myBookingsText.setVisibility(View.VISIBLE);
             bookingsRecycler.setVisibility(View.VISIBLE);
         }
@@ -185,8 +185,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
         dbUserRef.child(userId).child("instructorName").setValue(instructorName);
 
-        chooseInstructorButton.setVisibility(View.GONE);
-        instructorRecycler.setVisibility(View.GONE);
+//        chooseInstructorButton.setVisibility(View.GONE);
+//        instructorRecycler.setVisibility(View.GONE);
         hasPickedInstructor = true;
         Toast.makeText(getContext(), "Instructor chosen", Toast.LENGTH_SHORT).show();
     }
