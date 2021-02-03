@@ -5,17 +5,12 @@
     android:layout_marginStart="5dp"
     android:layout_marginEnd="5dp">
 
-    <ImageView
-        android:id="@+id/recycler_pupil_image"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"/>
     <TextView
         android:id="@+id/recycler_pupil_name"
-        android:textSize="15sp"
+        android:textSize="30sp"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 
     <View
         android:layout_width="match_parent"

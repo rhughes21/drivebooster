@@ -74,7 +74,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         bookingsRecycler.setAdapter(customBookingsAdapter);
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();
-        //instructorChoiceSpinner = view.findViewById(R.id.choose_instructor_spinner);
         noInstructorsText = view.findViewById(R.id.no_instructors_available);
 
         chooseInstructorButton.setOnClickListener(new View.OnClickListener() {

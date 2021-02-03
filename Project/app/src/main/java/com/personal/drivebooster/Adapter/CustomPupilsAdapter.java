@@ -50,11 +50,9 @@ public class CustomPupilsAdapter extends RecyclerView.Adapter {
     public class viewHolder extends RecyclerView.ViewHolder{
 
         TextView pupilName;
-        ImageView pupilImage;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             pupilName = itemView.findViewById(R.id.recycler_pupil_name);
-            pupilImage = itemView.findViewById(R.id.recycler_pupil_image);
 
         }
     }
