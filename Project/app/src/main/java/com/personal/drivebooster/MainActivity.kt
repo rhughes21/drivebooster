@@ -18,12 +18,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.home_fragment.*
 
 var userIsPupil : Boolean = false
 
 var userId: String? = null
 var user = FirebaseAuth.getInstance().currentUser
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,7 +38,6 @@ class MainActivity : AppCompatActivity() {
             val actionBar: ActionBar? = supportActionBar
             actionBar?.setDisplayHomeAsUpEnabled(false)
         }
-
     }
 
     override fun onResume() {

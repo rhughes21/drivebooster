@@ -16,7 +16,7 @@ class SplashActivity : Activity() {
     var userId: String? = null
     var userIsPupil = false
     var dbReference: DatabaseReference? = null
-     var container: ImageView? = null
+    var container: ImageView? = null
     private var animationDrawable: AnimationDrawable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
