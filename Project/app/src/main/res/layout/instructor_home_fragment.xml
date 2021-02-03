@@ -6,29 +6,39 @@
 
     <TextView
         android:id="@+id/instructor_bookings_header"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/my_bookings"
-        android:layout_marginStart="3dp"
-        android:textSize="25sp"
-        android:textColor="@color/gold"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toTopOf="@id/instructor_bookings_recycler"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/instructor_bookings_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/instructor_bookings_header"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/instructor_logout_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/colorPrimaryLight30"
+        android:padding="4dp"/>
 
     <Button
         android:id="@+id/instructor_logout_button"
-        android:text="@string/logout"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
+        android:layout_marginTop="8dp"
         android:layout_height="wrap_content"
+        android:text="@string/logout"
+        android:textColor="@color/white"
+        android:background="@drawable/large_button_drawable"
         app:layout_constraintTop_toBottomOf="@id/instructor_bookings_recycler"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
