@@ -54,9 +54,9 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
             Log.d("DIDN'T WORK", "BLAH BLAH");
         }
         if (rowindex == position) {
-            myViewHolder.instructorCardView.setCardBackgroundColor(ContextCompat.getColor(get));
+            myViewHolder.instructorCardView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorAccentLight));
         } else {
-            holder.itemView.setSelected(false);
+            myViewHolder.instructorCardView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
         }
     }
 

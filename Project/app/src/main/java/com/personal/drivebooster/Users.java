@@ -23,5 +23,7 @@ public class Users {
         this.longitude = longitude;
     }
 
+    public Users(){}
+
 
 }

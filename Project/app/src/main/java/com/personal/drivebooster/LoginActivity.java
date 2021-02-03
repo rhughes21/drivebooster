@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,7 +14,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,13 +35,19 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
+        userId = "";
         editTextEmail = findViewById(R.id.email_edit_text);
         editTextPassword = findViewById(R.id.password_input_edit_text);
-        buttonRegister = findViewById(R.id.no_account_text);
+        buttonRegister = findViewById(R.id.no_account_button);
         loginButton= findViewById(R.id.user_login_button);
         auth = FirebaseAuth.getInstance();
     }
+
+   /*@Override
+    public void onResume(){
+        super.onResume();
+        userId = "";
+    }*/
 
     //method used to login. Check is the user exists in firebase authentication
     public void loginUser(View v){
@@ -85,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                     LoginActivity.this.finish();
                 }else if(!snapshot.hasChild(userId)){
                     userIsPupil = false;
-                    Intent j = new Intent(LoginActivity.this, InstructorMainActivity.class);
+                    Intent j = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(j);
                     LoginActivity.this.finish();
                 }

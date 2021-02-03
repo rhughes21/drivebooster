@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,14 +25,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener, CustomInstructorAdapter.onInstructorNameListener {
 
     View view;
-    RecyclerView bookingsRecycler, instructorRecycler;
+    RecyclerView bookingsRecycler, manoeuvreRecycler, instructorRecycler;
     FirebaseAuth auth;
     Button chooseInstructorButton;
     TextView noInstructorsText, myBookingsText;
@@ -41,9 +45,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     double lessThanMyLng, moreThanMyLng;
     String instructorName, myLng, instLng;
     CustomBookingsAdapter customBookingsAdapter;
-    CustomInstructorAdapter customInstructorAdapter;
-    final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
 
+    ManoeuvresAdapter manoeuvresAdapter;
+    final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
+    List<Manoeuvres> manoeuvres = new ArrayList<Manoeuvres>();
+    YouTubePlayerView manoeuvreYouTubePlayerView;
+    Lifecycle lifecycle = getLifecycle();
+
+    CustomInstructorAdapter customInstructorAdapter;
     final List<Instructors> instructorsFromFirebase = new ArrayList<Instructors>();
 
 
@@ -55,6 +64,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
+
+        addManoeuvres();
+
         instructorsFromFirebase.clear();
         checkInstructorChosen();
         getBookings();
@@ -67,14 +79,21 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         bookingsRecycler.setLayoutManager(linearLayoutManager);
         instructorRecycler.setLayoutManager(linearLayoutManagerTwo);
 
+
+        manoeuvreRecycler = view.findViewById(R.id.manoeuvres_recycler);
+        LinearLayoutManager linearLayoutManagerManoeuvres = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        manoeuvreRecycler.setLayoutManager(linearLayoutManagerManoeuvres);
+
         customInstructorAdapter = new CustomInstructorAdapter(instructorsFromFirebase, this);
 
         instructorRecycler.setAdapter(customInstructorAdapter);
         customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
         bookingsRecycler.setAdapter(customBookingsAdapter);
+        manoeuvresAdapter = new ManoeuvresAdapter(manoeuvres, lifecycle);
+        manoeuvreRecycler.setAdapter(manoeuvresAdapter);
+
         chooseInstructorButton = view.findViewById(R.id.instructor_choice_button);
         auth = FirebaseAuth.getInstance();
-        //instructorChoiceSpinner = view.findViewById(R.id.choose_instructor_spinner);
         noInstructorsText = view.findViewById(R.id.no_instructors_available);
 
         chooseInstructorButton.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +102,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                 chooseInstructor();
             }
         });
+
+
         return view;
     }
 
@@ -130,14 +151,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             myBookingsText.setVisibility(View.INVISIBLE);
             bookingsRecycler.setVisibility(View.INVISIBLE);
         }else if(!getInstName().equals("not chosen") && getInstructorAvailable()){
-//            noInstructorsText.setVisibility(View.GONE);
-//            chooseInstructorButton.setVisibility(View.GONE);
-//            instructorRecycler.setVisibility(View.GONE);
+            noInstructorsText.setVisibility(View.GONE);
+            chooseInstructorButton.setVisibility(View.GONE);
+            instructorRecycler.setVisibility(View.GONE);
             myBookingsText.setVisibility(View.VISIBLE);
             bookingsRecycler.setVisibility(View.VISIBLE);
         }else{
-//            chooseInstructorButton.setVisibility(View.GONE);
-//            instructorRecycler.setVisibility(View.GONE);
+            chooseInstructorButton.setVisibility(View.GONE);
+            instructorRecycler.setVisibility(View.GONE);
             myBookingsText.setVisibility(View.VISIBLE);
             bookingsRecycler.setVisibility(View.VISIBLE);
         }
@@ -185,8 +206,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
         dbUserRef.child(userId).child("instructorName").setValue(instructorName);
 
-//        chooseInstructorButton.setVisibility(View.GONE);
-//        instructorRecycler.setVisibility(View.GONE);
+        chooseInstructorButton.setVisibility(View.GONE);
+        instructorRecycler.setVisibility(View.GONE);
         hasPickedInstructor = true;
         Toast.makeText(getContext(), "Instructor chosen", Toast.LENGTH_SHORT).show();
     }
@@ -214,6 +235,19 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
             }
         });
+    }
+
+
+    public void addManoeuvres() {
+        Manoeuvres parallelPark = new Manoeuvres("FetKmuscFY8", "Parallel Parking");
+        Manoeuvres bayPark = new Manoeuvres("NuDPbDkknRM", "Bay Parking");
+        Manoeuvres reverseAroundCorner = new Manoeuvres("ABUeMYQHEoQ", "Reverse Around Corner");
+        Manoeuvres threePointTurn = new Manoeuvres("FB9huB-DelU", "3-Point Turn");
+
+        manoeuvres.add(parallelPark);
+        manoeuvres.add(bayPark);
+        manoeuvres.add(reverseAroundCorner);
+        manoeuvres.add(threePointTurn);
     }
 
     public void getInstructorsFromFirebase(){

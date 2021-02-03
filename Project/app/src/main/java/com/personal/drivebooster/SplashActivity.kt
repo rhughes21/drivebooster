@@ -16,7 +16,7 @@ class SplashActivity : Activity() {
     var userId: String? = null
     var userIsPupil = false
     var dbReference: DatabaseReference? = null
-     var container: ImageView? = null
+    var container: ImageView? = null
     private var animationDrawable: AnimationDrawable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +92,7 @@ class SplashActivity : Activity() {
                     this@SplashActivity.finish()
                 } else if (!snapshot.hasChild(userId!!)) {
                     userIsPupil = false
-                    val j = Intent(this@SplashActivity, InstructorMainActivity::class.java)
+                    val j = Intent(this@SplashActivity, MainActivity::class.java)
                     startActivity(j)
                     this@SplashActivity.finish()
                 }
