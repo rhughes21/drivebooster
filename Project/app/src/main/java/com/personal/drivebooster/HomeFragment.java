@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.transform.dom.DOMLocator;
+
 public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener, CustomInstructorAdapter.onInstructorNameListener {
 
     View view;
@@ -43,7 +45,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     Boolean hasPickedInstructor = false;
     boolean instructorAvailable;
     double lessThanMyLng, moreThanMyLng;
-    String instructorName, myLng, instLng;
+    String instructorName;
+    Double instLng, myLng;
     CustomBookingsAdapter customBookingsAdapter;
 
     ManoeuvresAdapter manoeuvresAdapter;
@@ -108,7 +111,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     public void getMyLongitudeDifference(){
-        double x = Double.parseDouble(getLng());
+        double x = getLng();
 
         lessThanMyLng = x - 1;
         moreThanMyLng = x + 1;
@@ -135,11 +138,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     public void setInstructorAvailable(boolean instructorAvailable){
         this.instructorAvailable = instructorAvailable;
     }
-    public String getLng(){
+    public Double getLng(){
         return myLng;
     }
 
-    public void setMyLng(String myLng){
+    public void setMyLng(Double myLng){
         this.myLng = myLng;
     }
 
@@ -186,7 +189,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.equals(null)) {
                     setInstName(snapshot.child("instructorName").getValue(String.class));
-                    setMyLng(snapshot.child("longitude").getValue(String.class));
+                    setMyLng(snapshot.child("longitude").getValue(Double.class));
                     setChooseInstructorVisibility();
                 }else if(snapshot.equals(null)){
                     Toast.makeText(getContext(), "You are an instructor", Toast.LENGTH_SHORT).show();
@@ -264,7 +267,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                     for (DataSnapshot child: children){
                         Instructors instructors = child.getValue(Instructors.class);
                         instLng = instructors.longitude;
-                        if(Double.parseDouble(instLng) > lessThanMyLng && Double.parseDouble(instLng) < moreThanMyLng){
+                        if(instLng > lessThanMyLng && instLng < moreThanMyLng){
                             instructorsFromFirebase.add(instructors);
                             customInstructorAdapter.notifyDataSetChanged();
                         }

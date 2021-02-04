@@ -52,6 +52,13 @@
             android:layout_height="wrap_content"
             android:padding="10dp"/>
 
+
+        <fragment android:id="@+id/autocomplete_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
+
         <TextView
             android:id="@+id/register_longitude"
             android:layout_width="match_parent"
@@ -63,12 +70,6 @@
             android:layout_height="wrap_content"
             android:padding="15dp"/>
 
-        <Button
-            android:id="@+id/get_my_coords_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/get_my_coords"
-            android:padding="15dp"/>
 
         <Spinner
             android:id="@+id/user_type_spinner"
