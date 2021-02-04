@@ -35,4 +35,8 @@
     <string name="enter_email">Enter email address</string>
     <string name="enter_password">Enter password</string>
     <string name="api_key">AIzaSyDgxUH4MzNuwc5aICu55bb4f_thfS1ab_I</string>
+    <string name="add_time">Add time</string>
+    <string name="show_times_fragment">Show Times Fragment</string>
+    <string name="set_up_times">Set up my times</string>
+    <string name="set_time">Set time</string>
 </resources>
