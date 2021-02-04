@@ -3,16 +3,28 @@
     android:id="@+id/animation_list_splash"
     android:oneshot="true">
     <item
-        android:drawable="@drawable/driving_splash"
-        android:duration="500" />
+        android:drawable="@drawable/db_splash_blue"
+        android:duration="250" />
     <item
-        android:drawable="@drawable/l_plate_splash"
-        android:duration="500" />
+        android:drawable="@drawable/db_splash_white"
+        android:duration="250" />
     <item
-        android:drawable="@drawable/passed_splash"
-        android:duration="500" />
+        android:drawable="@drawable/db_splash_blue"
+        android:duration="250" />
     <item
-        android:drawable="@drawable/drive_safe_splash"
-        android:duration="500" />
+        android:drawable="@drawable/db_splash_white"
+        android:duration="250" />
+    <item
+        android:drawable="@drawable/db_splash_blue"
+        android:duration="250" />
+    <item
+        android:drawable="@drawable/db_splash_white"
+        android:duration="250" />
+    <item
+        android:drawable="@drawable/db_splash_blue"
+        android:duration="250" />
+    <item
+        android:drawable="@drawable/db_splash_white"
+        android:duration="250" />
 
 </animation-list>
