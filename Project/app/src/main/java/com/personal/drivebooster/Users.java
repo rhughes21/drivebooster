@@ -2,6 +2,8 @@ package com.personal.drivebooster;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Users {
 
     public String name;
@@ -9,11 +11,12 @@ public class Users {
     public String password;
     public String userType;
     public String instructorName;
-    public String latitude;
-    public String longitude;
+    public Double latitude;
+    public Double longitude;
+    public String fullAddress;
 
     //constructor for creating a new user and storing in firebase when registering
-    public Users(String name, String email, String password, String userType, String instructorName, String latitude, String longitude) {
+    public Users(String name, String email, String password, String userType, String instructorName, Double latitude, Double longitude, String fullAddress) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -21,6 +24,7 @@ public class Users {
         this.instructorName = instructorName;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.fullAddress= fullAddress;
     }
 
     public Users(){}
