@@ -31,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.harrywhewell.scrolldatepicker.DayScrollDatePicker;
 import com.harrywhewell.scrolldatepicker.OnDateSelectedListener;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,14 +44,15 @@ public class CreateBookingFragment extends Fragment  {
         View view;
         FirebaseUser currentUser;
         String userId;
-        DatabaseReference dbUserRef,databaseBookingRef, databaseCreateBookingRef;
+        DatabaseReference dbUserRef,databaseBookingRef, databaseCreateBookingRef, databaseScheduleRef;
         DayScrollDatePicker dayPicker;
-        TextView datePickedText, timePickedText;
+        TextView datePickedText, timePickedText, noTimeAvailableView;
         ListView timeListView;
-        String dateString, timeString, instructorName;
+        String dateString, timeString, instructorName, dateDay, instructorId;
         Button createBookingButton;
-        boolean canBookLesson;
+        boolean canBookLesson, canUseTime;
         final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
+       final List<String> instructorScheduleFromFirebase = new ArrayList<String>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class CreateBookingFragment extends Fragment  {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userId = currentUser.getUid();
         getBookings();
+        getInstructorIdFromFirebase();
         timeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -88,8 +91,8 @@ public class CreateBookingFragment extends Fragment  {
         timeListView = view.findViewById(R.id.time_list_view);
         timePickedText = view.findViewById(R.id.time_value_text_view);
         createBookingButton = view.findViewById(R.id.create_booking_button);
+        noTimeAvailableView = view.findViewById(R.id.no_times_available);
         setUpPicker();
-        setUpListView();
 
     }
 
@@ -104,10 +107,15 @@ public class CreateBookingFragment extends Fragment  {
         dayPicker.getSelectedDate(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@Nullable Date date) {
+
                 if(date != null){
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
                     dateString = dateFormat.format(date);
-                    datePickedText.setText(dateString);
+                    dateDay = sdf.format(date);
+                    datePickedText.setText(dateDay);
+                    instructorScheduleFromFirebase.clear();
+                    getInstructorSchedule();
                 }
             }
         });
@@ -127,7 +135,7 @@ public class CreateBookingFragment extends Fragment  {
     //method to set up the ListView using the times array
     public void setUpListView(){
         setUpTimes();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, setUpTimes());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, instructorScheduleFromFirebase);
         timeListView.setAdapter(adapter);
     }
 
@@ -139,6 +147,15 @@ public class CreateBookingFragment extends Fragment  {
     public void setInstName(String instructorName){
         this.instructorName = instructorName;
     }
+
+    public String getInstId(){
+        return instructorId;
+    }
+
+    public void setInstId(String instructorId){
+        this.instructorId = instructorId;
+    }
+
 
 
     //method used to create a booking and push to firebase. Also include checks for bookings already in the database.
@@ -171,19 +188,26 @@ public class CreateBookingFragment extends Fragment  {
                 }
 
                 if(canBookLesson){
-                    Bookings bookingObj = new Bookings(userId, userName, getInstName(), timeString, dateString, userAddress);
+                    Bookings bookingObj = new Bookings(userId, userName, getInstName(), timeString, dateString, userAddress, dateDay);
 
-                    databaseCreateBookingRef.push().setValue(bookingObj)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getContext(), "Booking complete", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(), "could  not complete booking", Toast.LENGTH_SHORT).show();
+                    if(dateString == null || timeString == null || dateDay == null){
+                        Toast.makeText(getContext(), "Make sure you have chosen a date and time", Toast.LENGTH_SHORT).show();
+                    }else if(getInstName().equals("not chosen")){
+                        Toast.makeText(getContext(), "Please choose an instructor on the home screen before booking", Toast.LENGTH_SHORT).show();
+                    }else{
+                        databaseCreateBookingRef.push().setValue(bookingObj)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(getContext(), "Booking complete", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getContext(), "could  not complete booking", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                    }
+
                 }
             }
             @Override
@@ -212,6 +236,61 @@ public class CreateBookingFragment extends Fragment  {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    public void getInstructorIdFromFirebase(){
+        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+        dbUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                setInstId(snapshot.child("instructorId").getValue(String.class));
+                setInstName(snapshot.child("instructorName").getValue(String.class));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    public void getInstructorSchedule(){
+        databaseScheduleRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(getInstId()).child("Times").child(dateDay).child("times");
+        databaseScheduleRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChildren()){
+                    Iterable<DataSnapshot> children = snapshot.getChildren();
+                    for (DataSnapshot child : children) {
+                        String t = child.getValue(String.class);
+                        canUseTime = true;
+                        for(int i = 0; i< bookingsFromFirebase.size(); i++){
+                            if (bookingsFromFirebase.get(i).bookingDate.equals(dateString)) {
+                                if (bookingsFromFirebase.get(i).instructorName.equals(getInstName()) && bookingsFromFirebase.get(i).bookingTime.equals(t)) {
+                                    Log.i("INSTRUCTOR HAS THE TIME", t);
+                                    canUseTime = false;
+                                    break;
+                                } else {
+                                    canUseTime = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(canUseTime){
+                            instructorScheduleFromFirebase.add(t);
+                        }
+                    }
+
+                    timeListView.setVisibility(View.VISIBLE);
+                    noTimeAvailableView.setVisibility(View.GONE);
+                    setUpListView();
+                }else{
+                    noTimeAvailableView.setVisibility(View.VISIBLE);
+                    timeListView.setVisibility(View.INVISIBLE);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }

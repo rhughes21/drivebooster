@@ -49,4 +49,5 @@
     <string name="set_up_times">Set up my times</string>
     <string name="set_time">Set time</string>
     <string name="submit_my_times">Submit Times</string>
+    <string name="no_times_available">Times unavailable, try another day</string>
 </resources>
