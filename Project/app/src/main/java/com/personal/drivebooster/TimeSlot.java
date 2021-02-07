@@ -9,4 +9,8 @@ public class TimeSlot {
     public TimeSlot( List<String> times) {
         this.times = times;
     }
+
+    public TimeSlot(){
+
+    }
 }
