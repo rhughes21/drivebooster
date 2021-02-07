@@ -1,18 +1,12 @@
 package com.personal.drivebooster;
 
+import java.util.List;
+
 public class TimeSlot {
 
-    private long slot;
+    public List<String> times;
 
-    public TimeSlot() {
-    }
-
-
-    public long getSlot() {
-        return slot;
-    }
-
-    public void setSlot(long slot) {
-        this.slot = slot;
+    public TimeSlot( List<String> times) {
+        this.times = times;
     }
 }

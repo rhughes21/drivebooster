@@ -5,6 +5,15 @@
         <item>Pupil</item>
         <item>Instructor</item>
     </string-array>
+    <string-array name="day_type_array">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login">Login</string>
@@ -35,4 +44,9 @@
     <string name="enter_email">Enter email address</string>
     <string name="enter_password">Enter password</string>
     <string name="api_key">AIzaSyDgxUH4MzNuwc5aICu55bb4f_thfS1ab_I</string>
+    <string name="add_time">Add time</string>
+    <string name="show_times_fragment">Show Times Fragment</string>
+    <string name="set_up_times">Set up my times</string>
+    <string name="set_time">Set time</string>
+    <string name="submit_my_times">Submit Times</string>
 </resources>
