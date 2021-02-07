@@ -24,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
@@ -42,10 +43,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     Button chooseInstructorButton;
     TextView noInstructorsText, myBookingsText;
     DatabaseReference databaseRef, dbUserRef,databaseBookingRef;
+    Query databaseQuery;
     Boolean hasPickedInstructor = false;
     boolean instructorAvailable;
     double lessThanMyLng, moreThanMyLng;
-    String instructorName;
+    String instructorName, instructorId;
     Double instLng, myLng;
     CustomBookingsAdapter customBookingsAdapter;
 
@@ -132,6 +134,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         this.instructorName = instructorName;
     }
 
+    public String getInstId(){
+        return instructorId;
+    }
+
+    public void setInstId(String instructorId){
+        this.instructorId = instructorId;
+    }
+
     public boolean getInstructorAvailable(){
         return instructorAvailable;
     }
@@ -208,7 +218,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         String userId = currentUser.getUid();
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
         dbUserRef.child(userId).child("instructorName").setValue(instructorName);
-
+        dbUserRef.child(userId).child("instructorId").setValue(getInstId());
         chooseInstructorButton.setVisibility(View.GONE);
         instructorRecycler.setVisibility(View.GONE);
         hasPickedInstructor = true;
@@ -288,5 +298,18 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     @Override
     public void onInstructorNameClick(int position) {
         setInstName(instructorsFromFirebase.get(position).name);
+
+        databaseQuery = FirebaseDatabase.getInstance().getReference().child("Instructors").orderByChild("name").equalTo(getInstName());
+        databaseQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
+                    setInstId(childSnapshot.getKey());
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 }

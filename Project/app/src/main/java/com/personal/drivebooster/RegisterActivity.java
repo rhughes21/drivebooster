@@ -73,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     EditText editTextUsername, editTextEmail, editTextPassword, editTextPasswordCnf, registerFullAddress;
     FirebaseAuth auth;
     DatabaseReference databaseUsersReference, databaseInstructorsReference, databaseRef, dbUserRef;
-    String userType, instructorName;
+    String userType, instructorName, instructorId;
     Spinner userSpinner;
     TextView latitudeTextView, longitudeTextView;
     LocationManager locationManager;
@@ -237,9 +237,10 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         fullAddress = registerFullAddress.getText().toString();
 
         instructorName = "not chosen";
+        instructorId = "";
         databaseUsersReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        Users user_obj = new Users(name, email, password, userType, instructorName, getLatitude(), getLongitude(), fullAddress);
+        Users user_obj = new Users(name, email, password, userType, instructorName, instructorId, getLatitude(), getLongitude(), fullAddress);
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         databaseUsersReference.child(firebaseUser.getUid()).setValue(user_obj)

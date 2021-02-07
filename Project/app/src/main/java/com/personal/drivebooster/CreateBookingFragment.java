@@ -153,6 +153,10 @@ public class CreateBookingFragment extends Fragment  {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 DataSnapshot ds = snapshot.child("instructorName");
+                DataSnapshot userNameFb = snapshot.child("name");
+                DataSnapshot userAddressFb = snapshot.child("fullAddress");
+                String userName = userNameFb.getValue(String.class);
+                String userAddress = userAddressFb.getValue(String.class);
                 setInstName(ds.getValue(String.class));
                 canBookLesson = true;
                 for(int i=0; i < bookingsFromFirebase.size(); i++){
@@ -167,7 +171,7 @@ public class CreateBookingFragment extends Fragment  {
                 }
 
                 if(canBookLesson){
-                    Bookings bookingObj = new Bookings(userId, getInstName(), timeString, dateString);
+                    Bookings bookingObj = new Bookings(userId, userName, getInstName(), timeString, dateString, userAddress);
 
                     databaseCreateBookingRef.push().setValue(bookingObj)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
