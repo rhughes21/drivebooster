@@ -18,6 +18,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,9 +30,14 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.transform.dom.DOMLocator;
@@ -38,18 +45,19 @@ import javax.xml.transform.dom.DOMLocator;
 public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener, CustomInstructorAdapter.onInstructorNameListener {
 
     View view;
-    RecyclerView bookingsRecycler, manoeuvreRecycler, instructorRecycler;
+    RecyclerView bookingsRecycler, manoeuvreRecycler, instructorRecycler, previousBookingsRecycler;
     FirebaseAuth auth;
     Button chooseInstructorButton;
-    TextView noInstructorsText, myBookingsText;
-    DatabaseReference databaseRef, dbUserRef,databaseBookingRef;
+    TextView noInstructorsText, myBookingsText, previousBookingsText;
+    DatabaseReference databaseRef, dbUserRef,databaseBookingRef, previousBookingsReference;
     Query databaseQuery;
     Boolean hasPickedInstructor = false;
     boolean instructorAvailable;
     double lessThanMyLng, moreThanMyLng;
     String instructorName, instructorId;
     Double instLng, myLng;
-    CustomBookingsAdapter customBookingsAdapter;
+    CustomBookingsAdapter customBookingsAdapter, customPreviousBookingAdapter;
+    Date currentDate;
 
     ManoeuvresAdapter manoeuvresAdapter;
     final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
@@ -59,6 +67,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     CustomInstructorAdapter customInstructorAdapter;
     final List<Instructors> instructorsFromFirebase = new ArrayList<Instructors>();
+
+    final List<Bookings> previousBookingsFromFirebase = new ArrayList<>();
 
 
     @Override
@@ -70,16 +80,21 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             fm.popBackStack();
         }
 
+        updatePreviousBookings();
         addManoeuvres();
-
+        currentDate = Calendar.getInstance().getTime();
         instructorsFromFirebase.clear();
         checkInstructorChosen();
         getBookings();
+        getPreviousBookings();
         getInstructorsFromFirebase();
         myBookingsText = view.findViewById(R.id.my_bookings_header);
         bookingsRecycler = view.findViewById(R.id.my_bookings_recycler);
+        previousBookingsRecycler = view.findViewById(R.id.previous_bookings_recycler);
+        previousBookingsText = view.findViewById(R.id.previous_bookings_header);
         instructorRecycler = view.findViewById(R.id.my_instructors_recycler);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager previousLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager linearLayoutManagerTwo = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);
         instructorRecycler.setLayoutManager(linearLayoutManagerTwo);
@@ -93,7 +108,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
         instructorRecycler.setAdapter(customInstructorAdapter);
         customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
+        customPreviousBookingAdapter = new CustomBookingsAdapter(previousBookingsFromFirebase);
+        previousBookingsRecycler.setLayoutManager(previousLinearLayoutManager);
         bookingsRecycler.setAdapter(customBookingsAdapter);
+        previousBookingsRecycler.setAdapter(customPreviousBookingAdapter);
         manoeuvresAdapter = new ManoeuvresAdapter(manoeuvres, lifecycle);
         manoeuvreRecycler.setAdapter(manoeuvresAdapter);
 
@@ -236,10 +254,96 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Bookings bookings = child.getValue(Bookings.class);
-                        if(bookings.pupilId.equals(userId)) {
+                        if(bookings.pupilId.equals(userId) ) {
                             bookingsFromFirebase.add(bookings);
                             customBookingsAdapter.notifyDataSetChanged();
                         }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void getPreviousBookings(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = currentUser.getUid();
+        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
+        databaseBookingRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChildren()) {
+                    Iterable<DataSnapshot> children = snapshot.getChildren();
+                    for (DataSnapshot child : children) {
+                        Bookings bookings = child.getValue(Bookings.class);
+                        if(bookings.pupilId.equals(userId) ) {
+                            previousBookingsFromFirebase.add(bookings);
+                            customPreviousBookingAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void updatePreviousBookings(){
+        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
+        databaseBookingRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChildren()) {
+                    Iterable<DataSnapshot> children = snapshot.getChildren();
+                    for (DataSnapshot child : children) {
+                        Bookings bookingsP = child.getValue(Bookings.class);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
+                        try {
+                            Date bDate = dateFormat.parse(bookingsP.bookingDate);
+                            if(currentDate.after(bDate)) {
+                                Query removeOutdatedBookings = databaseBookingRef.orderByChild("bookingDate").equalTo(bookingsP.bookingDate);
+                                removeOutdatedBookings.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot bookingSnap: snapshot.getChildren()){
+                                            bookingSnap.getRef().removeValue();
+                                            break;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                                previousBookingsReference = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
+                                previousBookingsReference.push().setValue(bookingsP)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    //Toast.makeText(getContext(), "Previous bookings updated", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(getContext(), "Couldn't update previous bookings", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+
+
+                                break;
+                            }else{
+                                //do nothing
+                            }
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }
             }
