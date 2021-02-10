@@ -58,6 +58,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     Double instLng, myLng;
     CustomBookingsAdapter customBookingsAdapter, customPreviousBookingAdapter;
     Date currentDate;
+    Calendar calendar;
 
     ManoeuvresAdapter manoeuvresAdapter;
     final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
@@ -81,12 +82,16 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         }
 
         updatePreviousBookings();
+        getPreviousBookings();
         addManoeuvres();
-        currentDate = Calendar.getInstance().getTime();
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        currentDate = calendar.getTime();
+        previousBookingsFromFirebase.clear();
         instructorsFromFirebase.clear();
+        bookingsFromFirebase.clear();
         checkInstructorChosen();
         getBookings();
-        getPreviousBookings();
         getInstructorsFromFirebase();
         myBookingsText = view.findViewById(R.id.my_bookings_header);
         bookingsRecycler = view.findViewById(R.id.my_bookings_recycler);
