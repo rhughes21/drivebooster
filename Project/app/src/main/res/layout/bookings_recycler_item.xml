@@ -8,8 +8,8 @@
     app:cardCornerRadius="8dp"
     android:layout_margin="4dp">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/booking_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp">
@@ -20,6 +20,8 @@
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="date"/>
 
         <TextView
@@ -28,6 +30,8 @@
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recycler_booking_date"
             tools:text="time" />
 
         <TextView
@@ -35,8 +39,18 @@
             android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recycler_booking_time"
             tools:text="instructor"/>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/recycler_booking_pupil_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recycler_booking_instructor"
+            tools:text="pupil"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

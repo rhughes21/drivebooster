@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +45,7 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
             myViewHolder.bookingDate.setText((CharSequence) bookingsFromFirebase.get(position).bookingDate);
             myViewHolder.bookingTime.setText(((CharSequence) bookingsFromFirebase.get(position).bookingTime));
             myViewHolder.bookingInstructor.setText(((CharSequence) bookingsFromFirebase.get(position).instructorName));
+            myViewHolder.bookingPupilName.setText(bookingsFromFirebase.get(position).userName);
         }else{
             Log.d("DIDN'T WORK", "BLAH BLAH");
         }
@@ -58,12 +60,15 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
 
     public class viewHolder extends RecyclerView.ViewHolder{
 
-        TextView bookingDate, bookingTime, bookingInstructor;
+        TextView bookingDate, bookingTime, bookingInstructor, bookingPupilName;
+        ConstraintLayout bookingConstraintLayout;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
+            bookingConstraintLayout = itemView.findViewById(R.id.booking_constraint_layout);
             bookingDate = itemView.findViewById(R.id.recycler_booking_date);
             bookingTime = itemView.findViewById(R.id.recycler_booking_time);
             bookingInstructor = itemView.findViewById(R.id.recycler_booking_instructor);
+            bookingPupilName = itemView.findViewById(R.id.recycler_booking_pupil_name);
 
         }
     }

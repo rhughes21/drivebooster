@@ -50,4 +50,6 @@
     <string name="set_time">Set time</string>
     <string name="submit_my_times">Submit Times</string>
     <string name="no_times_available">Times unavailable, try another day</string>
+    <string name="previous_bookings">Previous Bookings</string>
+    <string name="upcoming_bookings">Upcoming Bookings</string>
 </resources>

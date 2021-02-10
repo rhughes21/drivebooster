@@ -34,6 +34,7 @@ import com.harrywhewell.scrolldatepicker.OnDateSelectedListener;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +52,10 @@ public class CreateBookingFragment extends Fragment  {
         String dateString, timeString, instructorName, dateDay, instructorId;
         Button createBookingButton;
         boolean canBookLesson, canUseTime;
+        Date currentDate;
+        int day, month, year;
         final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
-       final List<String> instructorScheduleFromFirebase = new ArrayList<String>();
+        final List<String> instructorScheduleFromFirebase = new ArrayList<String>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,6 +64,13 @@ public class CreateBookingFragment extends Fragment  {
             fm.popBackStack();
         }
         view = inflater.inflate(R.layout.fragment_create_booking_fragment, container, false);
+
+        currentDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(currentDate);
+        day = cal.get(Calendar.DATE);
+        month = cal.get(Calendar.MONTH) + 1;
+        year = cal.get(Calendar.YEAR);
         initViews();
         getDateValue(dateString);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -98,8 +108,8 @@ public class CreateBookingFragment extends Fragment  {
 
     //method to set the start and end date shown on the calendar
     private void setUpPicker(){
-        dayPicker.setStartDate(2, 11, 2020);
-        dayPicker.setEndDate(10,3,2021);
+        dayPicker.setStartDate(day, month, year);
+        dayPicker.setEndDate(day,month + 6,year);
     }
 
     //method to get the date chosen by user
@@ -122,19 +132,8 @@ public class CreateBookingFragment extends Fragment  {
         return dateString;
     }
 
-    //method to add times to an array
-    public List<String> setUpTimes(){
-        ArrayList<String> times = new ArrayList<String>();
-        for(int i=9; i < 20; i++){
-            String time = i+ ":00";
-            times.add(time);
-        }
-        return times;
-    }
-
     //method to set up the ListView using the times array
     public void setUpListView(){
-        setUpTimes();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, instructorScheduleFromFirebase);
         timeListView.setAdapter(adapter);
     }
