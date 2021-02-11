@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     CustomInstructorAdapter customInstructorAdapter;
     final List<Instructors> instructorsFromFirebase = new ArrayList<Instructors>();
 
-    final List<Bookings> previousBookingsFromFirebase = new ArrayList<>();
+    final List<Bookings> previousBookingsFromFirebase = new ArrayList<Bookings>();
 
 
     @Override
@@ -82,24 +82,23 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         }
 
         updatePreviousBookings();
-        getPreviousBookings();
         addManoeuvres();
         calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -1);
         currentDate = calendar.getTime();
-        previousBookingsFromFirebase.clear();
         instructorsFromFirebase.clear();
         bookingsFromFirebase.clear();
+        previousBookingsFromFirebase.clear();
         checkInstructorChosen();
         getBookings();
         getInstructorsFromFirebase();
         myBookingsText = view.findViewById(R.id.my_bookings_header);
         bookingsRecycler = view.findViewById(R.id.my_bookings_recycler);
-        previousBookingsRecycler = view.findViewById(R.id.previous_bookings_recycler);
-        previousBookingsText = view.findViewById(R.id.previous_bookings_header);
+        //previousBookingsRecycler = view.findViewById(R.id.previous_bookings_recycler);
+        //previousBookingsText = view.findViewById(R.id.previous_bookings_header);
         instructorRecycler = view.findViewById(R.id.my_instructors_recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager previousLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        //LinearLayoutManager previousLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager linearLayoutManagerTwo = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);
         instructorRecycler.setLayoutManager(linearLayoutManagerTwo);
@@ -113,10 +112,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
         instructorRecycler.setAdapter(customInstructorAdapter);
         customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
-        customPreviousBookingAdapter = new CustomBookingsAdapter(previousBookingsFromFirebase);
-        previousBookingsRecycler.setLayoutManager(previousLinearLayoutManager);
+        //customPreviousBookingAdapter = new CustomBookingsAdapter(previousBookingsFromFirebase);
+        //previousBookingsRecycler.setLayoutManager(previousLinearLayoutManager);
         bookingsRecycler.setAdapter(customBookingsAdapter);
-        previousBookingsRecycler.setAdapter(customPreviousBookingAdapter);
+        //previousBookingsRecycler.setAdapter(customPreviousBookingAdapter);
         manoeuvresAdapter = new ManoeuvresAdapter(manoeuvres, lifecycle);
         manoeuvreRecycler.setAdapter(manoeuvresAdapter);
 
@@ -273,7 +272,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         });
     }
 
-    public void getPreviousBookings(){
+    /*public void getPreviousBookings(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = currentUser.getUid();
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
@@ -285,7 +284,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                     for (DataSnapshot child : children) {
                         Bookings bookings = child.getValue(Bookings.class);
                         if(bookings.pupilId.equals(userId) ) {
-                            previousBookingsFromFirebase.add(bookings);
+                                previousBookingsFromFirebase.add(bookings);
+
                             customPreviousBookingAdapter.notifyDataSetChanged();
                         }
                     }
@@ -296,7 +296,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
             }
         });
-    }
+    }*/
 
     public void updatePreviousBookings(){
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");

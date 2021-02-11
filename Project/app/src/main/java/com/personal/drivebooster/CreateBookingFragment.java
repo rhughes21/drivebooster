@@ -108,7 +108,7 @@ public class CreateBookingFragment extends Fragment  {
 
     //method to set the start and end date shown on the calendar
     private void setUpPicker(){
-        dayPicker.setStartDate(day, month, year);
+        dayPicker.setStartDate(10, month, year);
         dayPicker.setEndDate(day,month + 6,year);
     }
 
