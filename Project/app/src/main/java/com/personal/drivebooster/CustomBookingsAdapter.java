@@ -39,16 +39,11 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         viewHolder myViewHolder=(viewHolder)holder;
 
-
-        if (bookingsFromFirebase.get(position).pupilId.equals(currentUserId)){
             sizeOfView = sizeOfView +1;
             myViewHolder.bookingDate.setText((CharSequence) bookingsFromFirebase.get(position).bookingDate);
             myViewHolder.bookingTime.setText(((CharSequence) bookingsFromFirebase.get(position).bookingTime));
             myViewHolder.bookingInstructor.setText(((CharSequence) bookingsFromFirebase.get(position).instructorName));
             myViewHolder.bookingPupilName.setText(bookingsFromFirebase.get(position).userName);
-        }else{
-            Log.d("DIDN'T WORK", "BLAH BLAH");
-        }
 
 
     }
