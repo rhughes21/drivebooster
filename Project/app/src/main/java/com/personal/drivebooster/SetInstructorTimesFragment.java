@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -79,6 +80,8 @@ public class SetInstructorTimesFragment extends Fragment implements AdapterView.
             }
         });
 
+        BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
+        navBar.setVisibility(View.INVISIBLE);
         return view;
     }
 
