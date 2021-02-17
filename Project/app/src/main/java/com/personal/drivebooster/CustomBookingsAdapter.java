@@ -20,10 +20,13 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
     List<Bookings> bookingsFromFirebase;
     String currentUserId;
     FirebaseUser currentUser;
+    private onBookingListener onBookingListener;
+    int rowindex;
     int sizeOfView;
 
-    public CustomBookingsAdapter(List<Bookings> bookingsFromFirebase){
+    public CustomBookingsAdapter(List<Bookings> bookingsFromFirebase, onBookingListener onBookingListener){
         this.bookingsFromFirebase = bookingsFromFirebase;
+        this.onBookingListener = onBookingListener;
     }
     @NonNull
     @Override
@@ -32,9 +35,12 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         currentUserId = currentUser.getUid();
 
-        return new viewHolder(view);
+        return new viewHolder(view, onBookingListener);
     }
 
+    public interface onBookingListener{
+        void onBookingClick(int position);
+    }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         viewHolder myViewHolder=(viewHolder)holder;
@@ -53,17 +59,27 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
         return bookingsFromFirebase.size();
     }
 
-    public class viewHolder extends RecyclerView.ViewHolder{
+    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView bookingDate, bookingTime, bookingInstructor, bookingPupilName;
         ConstraintLayout bookingConstraintLayout;
-        public viewHolder(@NonNull View itemView) {
+        onBookingListener onBookingListener;
+        public viewHolder(@NonNull View itemView, onBookingListener onBookingListener) {
             super(itemView);
             bookingConstraintLayout = itemView.findViewById(R.id.booking_constraint_layout);
             bookingDate = itemView.findViewById(R.id.recycler_booking_date);
             bookingTime = itemView.findViewById(R.id.recycler_booking_time);
             bookingInstructor = itemView.findViewById(R.id.recycler_booking_instructor);
             bookingPupilName = itemView.findViewById(R.id.recycler_booking_pupil_name);
+            this.onBookingListener = onBookingListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onBookingListener.onBookingClick(getAdapterPosition());
+            rowindex = getAdapterPosition();
+            notifyDataSetChanged();
 
         }
     }

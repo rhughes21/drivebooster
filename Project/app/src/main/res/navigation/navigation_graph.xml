@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_instructor_home_nav_fragment_to_setInstructorTimesFragment"
             app:destination="@id/setInstructorTimesFragment" />
+        <action
+            android:id="@+id/action_instructor_home_nav_fragment_to_instructorBookingInfoFragment"
+            app:destination="@id/instructorBookingInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/instructor_my_pupils"
@@ -42,5 +45,13 @@
     <fragment
         android:id="@+id/setInstructorTimesFragment"
         android:name="com.personal.drivebooster.SetInstructorTimesFragment"
-        android:label="SetInstructorTimesFragment" />
+        android:label="@string/set_up_times_title" />
+    <fragment
+        android:id="@+id/instructorBookingInfoFragment"
+        android:name="com.personal.drivebooster.InstructorBookingInfoFragment"
+        android:label="@string/booking_info_title">
+    <argument
+        android:name="booking_date"
+        app:argType="string"/>
+    </fragment>
 </navigation>

@@ -42,7 +42,7 @@ import java.util.Map;
 
 import javax.xml.transform.dom.DOMLocator;
 
-public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener, CustomInstructorAdapter.onInstructorNameListener {
+public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener, CustomInstructorAdapter.onInstructorNameListener, CustomBookingsAdapter.onBookingListener {
 
     View view;
     RecyclerView bookingsRecycler, manoeuvreRecycler, instructorRecycler, previousBookingsRecycler;
@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         customInstructorAdapter = new CustomInstructorAdapter(instructorsFromFirebase, this);
 
         instructorRecycler.setAdapter(customInstructorAdapter);
-        customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
+        customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase, this);
         //customPreviousBookingAdapter = new CustomBookingsAdapter(previousBookingsFromFirebase);
         //previousBookingsRecycler.setLayoutManager(previousLinearLayoutManager);
         bookingsRecycler.setAdapter(customBookingsAdapter);
@@ -139,13 +139,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
         lessThanMyLng = x - 1;
         moreThanMyLng = x + 1;
-    }
-    public void setUpBookingsRecycler(){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        bookingsRecycler.setLayoutManager(linearLayoutManager);
-
-        CustomBookingsAdapter customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
-        bookingsRecycler.setAdapter(customBookingsAdapter);
     }
     //getter and setter for instructor name
     public String getInstName(){
@@ -420,5 +413,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
+
+    @Override
+    public void onBookingClick(int position) {
+
     }
 }

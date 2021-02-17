@@ -52,4 +52,6 @@
     <string name="no_times_available">Times unavailable, try another day</string>
     <string name="previous_bookings">Previous Bookings</string>
     <string name="upcoming_bookings">Upcoming Bookings</string>
+    <string name="set_up_times_title">My Schedule</string>
+    <string name="booking_info_title">Booking Info</string>
 </resources>
