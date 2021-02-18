@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_instructor_home_nav_fragment_to_instructorBookingInfoFragment"
             app:destination="@id/instructorBookingInfoFragment" />
+        <action
+            android:id="@+id/action_instructor_home_nav_fragment_to_instructorPreviousBookingFragment"
+            app:destination="@id/instructorPreviousBookingFragment" />
     </fragment>
     <fragment
         android:id="@+id/instructor_my_pupils"
@@ -54,4 +57,13 @@
         android:name="booking_date"
         app:argType="string"/>
     </fragment>
+    <fragment
+        android:id="@+id/instructorPreviousBookingFragment"
+        android:name="com.personal.drivebooster.InstructorPreviousBookingFragment"
+        android:label="InstructorPreviousBookingFragment">
+        <argument
+            android:name="booking_time"
+            app:argType="string"/>
+    </fragment>
+
 </navigation>
