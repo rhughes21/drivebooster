@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_logo"
@@ -13,6 +14,9 @@
         android:theme="@style/AppTheme"
         android:largeHeap="true"
         android:hardwareAccelerated="false">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCaWjgv8ZlUoUhOnqL4yxH1A5Odg_9KZVQ" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

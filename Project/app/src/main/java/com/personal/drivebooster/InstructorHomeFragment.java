@@ -17,6 +17,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,14 +29,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InstructorHomeFragment extends Fragment implements View.OnClickListener{
+import static androidx.core.os.BundleKt.bundleOf;
+
+public class InstructorHomeFragment extends Fragment implements View.OnClickListener, CustomBookingsAdapter.onBookingListener, PreviousBookingAdapter.onPreviousBookingListener{
 
     View view;
     Button logOutButton, addTimesButton;
     TextView upcomingBookingsHeader, previousBookingHeader;
     RecyclerView upcomingBookingsRecycler, previousBookingRecycler;
     String instructorName;
-    CustomBookingsAdapter upcomingBookingsAdapter, previousBookingAdapter;
+    CustomBookingsAdapter upcomingBookingsAdapter;
+    PreviousBookingAdapter previousBookingAdapter;
     final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
     final List<Bookings> previousBookingsFromFirebase = new ArrayList<Bookings>();
     DatabaseReference databaseBookingRef, instructorRef;
@@ -44,6 +48,8 @@ public class InstructorHomeFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.instructor_home_fragment, container, false);
+        bookingsFromFirebase.clear();
+        previousBookingsFromFirebase.clear();
         getMyName();
         getBookings();
         getPreviousBookings();
@@ -56,12 +62,14 @@ public class InstructorHomeFragment extends Fragment implements View.OnClickList
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager linearLayoutManagerPrevious = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         upcomingBookingsRecycler.setLayoutManager(linearLayoutManager);
-        upcomingBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase);
+        upcomingBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase, this);
         upcomingBookingsRecycler.setAdapter(upcomingBookingsAdapter);
 
         previousBookingRecycler.setLayoutManager(linearLayoutManagerPrevious);
-        previousBookingAdapter = new CustomBookingsAdapter(previousBookingsFromFirebase);
+        previousBookingAdapter = new PreviousBookingAdapter(previousBookingsFromFirebase, this);
         previousBookingRecycler.setAdapter(previousBookingAdapter);
+        BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
+        navBar.setVisibility(View.VISIBLE);
 
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,8 +157,31 @@ public class InstructorHomeFragment extends Fragment implements View.OnClickList
     public void setInstName(String instructorName){
         this.instructorName = instructorName;
     }
+
     @Override
     public void onClick(View view) {
         Navigation.findNavController(view).navigate(R.id.action_instructor_home_nav_fragment_to_setInstructorTimesFragment);
+    }
+
+    @Override
+    public void onBookingClick(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString("bookingDate", bookingsFromFirebase.get(position).bookingDate);
+        bundle.putString("bookingTime", bookingsFromFirebase.get(position).bookingTime);
+        bundle.putString("userAddress", bookingsFromFirebase.get(position).userAddress);
+        bundle.putString("userName", bookingsFromFirebase.get(position).userName);
+        Navigation.findNavController(view).navigate(R.id.action_instructor_home_nav_fragment_to_instructorBookingInfoFragment, bundle);
+
+    }
+
+    @Override
+    public void onPreviousBookingClick(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString("bookingDate", previousBookingsFromFirebase.get(position).bookingDate);
+        bundle.putString("bookingTime", previousBookingsFromFirebase.get(position).bookingTime);
+        bundle.putString("userAddress", previousBookingsFromFirebase.get(position).userAddress);
+        bundle.putString("userName", previousBookingsFromFirebase.get(position).userName);
+        Navigation.findNavController(view).navigate(R.id.action_instructor_home_nav_fragment_to_instructorPreviousBookingFragment, bundle);
+
     }
 }

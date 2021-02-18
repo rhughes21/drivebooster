@@ -14,7 +14,11 @@
         android:id="@+id/homeFragment2"
         android:name="com.personal.drivebooster.HomeFragment"
         android:label="@string/home_text"
-        tools:layout="@layout/home_fragment"/>
+        tools:layout="@layout/home_fragment">
+        <action
+            android:id="@+id/action_homeFragment2_to_pupilPreviousBookingsFragment"
+            app:destination="@id/pupilPreviousBookingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_booking"
         android:name="com.personal.drivebooster.CreateBookingFragment"
@@ -33,6 +37,12 @@
         <action
             android:id="@+id/action_instructor_home_nav_fragment_to_setInstructorTimesFragment"
             app:destination="@id/setInstructorTimesFragment" />
+        <action
+            android:id="@+id/action_instructor_home_nav_fragment_to_instructorBookingInfoFragment"
+            app:destination="@id/instructorBookingInfoFragment" />
+        <action
+            android:id="@+id/action_instructor_home_nav_fragment_to_instructorPreviousBookingFragment"
+            app:destination="@id/instructorPreviousBookingFragment" />
     </fragment>
     <fragment
         android:id="@+id/instructor_my_pupils"
@@ -42,5 +52,26 @@
     <fragment
         android:id="@+id/setInstructorTimesFragment"
         android:name="com.personal.drivebooster.SetInstructorTimesFragment"
-        android:label="SetInstructorTimesFragment" />
+        android:label="@string/set_up_times_title" />
+    <fragment
+        android:id="@+id/instructorBookingInfoFragment"
+        android:name="com.personal.drivebooster.InstructorBookingInfoFragment"
+        android:label="@string/booking_info_title">
+    <argument
+        android:name="booking_date"
+        app:argType="string"/>
+    </fragment>
+    <fragment
+        android:id="@+id/instructorPreviousBookingFragment"
+        android:name="com.personal.drivebooster.InstructorPreviousBookingFragment"
+        android:label="@string/previous_bookings">
+        <argument
+            android:name="booking_time"
+            app:argType="string"/>
+    </fragment>
+    <fragment
+        android:id="@+id/pupilPreviousBookingsFragment"
+        android:name="com.personal.drivebooster.PupilPreviousBookingsFragment"
+        android:label="@string/previous_bookings" />
+
 </navigation>
