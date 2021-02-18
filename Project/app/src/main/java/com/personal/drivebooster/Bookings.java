@@ -10,9 +10,10 @@ public class Bookings {
     public String userName;
     public String userAddress;
     public String dateDay;
+    public String lessonReview;
 
     //Booking constructor, takes pupilid, instructors name, booking time and date
-    public Bookings(String pupilId, String userName, String instructorName, String bookingTime, String bookingDate, String userAddress, String dateDay) {
+    public Bookings(String pupilId, String userName, String instructorName, String bookingTime, String bookingDate, String userAddress, String dateDay, String lessonReview) {
         this.pupilId = pupilId;
         this.userName = userName;
         this.instructorName = instructorName;
@@ -20,6 +21,7 @@ public class Bookings {
         this.bookingDate = bookingDate;
         this.userAddress = userAddress;
         this.dateDay = dateDay;
+        this.lessonReview = lessonReview;
     }
 
     //empty constructor for creating object array of bookings from firebase

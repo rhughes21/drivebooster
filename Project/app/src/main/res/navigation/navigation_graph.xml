@@ -14,7 +14,11 @@
         android:id="@+id/homeFragment2"
         android:name="com.personal.drivebooster.HomeFragment"
         android:label="@string/home_text"
-        tools:layout="@layout/home_fragment"/>
+        tools:layout="@layout/home_fragment">
+        <action
+            android:id="@+id/action_homeFragment2_to_pupilPreviousBookingsFragment"
+            app:destination="@id/pupilPreviousBookingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_booking"
         android:name="com.personal.drivebooster.CreateBookingFragment"
@@ -60,10 +64,14 @@
     <fragment
         android:id="@+id/instructorPreviousBookingFragment"
         android:name="com.personal.drivebooster.InstructorPreviousBookingFragment"
-        android:label="InstructorPreviousBookingFragment">
+        android:label="@string/previous_bookings">
         <argument
             android:name="booking_time"
             app:argType="string"/>
     </fragment>
+    <fragment
+        android:id="@+id/pupilPreviousBookingsFragment"
+        android:name="com.personal.drivebooster.PupilPreviousBookingsFragment"
+        android:label="@string/previous_bookings" />
 
 </navigation>

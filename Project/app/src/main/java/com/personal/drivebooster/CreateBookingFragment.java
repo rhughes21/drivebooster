@@ -172,6 +172,7 @@ public class CreateBookingFragment extends Fragment  {
                 DataSnapshot userNameFb = snapshot.child("name");
                 DataSnapshot userAddressFb = snapshot.child("fullAddress");
                 String userName = userNameFb.getValue(String.class);
+                String review = "Instructor has not provided review";
                 String userAddress = userAddressFb.getValue(String.class);
                 setInstName(ds.getValue(String.class));
                 canBookLesson = true;
@@ -187,7 +188,7 @@ public class CreateBookingFragment extends Fragment  {
                 }
 
                 if(canBookLesson){
-                    Bookings bookingObj = new Bookings(userId, userName, getInstName(), timeString, dateString, userAddress, dateDay);
+                    Bookings bookingObj = new Bookings(userId, userName, getInstName(), timeString, dateString, userAddress, dateDay, review);
 
                     if(dateString == null || timeString == null || dateDay == null){
                         Toast.makeText(getContext(), "Make sure you have chosen a date and time", Toast.LENGTH_SHORT).show();

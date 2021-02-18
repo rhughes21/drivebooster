@@ -56,4 +56,6 @@
     <string name="booking_info_title">Booking Info</string>
     <string name="leave_a_review">Leave a review for this lesson</string>
     <string name="submit_review">Submit Review</string>
+    <string name="remember_to_book">Please remember to book another lesson.</string>
+    <string name="review_header">Review from instructor</string>
 </resources>

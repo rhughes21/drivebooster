@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,8 +48,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     View view;
     RecyclerView bookingsRecycler, manoeuvreRecycler, instructorRecycler, previousBookingsRecycler;
     FirebaseAuth auth;
-    Button chooseInstructorButton;
-    TextView noInstructorsText, myBookingsText, previousBookingsText;
+    Button chooseInstructorButton, previousBookingsButton;
+    TextView noInstructorsText, myBookingsText;
     DatabaseReference databaseRef, dbUserRef,databaseBookingRef, previousBookingsReference;
     Query databaseQuery;
     Boolean hasPickedInstructor = false;
@@ -56,7 +57,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     double lessThanMyLng, moreThanMyLng;
     String instructorName, instructorId;
     Double instLng, myLng;
-    CustomBookingsAdapter customBookingsAdapter, customPreviousBookingAdapter;
+    CustomBookingsAdapter customBookingsAdapter;
     Date currentDate;
     Calendar calendar;
 
@@ -69,7 +70,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     CustomInstructorAdapter customInstructorAdapter;
     final List<Instructors> instructorsFromFirebase = new ArrayList<Instructors>();
 
-    final List<Bookings> previousBookingsFromFirebase = new ArrayList<Bookings>();
 
 
     @Override
@@ -88,17 +88,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         currentDate = calendar.getTime();
         instructorsFromFirebase.clear();
         bookingsFromFirebase.clear();
-        previousBookingsFromFirebase.clear();
         checkInstructorChosen();
         getBookings();
         getInstructorsFromFirebase();
         myBookingsText = view.findViewById(R.id.my_bookings_header);
         bookingsRecycler = view.findViewById(R.id.my_bookings_recycler);
-        //previousBookingsRecycler = view.findViewById(R.id.previous_bookings_recycler);
-        //previousBookingsText = view.findViewById(R.id.previous_bookings_header);
+        previousBookingsButton = view.findViewById(R.id.previous_bookings_button);
         instructorRecycler = view.findViewById(R.id.my_instructors_recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        //LinearLayoutManager previousLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager linearLayoutManagerTwo = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);
         instructorRecycler.setLayoutManager(linearLayoutManagerTwo);
@@ -112,10 +109,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
         instructorRecycler.setAdapter(customInstructorAdapter);
         customBookingsAdapter = new CustomBookingsAdapter(bookingsFromFirebase, this);
-        //customPreviousBookingAdapter = new CustomBookingsAdapter(previousBookingsFromFirebase);
-        //previousBookingsRecycler.setLayoutManager(previousLinearLayoutManager);
         bookingsRecycler.setAdapter(customBookingsAdapter);
-        //previousBookingsRecycler.setAdapter(customPreviousBookingAdapter);
         manoeuvresAdapter = new ManoeuvresAdapter(manoeuvres, lifecycle);
         manoeuvreRecycler.setAdapter(manoeuvresAdapter);
 
@@ -130,6 +124,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             }
         });
 
+        previousBookingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.action_homeFragment2_to_pupilPreviousBookingsFragment);
+
+            }
+        });
 
         return view;
     }
@@ -264,32 +265,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             }
         });
     }
-
-    /*public void getPreviousBookings(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        final String userId = currentUser.getUid();
-        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
-        databaseBookingRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
-                    Iterable<DataSnapshot> children = snapshot.getChildren();
-                    for (DataSnapshot child : children) {
-                        Bookings bookings = child.getValue(Bookings.class);
-                        if(bookings.pupilId.equals(userId) ) {
-                                previousBookingsFromFirebase.add(bookings);
-
-                            customPreviousBookingAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }*/
 
     public void updatePreviousBookings(){
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
