@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -99,7 +100,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         LinearLayoutManager linearLayoutManagerTwo = new LinearLayoutManager(getContext());
         bookingsRecycler.setLayoutManager(linearLayoutManager);
         instructorRecycler.setLayoutManager(linearLayoutManagerTwo);
-
+        BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
+        navBar.setVisibility(View.VISIBLE);
 
         manoeuvreRecycler = view.findViewById(R.id.manoeuvres_recycler);
         LinearLayoutManager linearLayoutManagerManoeuvres = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
