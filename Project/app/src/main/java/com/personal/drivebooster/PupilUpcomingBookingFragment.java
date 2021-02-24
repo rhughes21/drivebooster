@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -124,6 +125,8 @@ public class PupilUpcomingBookingFragment extends Fragment {
         timeListView = view.findViewById(R.id.info_time_list_view);
         dayPicker = view.findViewById(R.id.info_horizontal_calendar);
         deleteButton = view.findViewById(R.id.delete_booking_button);
+        BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
+        navBar.setVisibility(View.INVISIBLE);
     }
 
     //method to set the start and end date shown on the calendar
