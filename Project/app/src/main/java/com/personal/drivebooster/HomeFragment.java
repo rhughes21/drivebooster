@@ -392,6 +392,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     @Override
     public void onBookingClick(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString("bookingDate", bookingsFromFirebase.get(position).bookingDate);
+        bundle.putString("bookingTime", bookingsFromFirebase.get(position).bookingTime);
+        bundle.putString("userAddress", bookingsFromFirebase.get(position).userAddress);
+        bundle.putString("dateDay", bookingsFromFirebase.get(position).dateDay);
+        bundle.putString("instructorName", bookingsFromFirebase.get(position).instructorName);
+        Navigation.findNavController(view).navigate(R.id.action_homeFragment2_to_pupilUpcomingBookingFragment, bundle);
 
     }
 }

@@ -58,4 +58,10 @@
     <string name="submit_review">Submit Review</string>
     <string name="remember_to_book">Please remember to book another lesson.</string>
     <string name="review_header">Review from instructor</string>
+    <string name="upcoming_booking_title">Upcoming Booking</string>
+    <string name="edit_booking">Edit Booking</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+    <string name="delete_booking">Delete</string>
+    <string name="confirm_deletion">Are you sure you want to delete this booking?</string>
 </resources>

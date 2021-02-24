@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_homeFragment2_to_pupilPreviousBookingsFragment"
             app:destination="@id/pupilPreviousBookingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment2_to_pupilUpcomingBookingFragment"
+            app:destination="@id/pupilUpcomingBookingFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_booking"
@@ -73,5 +76,13 @@
         android:id="@+id/pupilPreviousBookingsFragment"
         android:name="com.personal.drivebooster.PupilPreviousBookingsFragment"
         android:label="@string/previous_bookings" />
+    <fragment
+        android:id="@+id/pupilUpcomingBookingFragment"
+        android:name="com.personal.drivebooster.PupilUpcomingBookingFragment"
+        android:label="@string/upcoming_booking_title">
+        <argument
+            android:name="pupil_upcoming_booking"
+            app:argType="string"/>
+    </fragment>
 
 </navigation>
