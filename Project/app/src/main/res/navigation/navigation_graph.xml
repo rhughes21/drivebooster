@@ -51,7 +51,11 @@
         android:id="@+id/instructor_my_pupils"
         android:name="com.personal.drivebooster.MyPupilsFragment"
         android:label="@string/my_pupils"
-        tools:layout="@layout/instructors_my_pupils_fragment"/>
+        tools:layout="@layout/instructors_my_pupils_fragment">
+        <action
+            android:id="@+id/action_instructor_my_pupils_to_instructorPupilDetailsFragment"
+            app:destination="@id/instructorPupilDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/setInstructorTimesFragment"
         android:name="com.personal.drivebooster.SetInstructorTimesFragment"
@@ -83,6 +87,14 @@
         <argument
             android:name="pupil_upcoming_booking"
             app:argType="string"/>
+    </fragment>
+    <fragment
+        android:id="@+id/instructorPupilDetailsFragment"
+        android:name="com.personal.drivebooster.InstructorPupilDetailsFragment"
+        android:label="@string/pupil_details" >
+    <argument
+        android:name="pupil_details"
+        app:argType="string"/>
     </fragment>
 
 </navigation>
