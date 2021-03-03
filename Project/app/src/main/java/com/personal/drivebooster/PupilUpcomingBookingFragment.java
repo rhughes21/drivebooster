@@ -306,11 +306,6 @@ public class PupilUpcomingBookingFragment extends Fragment {
         });
     }
 
-    public void deleteBooking(){
-        dbEditRef = FirebaseDatabase.getInstance().getReference().child("Booking").child(getBookingKey());
-        dbEditRef.removeValue();
-    }
-
     public void deleteDialog(){
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(getString(R.string.confirm_deletion));
@@ -318,7 +313,8 @@ public class PupilUpcomingBookingFragment extends Fragment {
                     "Yes",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            deleteBooking();
+                            Bookings b = new Bookings();
+                            b.deleteBooking(getBookingKey());
                         }
                     });
             builder.setNegativeButton(

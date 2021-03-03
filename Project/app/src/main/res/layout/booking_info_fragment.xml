@@ -32,4 +32,29 @@
         android:layout_height="300dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/booking_info_date"/>
+
+    <Button
+        android:id="@+id/instructor_remind_booking_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/remind_pupil"
+        android:background="@drawable/large_button_drawable"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/instructor_delete_booking_button"
+        app:layout_constraintTop_toBottomOf="@id/info_map"/>
+    <Button
+        android:id="@+id/instructor_delete_booking_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/delete_booking"
+        android:background="@drawable/negative_button_drawable"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/instructor_remind_booking_button"
+        app:layout_constraintTop_toBottomOf="@id/info_map"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
