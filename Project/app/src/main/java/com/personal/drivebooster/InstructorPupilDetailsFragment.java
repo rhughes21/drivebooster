@@ -1,15 +1,42 @@
 package com.personal.drivebooster;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,20 +46,35 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
 import java.util.Locale;
 
-public class InstructorPupilDetailsFragment extends Fragment {
+import static com.personal.drivebooster.Constants.REQUEST_LOCATION;
+
+public class InstructorPupilDetailsFragment extends Fragment implements OnMapReadyCallback{
 
     View view;
-    TextView pupilName, pupilAddress, pupilEmail, pupilDistance;
-    double pupilLat, pupilLong, myLng, myLat, distance;
+    TextView pupilName, pupilAddress, pupilEmail;
+    Button sendEmailButton;
+    double pupilLat, pupilLong;
+    String pupilAddressString;
     DatabaseReference dbRef;
+    SupportMapFragment mapFragment;
+    GoogleMap mMap;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.instructor_pupil_details_fragment, container, false);
         initViews();
+        mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.pupil_details_map);
 
+        mapFragment.getMapAsync(this);
 
+        sendEmailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendEmail();
+            }
+        });
         return view;
     }
 
@@ -42,76 +84,71 @@ public class InstructorPupilDetailsFragment extends Fragment {
         pupilName = view.findViewById(R.id.pupil_details_name);
         pupilEmail = view.findViewById(R.id.pupil_details_email);
         pupilAddress = view.findViewById(R.id.pupil_details_address);
-        pupilDistance = view.findViewById(R.id.pupil_details_distance);
 
         pupilName.setText(getArguments().getString("pupilName"));
         pupilEmail.setText(getArguments().getString("pupilEmail"));
         pupilAddress.setText(getArguments().getString("pupilAddress"));
         pupilLat = getArguments().getDouble("latitude");
         pupilLong = getArguments().getDouble("longitude");
+        pupilAddressString = getArguments().getString("pupilAddress");
+        sendEmailButton = view.findViewById(R.id.send_email_button);
 
-        getInstructorLatLng();
+
     }
 
+    protected void sendEmail(){
+        Log.i("Send email", "");
+        String[] TO = {pupilEmail.getText().toString()};
+        String[] CC = {""};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
-    public void calculateDistanceToUser(double lat1, double long1, double lat2,double  long2){
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_CC, CC);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Your subject");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message goes here");
 
-        double longDifference = long1 - long2;
-
-
-        double distance = Math.sin(degreeToRadian(lat1))
-                * Math.sin(degreeToRadian(lat2))
-                + Math.cos(degreeToRadian(lat1))
-                * Math.cos(degreeToRadian(lat2))
-                * Math.cos(degreeToRadian(longDifference));
-        distance = Math.acos(distance);
-        distance = radianToDegree(distance);
-        distance =distance * 60 * 1.1515;
-
-        pupilDistance.setText(String.format(Locale.UK,"%2f Miles", distance));
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            getActivity().finish();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private double radianToDegree(double distance) {
-        return (distance * 180.0/ Math.PI);
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        LatLng address = getLocationFromAddress(getContext(), pupilAddressString);
+        mMap.addMarker(new MarkerOptions().position(address).title(pupilName.getText().toString()));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(address,16));
     }
 
-    private double degreeToRadian(double lat1) {
-        return (lat1 * Math.PI/180);
-    }
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
+        Geocoder coder= new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
 
-    public Double getLng(){
-        return myLng;
-    }
-
-    public void setMyLng(Double myLng){
-        this.myLng = myLng;
-    }
-
-    public Double getLat(){
-        return myLat;
-    }
-
-    public void setMyLat(Double myLat){
-        this.myLat = myLat;
-    }
-
-    public void getInstructorLatLng(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = currentUser.getUid();
-        dbRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(userId);
-        dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                setMyLat(snapshot.child("latitude").getValue(Double.class));
-                setMyLng(snapshot.child("longitude").getValue(Double.class));
-                calculateDistanceToUser(pupilLat, getLng(), getLat(), pupilLong);
-
+        try
+        {
+            address = coder.getFromLocationName(strAddress, 5);
+            if(address==null)
+            {
+                return null;
             }
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return p1;
 
-            }
-        });
     }
+
 }
