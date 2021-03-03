@@ -20,18 +20,24 @@ import java.util.List;
 public class CustomPupilsAdapter extends RecyclerView.Adapter {
 
     List<Users> usersFromFirebase;
+    private onNameListener onNameListener;
+    int rowindex;
 
-    public CustomPupilsAdapter(List<Users> usersFromFirebase){
+    public CustomPupilsAdapter(List<Users> usersFromFirebase, onNameListener onNameListener){
         this.usersFromFirebase = usersFromFirebase;
+        this.onNameListener = onNameListener;
     }
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_pupils_recycler_item, parent, false);
 
-        return new viewHolder(view);
+        return new viewHolder(view, onNameListener);
     }
 
+    public interface onNameListener{
+        void onNameClick(int position);
+    }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
@@ -47,13 +53,22 @@ public class CustomPupilsAdapter extends RecyclerView.Adapter {
         return usersFromFirebase.size();
     }
 
-    public class viewHolder extends RecyclerView.ViewHolder{
+    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView pupilName;
-        public viewHolder(@NonNull View itemView) {
+        onNameListener onNameListener;
+        public viewHolder(@NonNull View itemView, onNameListener onNameListener) {
             super(itemView);
             pupilName = itemView.findViewById(R.id.recycler_pupil_name);
+            this.onNameListener = onNameListener;
+            itemView.setOnClickListener(this);
+        }
 
+        @Override
+        public void onClick(View v) {
+            onNameListener.onNameClick(getAdapterPosition());
+            rowindex = getAdapterPosition();
+            notifyDataSetChanged();
         }
     }
 }
