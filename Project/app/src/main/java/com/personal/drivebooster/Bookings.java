@@ -1,5 +1,8 @@
 package com.personal.drivebooster;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Bookings {
 
 
@@ -11,7 +14,7 @@ public class Bookings {
     public String userAddress;
     public String dateDay;
     public String lessonReview;
-
+    DatabaseReference dbEditRef;
     //Booking constructor, takes pupilid, instructors name, booking time and date
     public Bookings(String pupilId, String userName, String instructorName, String bookingTime, String bookingDate, String userAddress, String dateDay, String lessonReview) {
         this.pupilId = pupilId;
@@ -28,4 +31,8 @@ public class Bookings {
     public Bookings(){
     }
 
+    public void deleteBooking(String bookingKey){
+        dbEditRef = FirebaseDatabase.getInstance().getReference().child("Booking").child(bookingKey);
+        dbEditRef.removeValue();
+    }
 }
