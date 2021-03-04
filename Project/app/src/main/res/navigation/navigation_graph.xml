@@ -30,7 +30,11 @@
     <fragment android:id="@+id/navigation_my_details"
         android:name="com.personal.drivebooster.PupilDetailsFragment"
         android:label="@string/my_details"
-        tools:layout="@layout/pupil_my_details_fragment"/>
+        tools:layout="@layout/pupil_my_details_fragment">
+        <action
+            android:id="@+id/action_navigation_my_details_to_editDetailsFragment"
+            app:destination="@id/editDetailsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/instructor_home_nav_fragment"
@@ -96,5 +100,9 @@
         android:name="pupil_details"
         app:argType="string"/>
     </fragment>
+    <fragment
+        android:id="@+id/editDetailsFragment"
+        android:name="com.personal.drivebooster.EditDetailsFragment"
+        android:label="EditDetailsFragment" />
 
 </navigation>

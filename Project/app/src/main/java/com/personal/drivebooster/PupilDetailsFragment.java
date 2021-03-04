@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,11 +25,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 public class PupilDetailsFragment extends Fragment {
 
     View view;
-    EditText userNameView;
-    TextView userInstructorTextView, userEmailView;
+    TextView userNameView;
+    TextView userInstructorTextView, userEmailView, addressView;
     DatabaseReference  dbUserRef;
     Button logoutButton, updateDetailsButton;
     @Nullable
@@ -42,6 +45,7 @@ public class PupilDetailsFragment extends Fragment {
         userNameView = view.findViewById(R.id.user_name);
         userEmailView = view.findViewById(R.id.user_email);
         userInstructorTextView = view.findViewById(R.id.user_instructor);
+        addressView = view.findViewById(R.id.user_address);
         logoutButton = view.findViewById(R.id.logout_button);
         updateDetailsButton = view.findViewById(R.id.update_user_details_button);
         getUserDetails();
@@ -58,7 +62,7 @@ public class PupilDetailsFragment extends Fragment {
         updateDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateDialog();
+                updateUserDetails();
             }
         });
         return view;
@@ -74,6 +78,7 @@ public class PupilDetailsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userNameView.setText(snapshot.child("name").getValue(String.class));
                 userEmailView.setText(snapshot.child("email").getValue(String.class));
+                addressView.setText(snapshot.child("fullAddress").getValue(String.class));
                 userInstructorTextView.setText(snapshot.child("instructorName").getValue(String.class));
             }
 
@@ -84,34 +89,8 @@ public class PupilDetailsFragment extends Fragment {
         });
     }
     public void updateUserDetails(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = currentUser.getUid();
-        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        dbUserRef.child(userId).child("name").setValue(userNameView.getText().toString());
-    }
+        Navigation.findNavController(view).navigate(R.id.action_navigation_my_details_to_editDetailsFragment);
 
-    public void updateDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Are you sure you want to update your name?");
-        builder.setMessage("updating details will return you to the home screen as the database has updated your information");
-        builder.setPositiveButton(
-                "Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        updateUserDetails();
-                    }
-                });
-        builder.setNegativeButton(
-                "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog updateAlert = builder.create();
-        updateAlert.show();
-        updateAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.negative_alert_button));
-        updateAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.positive_alert_button));
     }
 
 }
