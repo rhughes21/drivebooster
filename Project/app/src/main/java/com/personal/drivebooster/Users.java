@@ -15,9 +15,10 @@ public class Users {
     public Double latitude;
     public Double longitude;
     public String fullAddress;
+    public String phoneNumber;
 
     //constructor for creating a new user and storing in firebase when registering
-    public Users(String name, String email, String password, String userType, String instructorName, String instructorId, Double latitude, Double longitude, String fullAddress) {
+    public Users(String name, String email, String password, String userType, String instructorName, String instructorId, Double latitude, Double longitude, String fullAddress, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -27,6 +28,7 @@ public class Users {
         this.latitude = latitude;
         this.longitude = longitude;
         this.fullAddress= fullAddress;
+        this.phoneNumber = phoneNumber;
     }
 
     public Users(){}

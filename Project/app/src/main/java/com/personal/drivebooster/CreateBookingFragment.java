@@ -171,9 +171,11 @@ public class CreateBookingFragment extends Fragment  {
                 DataSnapshot ds = snapshot.child("instructorName");
                 DataSnapshot userNameFb = snapshot.child("name");
                 DataSnapshot userAddressFb = snapshot.child("fullAddress");
+                DataSnapshot phoneNo = snapshot.child("phoneNumber");
                 String userName = userNameFb.getValue(String.class);
                 String review = "Instructor has not provided review";
                 String userAddress = userAddressFb.getValue(String.class);
+                String pupilPhoneNumber = phoneNo.getValue(String.class);
                 setInstName(ds.getValue(String.class));
                 canBookLesson = true;
                 for(int i=0; i < bookingsFromFirebase.size(); i++){
@@ -188,7 +190,7 @@ public class CreateBookingFragment extends Fragment  {
                 }
 
                 if(canBookLesson){
-                    Bookings bookingObj = new Bookings(userId, userName, getInstName(), timeString, dateString, userAddress, dateDay, review);
+                    Bookings bookingObj = new Bookings(userId, userName, getInstName(), timeString, dateString, userAddress, dateDay, review, pupilPhoneNumber);
 
                     if(dateString == null || timeString == null || dateDay == null){
                         Toast.makeText(getContext(), "Make sure you have chosen a date and time", Toast.LENGTH_SHORT).show();
