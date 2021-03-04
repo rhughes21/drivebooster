@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_title">
 
-            <EditText
+            <TextView
                 android:id="@+id/user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,23 +58,30 @@
             android:text="@string/email"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@id/user_email"
+            app:layout_constraintBottom_toTopOf="@id/user_email_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_name_layout" />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/user_email_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:layout_constraintBottom_toTopOf="@id/address_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_title">
         <TextView
             android:id="@+id/user_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/user_email"
-            android:textColor="@color/colorPrimaryLight"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@id/address_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_title"
+            android:padding="8dp"
             tools:text="fakeaddress@gmail.com" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/address_title"
@@ -87,7 +94,7 @@
             app:layout_constraintBottom_toTopOf="@id/user_address_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_email" />
+            app:layout_constraintTop_toBottomOf="@id/user_email_layout" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/user_address_layout"
@@ -99,7 +106,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/address_title">
 
-            <EditText
+            <TextView
                 android:id="@+id/user_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,22 +126,33 @@
             android:text="@string/instructor"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@id/user_instructor"
+            app:layout_constraintBottom_toTopOf="@id/user_instructor_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_address_layout" />
 
-        <TextView
-            android:id="@+id/user_instructor"
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/user_instructor_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/instructor_name"
-            android:textColor="@color/colorPrimaryLight"
-            android:textSize="20sp"
+            android:elevation="4dp"
             app:layout_constraintBottom_toTopOf="@id/update_user_details_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instructor_title" />
+            app:layout_constraintTop_toBottomOf="@id/instructor_title">
+
+            <TextView
+                android:id="@+id/user_instructor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/instructor_name"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:padding="8dp"/>
+
+        </androidx.cardview.widget.CardView>
+
 
         <Button
             android:id="@+id/update_user_details_button"
@@ -149,7 +167,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_instructor" />
+            app:layout_constraintTop_toBottomOf="@id/user_instructor_layout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
