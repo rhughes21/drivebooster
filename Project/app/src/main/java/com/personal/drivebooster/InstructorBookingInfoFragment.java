@@ -49,7 +49,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
     TextView bookingInfoDate, bookingInfoTime;
     Button remindButton, deleteButton;
     DatabaseReference dbKeyRef, dbUserRef;
-    String bookingDate, addressBooking, userName,bookingKey, phoneNo, pupilEmail, pupilId, message;
+    String bookingDate, addressBooking, userName,bookingKey, phoneNo, pupilEmail, pupilId, message, pupilPhoneNumber;
     GoogleMap mMap;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -61,6 +61,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         bookingDate = getArguments().getString("bookingDate");
         userName = getArguments().getString("userName");
         pupilId = getArguments().getString("pupilId");
+        pupilPhoneNumber = getArguments().getString("phoneNo");
         //getEmailFromFirebase();
         bookingInfoDate.setText(bookingDate);
         bookingInfoTime.setText(getArguments().getString("bookingTime"));
@@ -225,19 +226,17 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
     }
 
     protected void sendBookingDeletedSMSMessage() {
-        phoneNo = "07471680840";
         message = "Booking on " + bookingInfoDate.getText().toString() + " has been deleted";
 
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phoneNo, null, message, null, null);
+        smsManager.sendTextMessage(pupilPhoneNumber, null, message, null, null);
     }
 
     protected void sendReminderSMSMessage() {
-        phoneNo = "07471680840";
         message = "This is a reminder for your lesson on " + bookingInfoDate.getText().toString() + " at " + bookingInfoTime.getText().toString();
 
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phoneNo, null, message, null, null);
+        smsManager.sendTextMessage(pupilPhoneNumber, null, message, null, null);
     }
 
 

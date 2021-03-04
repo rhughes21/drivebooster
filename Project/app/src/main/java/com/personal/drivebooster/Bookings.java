@@ -14,9 +14,10 @@ public class Bookings {
     public String userAddress;
     public String dateDay;
     public String lessonReview;
+    public String phoneNumber;
     DatabaseReference dbEditRef;
     //Booking constructor, takes pupilid, instructors name, booking time and date
-    public Bookings(String pupilId, String userName, String instructorName, String bookingTime, String bookingDate, String userAddress, String dateDay, String lessonReview) {
+    public Bookings(String pupilId, String userName, String instructorName, String bookingTime, String bookingDate, String userAddress, String dateDay, String lessonReview, String phoneNumber) {
         this.pupilId = pupilId;
         this.userName = userName;
         this.instructorName = instructorName;
@@ -25,6 +26,7 @@ public class Bookings {
         this.userAddress = userAddress;
         this.dateDay = dateDay;
         this.lessonReview = lessonReview;
+        this.phoneNumber = phoneNumber;
     }
 
     //empty constructor for creating object array of bookings from firebase

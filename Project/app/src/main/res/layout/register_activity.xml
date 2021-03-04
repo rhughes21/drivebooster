@@ -19,7 +19,7 @@
             android:id="@+id/edit_text_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username"
+            android:hint="@string/username"
             android:inputType="textPersonName"
             android:padding="15dp" />
 
@@ -27,7 +27,7 @@
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:padding="15dp"/>
 
@@ -35,15 +35,24 @@
             android:id="@+id/edit_text_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:padding="15dp"/>
         <EditText
             android:id="@+id/edit_text_passwordCnf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="@string/confirm_password"
             android:inputType="textPassword"
+            android:padding="15dp"/>
+
+        <EditText
+            android:id="@+id/edit_text_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/phone_number"
+            android:inputType="phone"
+            android:visibility="invisible"
             android:padding="15dp"/>
 
         <EditText
@@ -58,17 +67,6 @@
             android:layout_height="wrap_content"
             android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
             />
-
-        <TextView
-            android:id="@+id/register_longitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp"/>
-        <TextView
-            android:id="@+id/register_latitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp"/>
 
 
         <Spinner

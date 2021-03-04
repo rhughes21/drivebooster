@@ -16,6 +16,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -70,20 +71,15 @@ import static com.personal.drivebooster.Constants.REQUEST_LOCATION;
 
 public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    EditText editTextUsername, editTextEmail, editTextPassword, editTextPasswordCnf, registerFullAddress;
+    EditText editTextUsername, editTextEmail, editTextPassword, editTextPasswordCnf, registerFullAddress, registerPhoneNumber;
     FirebaseAuth auth;
     DatabaseReference databaseUsersReference, databaseInstructorsReference, databaseRef, dbUserRef;
     String userType, instructorName, instructorId;
     Spinner userSpinner;
-    TextView latitudeTextView, longitudeTextView;
-    LocationManager locationManager;
     String apiKey;
-    Double longitude, latitude;;
-    Button getLocationButton;
-    LocationListener locationListener;
+    Double longitude, latitude;
+    String phoneNumber;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private String provider;
-    ArrayList<String> instructorArray = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +90,8 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.edit_text_password);
         editTextPasswordCnf = findViewById(R.id.edit_text_passwordCnf);
-        latitudeTextView = findViewById(R.id.register_latitude);
-        longitudeTextView = findViewById(R.id.register_longitude);
         registerFullAddress = findViewById(R.id.register_full_address);
+        registerPhoneNumber = findViewById(R.id.edit_text_phone_number);
         auth = FirebaseAuth.getInstance();
         apiKey = getString(R.string.api_key);
 
@@ -125,10 +120,8 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             public void onPlaceSelected(@NonNull Place place) {
                 final LatLng latLng = place.getLatLng();
                 assert latLng != null;
-                latitudeTextView.setText(String.valueOf(latLng.latitude));
                 setLatitude(latLng.latitude);
                 setLongitude(latLng.longitude);
-                longitudeTextView.setText(String.valueOf(latLng.longitude));
                 registerFullAddress.setText(place.getAddress());
             }
 
@@ -201,7 +194,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         final String email = editTextEmail.getText().toString();
         final String password = editTextPassword.getText().toString();
         final String fullAddress = registerFullAddress.getText().toString();
-
+        final String phoneNo = registerPhoneNumber.getText().toString();
         if (name.equals("") || email.equals("") || password.equals("")) {
             Toast.makeText(getApplicationContext(), "Fields cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
@@ -213,7 +206,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                                 finish();
                                 Toast.makeText(getApplicationContext(), "User created", Toast.LENGTH_SHORT).show();
                                 if (userType.equals("Pupil")) {
-                                    registerPupil(name, email, password, getLatitude(), getLongitude(), fullAddress);
+                                    registerPupil(name, email, password, getLatitude(), getLongitude(), fullAddress, phoneNo);
                                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                 } else {
                                     registerInstructor(name, email, password, getLatitude(), getLongitude(), fullAddress);
@@ -229,18 +222,21 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
     //method used to register a pupil and store the details in firebase
-    public void registerPupil(String name, String email, String password, Double latitude, Double longitude, String fullAddress) {
+    public void registerPupil(String name, String email, String password, Double latitude, Double longitude, String fullAddress, String phoneNo) {
 
         name = editTextUsername.getText().toString();
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
         fullAddress = registerFullAddress.getText().toString();
-
+        phoneNo = registerPhoneNumber.getText().toString();
+        if(phoneNo.equals("")){
+            phoneNo = "Unavailable";
+        }
         instructorName = "not chosen";
         instructorId = "";
         databaseUsersReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        Users user_obj = new Users(name, email, password, userType, instructorName, instructorId, getLatitude(), getLongitude(), fullAddress);
+        Users user_obj = new Users(name, email, password, userType, instructorName, instructorId, getLatitude(), getLongitude(), fullAddress, phoneNo);
         FirebaseUser firebaseUser = auth.getCurrentUser();
 
         databaseUsersReference.child(firebaseUser.getUid()).setValue(user_obj)
@@ -262,7 +258,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
         fullAddress = registerFullAddress.getText().toString();
-
         databaseInstructorsReference = FirebaseDatabase.getInstance().getReference().child("Instructors");
 
         Instructors instructor_obj = new Instructors(name, email, password, userType, getLatitude(), getLongitude(), fullAddress);
@@ -287,6 +282,11 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
         userType = item;
+        if(userType.equals("Pupil")){
+            registerPhoneNumber.setVisibility(View.VISIBLE);
+        }else{
+            registerPhoneNumber.setVisibility(View.GONE);
+        }
     }
 
 
@@ -300,8 +300,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onSuccess(Location location) {
                 if(location != null){
-                    latitudeTextView.setText(String.valueOf(location.getLatitude()));
-                    longitudeTextView.setText(String.valueOf(location.getLongitude()));
                     registerFullAddress.setText(getAddress(location.getLatitude(), location.getLongitude()));
                 }
             }
@@ -310,8 +308,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         locationTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                latitudeTextView.setText("Unavailable");
-                longitudeTextView.setText("Unavailable");
             }
         });
 
@@ -332,8 +328,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
         return result.toString();
     }
-
-
 
 }
 

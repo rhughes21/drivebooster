@@ -69,4 +69,7 @@
     <string name="pupil_details_address">Address</string>
     <string name="send_email">Send Email</string>
     <string name="remind_pupil">Remind Pupil</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="phone_number">Phone Number</string>
 </resources>

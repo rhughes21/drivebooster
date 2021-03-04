@@ -170,7 +170,7 @@ public class InstructorHomeFragment extends Fragment implements View.OnClickList
         bundle.putString("bookingTime", bookingsFromFirebase.get(position).bookingTime);
         bundle.putString("userAddress", bookingsFromFirebase.get(position).userAddress);
         bundle.putString("userName", bookingsFromFirebase.get(position).userName);
-        bundle.putString("pupilId", previousBookingsFromFirebase.get(position).pupilId);
+        bundle.putString("phoneNo", bookingsFromFirebase.get(position).phoneNumber);
         Navigation.findNavController(view).navigate(R.id.action_instructor_home_nav_fragment_to_instructorBookingInfoFragment, bundle);
 
     }
