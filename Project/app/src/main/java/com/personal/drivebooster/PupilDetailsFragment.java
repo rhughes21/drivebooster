@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +34,7 @@ public class PupilDetailsFragment extends Fragment {
     TextView userNameView;
     TextView userInstructorTextView, userEmailView, addressView;
     DatabaseReference  dbUserRef;
-    Button logoutButton, updateDetailsButton;
+    Button logoutButton, updateDetailsButton, changeInstructorButton;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,12 +42,15 @@ public class PupilDetailsFragment extends Fragment {
         for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
+        BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
+        navBar.setVisibility(View.VISIBLE);
         view = inflater.inflate(R.layout.pupil_my_details_fragment, container, false);
         userNameView = view.findViewById(R.id.user_name);
         userEmailView = view.findViewById(R.id.user_email);
         userInstructorTextView = view.findViewById(R.id.user_instructor);
         addressView = view.findViewById(R.id.user_address);
         logoutButton = view.findViewById(R.id.logout_button);
+        changeInstructorButton = view.findViewById(R.id.change_instructor_button);
         updateDetailsButton = view.findViewById(R.id.update_user_details_button);
         getUserDetails();
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +63,12 @@ public class PupilDetailsFragment extends Fragment {
             }
         });
 
+        changeInstructorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeInstructor();
+            }
+        });
         updateDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +97,10 @@ public class PupilDetailsFragment extends Fragment {
 
             }
         });
+    }
+
+    public void changeInstructor(){
+        Navigation.findNavController(view).navigate(R.id.action_navigation_my_details_to_chooseInstructorFragment);
     }
     public void updateUserDetails(){
         Navigation.findNavController(view).navigate(R.id.action_navigation_my_details_to_editDetailsFragment);

@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_homeFragment2_to_pupilUpcomingBookingFragment"
             app:destination="@id/pupilUpcomingBookingFragment" />
+        <action
+            android:id="@+id/action_homeFragment2_to_chooseInstructorFragment"
+            app:destination="@id/chooseInstructorFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_booking"
@@ -34,6 +37,9 @@
         <action
             android:id="@+id/action_navigation_my_details_to_editDetailsFragment"
             app:destination="@id/editDetailsFragment" />
+        <action
+            android:id="@+id/action_navigation_my_details_to_chooseInstructorFragment"
+            app:destination="@id/chooseInstructorFragment" />
     </fragment>
 
     <fragment
@@ -104,5 +110,9 @@
         android:id="@+id/editDetailsFragment"
         android:name="com.personal.drivebooster.EditDetailsFragment"
         android:label="EditDetailsFragment" />
+    <fragment
+        android:id="@+id/chooseInstructorFragment"
+        android:name="com.personal.drivebooster.ChooseInstructorFragment"
+        android:label="@string/change_instructor" />
 
 </navigation>

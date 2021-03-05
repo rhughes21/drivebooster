@@ -73,4 +73,6 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="phone_number">Phone Number</string>
     <string name="update_and_find_address">Find address and update</string>
+    <string name="choose_instructor_to_continue">Choose Instructor to Continue</string>
+    <string name="change_instructor">Change Instructor</string>
 </resources>

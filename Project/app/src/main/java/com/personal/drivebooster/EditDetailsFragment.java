@@ -24,6 +24,7 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +53,8 @@ public class EditDetailsFragment extends Fragment  {
         userNameView = view.findViewById(R.id.edit_user_name);
         updateDetails = view.findViewById(R.id.update_details_button);
         auth = FirebaseAuth.getInstance();
+        BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
+        navBar.setVisibility(View.GONE);
         if (!Places.isInitialized()) {
             Places.initialize(getActivity(), getString(R.string.api_key), Locale.UK);
         }

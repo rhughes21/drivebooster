@@ -166,6 +166,20 @@
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/change_instructor_button"
+            app:layout_constraintTop_toBottomOf="@id/user_instructor_layout" />
+
+        <Button
+            android:id="@+id/change_instructor_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/large_button_drawable"
+            android:padding="8dp"
+            android:text="@string/change_instructor"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/update_user_details_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_instructor_layout" />
 
@@ -184,5 +198,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/details_layout"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
