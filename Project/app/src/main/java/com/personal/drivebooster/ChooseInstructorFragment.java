@@ -1,5 +1,6 @@
 package com.personal.drivebooster;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +32,12 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
     RecyclerView instructorRecycler;
     TextView noInstructorsText;
     boolean instructorAvailable, hasPickedInstructor;
-    double myLng, lessThanMyLng, moreThanMyLng, instLng;
+    double myLng, lessThanMyLng, moreThanMyLng, instLng, myLat;
     String instructorName, instructorId;
     Button chooseInstructorButton;
     DatabaseReference databaseRef, dbUserRef;
     Query databaseQuery;
+    Location pupilLocation, instructorLocation;
     CustomInstructorAdapter customInstructorAdapter;
     final List<Instructors> instructorsFromFirebase = new ArrayList<Instructors>();
 
@@ -47,6 +49,8 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         getInstructorsFromFirebase();
         BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
         navBar.setVisibility(View.GONE);
+        pupilLocation = new Location("Pupils Location");
+        instructorLocation = new Location("Instructors Location");
 
         instructorRecycler = view.findViewById(R.id.my_instructors_recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -100,12 +104,14 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
                     noInstructorsText.setVisibility(View.GONE);
                     setInstructorAvailable(true);
                     checkInstructorChosen();
-                    getMyLongitudeDifference();
+                    //getMyLongitudeDifference();
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child: children){
                         Instructors instructors = child.getValue(Instructors.class);
-                        instLng = instructors.longitude;
-                        if(instLng > lessThanMyLng && instLng < moreThanMyLng){
+
+                        instructorLocation.setLatitude(instructors.latitude);
+                        instructorLocation.setLongitude(instructors.longitude);
+                        if(pupilLocation.distanceTo(instructorLocation) < 10000 && !getInstName().equals(instructors.name)){
                             instructorsFromFirebase.add(instructors);
                             customInstructorAdapter.notifyDataSetChanged();
                         }
@@ -127,6 +133,7 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
 
         lessThanMyLng = x - 1;
         moreThanMyLng = x + 1;
+
     }
     public Double getLng(){
         return myLng;
@@ -134,6 +141,14 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
 
     public void setMyLng(Double myLng){
         this.myLng = myLng;
+    }
+
+    public Double getLat(){
+        return myLat;
+    }
+
+    public void setMyLat(Double myLat){
+        this.myLat = myLat;
     }
 
     public void checkInstructorChosen(){
@@ -147,6 +162,9 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
                 if(!snapshot.equals(null)) {
                     setInstName(snapshot.child("instructorName").getValue(String.class));
                     setMyLng(snapshot.child("longitude").getValue(Double.class));
+                    setMyLat(snapshot.child("latitude").getValue(Double.class));
+                    pupilLocation.setLongitude(getLng());
+                    pupilLocation.setLatitude(getLat());
                     setChooseInstructorVisibility();
                 }else if(snapshot.equals(null)){
                     Toast.makeText(getContext(), "You are an instructor", Toast.LENGTH_SHORT).show();
