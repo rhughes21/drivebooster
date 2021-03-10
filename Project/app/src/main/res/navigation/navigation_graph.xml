@@ -48,9 +48,6 @@
         android:label="@string/home_text"
         tools:layout="@layout/instructor_home_fragment">
         <action
-            android:id="@+id/action_instructor_home_nav_fragment_to_setInstructorTimesFragment"
-            app:destination="@id/setInstructorTimesFragment" />
-        <action
             android:id="@+id/action_instructor_home_nav_fragment_to_instructorBookingInfoFragment"
             app:destination="@id/instructorBookingInfoFragment" />
         <action
@@ -114,5 +111,20 @@
         android:id="@+id/chooseInstructorFragment"
         android:name="com.personal.drivebooster.ChooseInstructorFragment"
         android:label="@string/change_instructor" />
+    <fragment
+        android:id="@+id/instructorDetailsFragment"
+        android:name="com.personal.drivebooster.InstructorDetailsFragment"
+        android:label="InstructorDetailsFragment" >
+        <action
+            android:id="@+id/action_instructorDetailsFragment_to_instructorUpdateDetailsFragment"
+            app:destination="@id/instructorUpdateDetailsFragment" />
+        <action
+            android:id="@+id/action_instructorDetailsFragment_to_setInstructorTimesFragment"
+            app:destination="@id/setInstructorTimesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/instructorUpdateDetailsFragment"
+        android:name="com.personal.drivebooster.InstructorUpdateDetailsFragment"
+        android:label="InstructorUpdateDetailsFragment" />
 
 </navigation>

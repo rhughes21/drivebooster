@@ -31,10 +31,9 @@ import java.util.List;
 
 import static androidx.core.os.BundleKt.bundleOf;
 
-public class InstructorHomeFragment extends Fragment implements View.OnClickListener, CustomBookingsAdapter.onBookingListener, PreviousBookingAdapter.onPreviousBookingListener{
+public class InstructorHomeFragment extends Fragment implements  CustomBookingsAdapter.onBookingListener, PreviousBookingAdapter.onPreviousBookingListener{
 
     View view;
-    Button logOutButton, addTimesButton;
     TextView upcomingBookingsHeader, previousBookingHeader;
     RecyclerView upcomingBookingsRecycler, previousBookingRecycler;
     String instructorName;
@@ -53,8 +52,6 @@ public class InstructorHomeFragment extends Fragment implements View.OnClickList
         getMyName();
         getBookings();
         getPreviousBookings();
-        addTimesButton = view.findViewById(R.id.show_times_fragment);
-        logOutButton = view.findViewById(R.id.instructor_logout_button);
         upcomingBookingsHeader = view.findViewById(R.id.instructor_bookings_header);
         upcomingBookingsRecycler = view.findViewById(R.id.instructor_bookings_recycler);
         previousBookingHeader = view.findViewById(R.id.instructor_previous_bookings_header);
@@ -70,18 +67,6 @@ public class InstructorHomeFragment extends Fragment implements View.OnClickList
         previousBookingRecycler.setAdapter(previousBookingAdapter);
         BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
         navBar.setVisibility(View.VISIBLE);
-
-        logOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-                getActivity().finish();
-                System.exit(0);
-            }
-        });
-
-        addTimesButton.setOnClickListener(this);
 
 
         return view;
@@ -158,10 +143,6 @@ public class InstructorHomeFragment extends Fragment implements View.OnClickList
         this.instructorName = instructorName;
     }
 
-    @Override
-    public void onClick(View view) {
-        Navigation.findNavController(view).navigate(R.id.action_instructor_home_nav_fragment_to_setInstructorTimesFragment);
-    }
 
     @Override
     public void onBookingClick(int position) {
