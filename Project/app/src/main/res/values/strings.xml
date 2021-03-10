@@ -75,4 +75,5 @@
     <string name="update_and_find_address">Find address and update</string>
     <string name="choose_instructor_to_continue">Choose Instructor to Continue</string>
     <string name="change_instructor">Change Instructor</string>
+    <string name="instructor_radius_text">These instructors are within 10 kilometers of your chosen address</string>
 </resources>

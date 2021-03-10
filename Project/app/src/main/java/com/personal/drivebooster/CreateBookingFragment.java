@@ -125,7 +125,7 @@ public class CreateBookingFragment extends Fragment  {
                     dateDay = sdf.format(date);
                     datePickedText.setText(dateDay);
                     instructorScheduleFromFirebase.clear();
-                    getInstructorSchedule();
+                    checkInstructorHasTimes();
                 }
             }
         });
@@ -293,6 +293,25 @@ public class CreateBookingFragment extends Fragment  {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    public void checkInstructorHasTimes(){
+        databaseScheduleRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(getInstId());
+        databaseScheduleRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild("Times")){
+                    getInstructorSchedule();
+                }else{
+                    noTimeAvailableView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

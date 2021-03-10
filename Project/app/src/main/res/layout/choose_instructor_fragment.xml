@@ -43,5 +43,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/my_instructors_recycler" />
 
+    <TextView
+        android:id="@+id/instructor_radius_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/instructor_radius_text"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/instructor_choice_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
