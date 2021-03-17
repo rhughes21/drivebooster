@@ -89,6 +89,8 @@ public class EditDetailsFragment extends Fragment  {
                 String address = place.getAddress();
                 Users userObj = new Users();
                 userObj.updateNameAndAddress(myUuid, userNameView.getText().toString(), address, place.getLatLng().latitude, place.getLatLng().longitude);
+                userObj.updatePupilNameAndAddressInBookings(myUuid, userNameView.getText().toString(), address);
+                userObj.updatePupilNameAndAddressInPreviousBookings(myUuid, userNameView.getText().toString());
                 // do query with address
 
             } else if (resultCode == RESULT_ERROR) {
