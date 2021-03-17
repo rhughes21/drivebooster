@@ -92,7 +92,7 @@ public class Instructors {
         });
     }
     public void updateInstructorNameInPreviousBooking(String pupilId, final String instructorName){
-        dbEditPreviousBooking = FirebaseDatabase.getInstance().getReference().child("Previous Bookings");
+        dbEditPreviousBooking = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
         updateNameInPrevious = dbEditPreviousBooking.orderByChild("pupilId").equalTo(pupilId);
         updateNameInPrevious.addValueEventListener(new ValueEventListener() {
             @Override
