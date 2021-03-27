@@ -84,14 +84,9 @@ public class EditDetailsFragment extends Fragment  {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 Log.i("TAG", "Place: " + place.getName() + ", " + place.getId() + ", " + place.getAddress());
-                FirebaseUser user = auth.getCurrentUser();
-                String myUuid = user.getUid();
                 String address = place.getAddress();
                 Users userObj = new Users();
-                userObj.updateNameAndAddress(myUuid, userNameView.getText().toString(), address, place.getLatLng().latitude, place.getLatLng().longitude);
-                userObj.updatePupilNameAndAddressInBookings(myUuid, userNameView.getText().toString(), address);
-                userObj.updatePupilNameAndAddressInPreviousBookings(myUuid, userNameView.getText().toString());
-                // do query with address
+                userObj.updateNameAndAddress(userNameView.getText().toString(), address, place.getLatLng().latitude, place.getLatLng().longitude);
 
             } else if (resultCode == RESULT_ERROR) {
                 // TODO: Handle the error.
