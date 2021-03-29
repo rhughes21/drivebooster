@@ -26,6 +26,20 @@
         app:layout_constraintBottom_toTopOf="@id/instructor_previous_bookings_header"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
+        android:visibility="gone"
+        android:background="@color/colorPrimaryLight30"
+        android:padding="4dp"/>
+
+    <TextView
+        android:id="@+id/instructor_no_upcoming_bookings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/instructor_bookings_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:text="@string/no_upcoming_bookings"
         android:background="@color/colorPrimaryLight30"
         android:padding="4dp"/>
 
@@ -46,10 +60,24 @@
         android:id="@+id/instructor_previous_bookings_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/instructor_previous_bookings_header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
+        android:background="@color/colorPrimaryLight30"
+        android:padding="4dp"/>
+
+    <TextView
+        android:id="@+id/instructor_no_previous_bookings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/instructor_previous_bookings_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:text="@string/no_previous_bookings"
         android:background="@color/colorPrimaryLight30"
         android:padding="4dp"/>
 

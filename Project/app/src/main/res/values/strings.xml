@@ -79,4 +79,7 @@
     <string name="booking_theory">Book Theory Test</string>
     <string name="booking_driving">Book Practical Test</string>
     <string name="edit_details_title">Edit Details</string>
+    <string name="pupil_no_upcoming_bookings">No Upcoming Bookings, book a lesson with your instructor</string>
+    <string name="no_upcoming_bookings">No Upcoming Bookings, they will appear when pupils book lessons</string>
+    <string name="no_previous_bookings">No Previous Bookings</string>
 </resources>

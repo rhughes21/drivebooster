@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     RecyclerView bookingsRecycler, manoeuvreRecycler;
     FirebaseAuth auth;
     Button previousBookingsButton;
-    TextView noInstructorsText, myBookingsText;
+    TextView noInstructorsText, myBookingsText, noBookingsText;
     DatabaseReference  dbUserRef,databaseBookingRef, previousBookingsReference;
     boolean instructorAvailable;
     String instructorName;
@@ -80,6 +80,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
         updatePreviousBookings();
         addManoeuvres();
+        noBookingsText = view.findViewById(R.id.no_upcoming_bookings);
         calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -1);
         currentDate = calendar.getTime();
@@ -100,7 +101,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         bookingsRecycler.setAdapter(customBookingsAdapter);
         manoeuvresAdapter = new ManoeuvresAdapter(manoeuvres, lifecycle);
         manoeuvreRecycler.setAdapter(manoeuvresAdapter);
-
         auth = FirebaseAuth.getInstance();
         noInstructorsText = view.findViewById(R.id.no_instructors_available);
 
@@ -178,6 +178,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                         if(bookings.pupilId.equals(userId) ) {
                             bookingsFromFirebase.add(bookings);
                             customBookingsAdapter.notifyDataSetChanged();
+                            noBookingsText.setVisibility(View.GONE);
+                            bookingsRecycler.setVisibility(View.VISIBLE);
                         }
                     }
                 }
@@ -187,6 +189,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
             }
         });
+
     }
 
     public void updatePreviousBookings(){
