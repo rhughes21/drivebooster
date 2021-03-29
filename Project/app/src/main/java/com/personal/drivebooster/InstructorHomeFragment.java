@@ -34,7 +34,7 @@ import static androidx.core.os.BundleKt.bundleOf;
 public class InstructorHomeFragment extends Fragment implements  CustomBookingsAdapter.onBookingListener, PreviousBookingAdapter.onPreviousBookingListener{
 
     View view;
-    TextView upcomingBookingsHeader, previousBookingHeader;
+    TextView upcomingBookingsHeader, previousBookingHeader, noUpcomingBookings, noPreviousBookings;
     RecyclerView upcomingBookingsRecycler, previousBookingRecycler;
     String instructorName;
     CustomBookingsAdapter upcomingBookingsAdapter;
@@ -56,6 +56,8 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
         upcomingBookingsRecycler = view.findViewById(R.id.instructor_bookings_recycler);
         previousBookingHeader = view.findViewById(R.id.instructor_previous_bookings_header);
         previousBookingRecycler = view.findViewById(R.id.instructor_previous_bookings_recycler);
+        noPreviousBookings = view.findViewById(R.id.instructor_no_previous_bookings);
+        noUpcomingBookings = view.findViewById(R.id.instructor_no_upcoming_bookings);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager linearLayoutManagerPrevious = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         upcomingBookingsRecycler.setLayoutManager(linearLayoutManager);
@@ -84,6 +86,8 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
                         if(bookings.instructorName.equals(getInstName()) ) {
                             bookingsFromFirebase.add(bookings);
                             upcomingBookingsAdapter.notifyDataSetChanged();
+                            noUpcomingBookings.setVisibility(View.GONE);
+                            upcomingBookingsRecycler.setVisibility(View.VISIBLE);
                         }
                     }
                 }
@@ -107,6 +111,8 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
                         if(bookings.instructorName.equals(getInstName()) ) {
                             previousBookingsFromFirebase.add(bookings);
                             previousBookingAdapter.notifyDataSetChanged();
+                            noPreviousBookings.setVisibility(View.GONE);
+                            previousBookingRecycler.setVisibility(View.VISIBLE);
                         }
                     }
                 }
