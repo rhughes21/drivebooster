@@ -76,4 +76,6 @@
     <string name="choose_instructor_to_continue">Choose Instructor to Continue</string>
     <string name="change_instructor">Change Instructor</string>
     <string name="instructor_radius_text">These instructors are within 10 kilometers of your chosen address</string>
+    <string name="booking_theory">Book Theory Test</string>
+    <string name="booking_driving">Book Practical Test</string>
 </resources>
