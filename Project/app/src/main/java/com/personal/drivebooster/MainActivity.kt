@@ -1,8 +1,12 @@
 package com.personal.drivebooster
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
@@ -18,7 +22,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.home_fragment.*
 
 var userIsPupil : Boolean = false
 
@@ -44,6 +47,36 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         setUpNavigation()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        return if(userIsPupil){
+            val inflater: MenuInflater = menuInflater
+            inflater.inflate(R.menu.gov_links_menu, menu)
+            true
+        }
+        else{
+            false
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.book_theory_test -> {
+                val uri: Uri = Uri.parse("https://www.nidirect.gov.uk/services/book-change-or-cancel-your-theory-test-online")
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                startActivity(intent)
+                true
+            }
+            R.id.book_driving_test -> {
+                val uri: Uri = Uri.parse("https://www.nidirect.gov.uk/services/book-your-practical-driving-test-online")
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
     //method to determine what the back button does on this screen
     override fun onSupportNavigateUp() = findNavController(R.id.main_navigation_fragment).navigateUp()
