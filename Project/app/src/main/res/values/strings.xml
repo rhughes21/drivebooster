@@ -78,4 +78,5 @@
     <string name="instructor_radius_text">These instructors are within 10 kilometers of your chosen address</string>
     <string name="booking_theory">Book Theory Test</string>
     <string name="booking_driving">Book Practical Test</string>
+    <string name="edit_details_title">Edit Details</string>
 </resources>

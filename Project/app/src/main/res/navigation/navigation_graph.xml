@@ -106,7 +106,7 @@
     <fragment
         android:id="@+id/editDetailsFragment"
         android:name="com.personal.drivebooster.EditDetailsFragment"
-        android:label="EditDetailsFragment" />
+        android:label="@string/edit_details_title" />
     <fragment
         android:id="@+id/chooseInstructorFragment"
         android:name="com.personal.drivebooster.ChooseInstructorFragment"
@@ -114,7 +114,7 @@
     <fragment
         android:id="@+id/instructorDetailsFragment"
         android:name="com.personal.drivebooster.InstructorDetailsFragment"
-        android:label="InstructorDetailsFragment" >
+        android:label="@string/my_details" >
         <action
             android:id="@+id/action_instructorDetailsFragment_to_instructorUpdateDetailsFragment"
             app:destination="@id/instructorUpdateDetailsFragment" />
@@ -125,6 +125,6 @@
     <fragment
         android:id="@+id/instructorUpdateDetailsFragment"
         android:name="com.personal.drivebooster.InstructorUpdateDetailsFragment"
-        android:label="InstructorUpdateDetailsFragment" />
+        android:label="@string/edit_details_title" />
 
 </navigation>
