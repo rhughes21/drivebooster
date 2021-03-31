@@ -62,7 +62,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         userName = getArguments().getString("userName");
         pupilId = getArguments().getString("pupilId");
         pupilPhoneNumber = getArguments().getString("phoneNo");
-        //getEmailFromFirebase();
+        getEmailFromFirebase();
         bookingInfoDate.setText(bookingDate);
         bookingInfoTime.setText(getArguments().getString("bookingTime"));
         retrieveBookingKeyFromFirebase();
@@ -71,7 +71,11 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         remindButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendReminderSMSMessage();
+                if(!pupilPhoneNumber.equals("Unavailable")){
+                    sendReminderSMSMessage();
+                } else{
+                    sendBookingReminderEmail();
+                }
             }
         });
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +166,12 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
                     public void onClick(DialogInterface dialog, int id) {
                         Bookings b = new Bookings();
                         b.deleteBooking(getBookingKey());
-                        sendBookingDeletedSMSMessage();
+                        if(!pupilPhoneNumber.equals("Unavailable")){
+                            sendBookingDeletedSMSMessage();
+                        }else {
+                            sendBookingDeletedEmail();
+                        }
+
                     }
                 });
         builder.setNegativeButton(
@@ -189,8 +198,31 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Booking deleted");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Let" + userName + "know why you had to delete the booking");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Booking on " + bookingDate + " was deleted");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Let " + userName + " know why you had to delete the booking");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            getActivity().finish();
+            Log.i("Finished sending email...", "");
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @SuppressLint("LongLogTag")
+    public void sendBookingReminderEmail(){
+        Log.i("Send email", "");
+        String[] TO = {getPupilEmail()};
+        String[] CC = {""};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_CC, CC);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Booking reminder");
+        emailIntent.putExtra(Intent.EXTRA_TEXT,  userName + " this is a reminder for your booking on " + bookingDate + " at " + bookingInfoTime.getText().toString());
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
@@ -210,12 +242,11 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
     }
 
     public void getEmailFromFirebase(){
-        dbUserRef = FirebaseDatabase.getInstance().getReference().child(pupilId);
+        dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(pupilId);
         dbUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 setPupilEmail(snapshot.child("email").getValue(String.class));
-                sendBookingDeletedEmail();
             }
 
             @Override
@@ -230,6 +261,8 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
 
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(pupilPhoneNumber, null, message, null, null);
+        Log.i("Pupil Phone", pupilPhoneNumber);
+        Toast.makeText(getActivity(), "SMS sent ", Toast.LENGTH_SHORT).show();
     }
 
     protected void sendReminderSMSMessage() {
@@ -237,6 +270,31 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
 
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(pupilPhoneNumber, null, message, null, null);
+        Toast.makeText(getActivity(), "SMS reminder sent ", Toast.LENGTH_SHORT).show();
+    }
+
+    private void noPhoneNumberAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.user_has_no_number));
+        builder.setPositiveButton(
+                "Compose email",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        sendBookingReminderEmail();
+                    }
+                });
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog updateAlert = builder.create();
+        updateAlert.show();
+        updateAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.negative_alert_button));
+        updateAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.positive_alert_button));
+
     }
 
 

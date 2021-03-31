@@ -158,6 +158,7 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
         bundle.putString("userAddress", bookingsFromFirebase.get(position).userAddress);
         bundle.putString("userName", bookingsFromFirebase.get(position).userName);
         bundle.putString("phoneNo", bookingsFromFirebase.get(position).phoneNumber);
+        bundle.putString("pupilId", bookingsFromFirebase.get(position).pupilId);
         Navigation.findNavController(view).navigate(R.id.action_instructor_home_nav_fragment_to_instructorBookingInfoFragment, bundle);
 
     }

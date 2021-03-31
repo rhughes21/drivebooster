@@ -82,4 +82,5 @@
     <string name="pupil_no_upcoming_bookings">No Upcoming Bookings, book a lesson with your instructor</string>
     <string name="no_upcoming_bookings">No Upcoming Bookings, they will appear when pupils book lessons</string>
     <string name="no_previous_bookings">No Previous Bookings</string>
+    <string name="user_has_no_number">This pupil has no phone number record, please email to remind them off the lesson</string>
 </resources>
