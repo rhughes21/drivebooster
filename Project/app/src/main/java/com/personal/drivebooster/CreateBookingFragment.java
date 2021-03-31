@@ -265,10 +265,11 @@ public class CreateBookingFragment extends Fragment  {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         String t = child.getValue(String.class);
+                        String[] arrayString = t.split(":");
                         canUseTime = true;
                         for(int i = 0; i< bookingsFromFirebase.size(); i++){
                             if (bookingsFromFirebase.get(i).bookingDate.equals(dateString)) {
-                                if (bookingsFromFirebase.get(i).instructorName.equals(getInstName()) && bookingsFromFirebase.get(i).bookingTime.equals(t)) {
+                                if (bookingsFromFirebase.get(i).instructorName.equals(getInstName()) && bookingsFromFirebase.get(i).bookingTime.contains(arrayString[0])) {
                                     Log.i("INSTRUCTOR HAS THE TIME", t);
                                     canUseTime = false;
                                     break;
@@ -286,7 +287,7 @@ public class CreateBookingFragment extends Fragment  {
                     timeListView.setVisibility(View.VISIBLE);
                     noTimeAvailableView.setVisibility(View.GONE);
                     setUpListView();
-                }else{
+                }else if (!canUseTime){
                     noTimeAvailableView.setVisibility(View.VISIBLE);
                     timeListView.setVisibility(View.INVISIBLE);
                 }
