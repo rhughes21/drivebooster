@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if(!user!!.equals(null)){
+            Log.i("User id", user!!.uid)
             userId = user!!.uid
         }
 

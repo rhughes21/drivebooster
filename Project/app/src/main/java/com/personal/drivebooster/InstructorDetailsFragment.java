@@ -56,8 +56,6 @@ public class InstructorDetailsFragment extends Fragment {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
-                getActivity().finish();
-                System.exit(0);
             }
         });
 

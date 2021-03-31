@@ -46,28 +46,24 @@ import java.util.Map;
 
 import javax.xml.transform.dom.DOMLocator;
 
-public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener, CustomBookingsAdapter.onBookingListener {
+public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onBookingListener {
 
     View view;
     RecyclerView bookingsRecycler, manoeuvreRecycler;
     FirebaseAuth auth;
     Button previousBookingsButton;
     TextView noInstructorsText, myBookingsText, noBookingsText;
-    DatabaseReference  dbUserRef,databaseBookingRef, previousBookingsReference;
+    DatabaseReference  dbUserRef,databaseBookingRef, previousBookingsReference, instructorsAvailableRef;
     boolean instructorAvailable;
     String instructorName;
     CustomBookingsAdapter customBookingsAdapter;
     Date currentDate;
     Calendar calendar;
-
     ManoeuvresAdapter manoeuvresAdapter;
     final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
     List<Manoeuvres> manoeuvres = new ArrayList<Manoeuvres>();
     YouTubePlayerView manoeuvreYouTubePlayerView;
     Lifecycle lifecycle = getLifecycle();
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -77,15 +73,16 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
-
+        checkInstructorChosen();
         updatePreviousBookings();
         addManoeuvres();
+
         noBookingsText = view.findViewById(R.id.no_upcoming_bookings);
         calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -1);
         currentDate = calendar.getTime();
         bookingsFromFirebase.clear();
-        checkInstructorChosen();
+
         getBookings();
         myBookingsText = view.findViewById(R.id.my_bookings_header);
         bookingsRecycler = view.findViewById(R.id.my_bookings_recycler);
@@ -117,27 +114,43 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
 
-    //onItemSelected method for the instructor spinner
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String item = parent.getItemAtPosition(position).toString();
-        instructorName = item;
-
-    }
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    public boolean isInstructorAvailable() {
+        return instructorAvailable;
     }
 
+    public void setInstructorAvailable(boolean instructorAvailable) {
+        this.instructorAvailable = instructorAvailable;
+    }
+
+    public void instructorsAvailable(){
+
+        instructorsAvailableRef = FirebaseDatabase.getInstance().getReference().child("Instructors");
+        instructorsAvailableRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChildren()){
+                    setInstructorAvailable(true);
+                }else{
+                    setInstructorAvailable(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     //method to get if the user has picked an instructor or not
     public void checkInstructorChosen(){
+        instructorsAvailable();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
-
         dbUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("instructorName").getValue().equals("not chosen")){
+                if(snapshot.child("instructorName").getValue().equals("not chosen") && isInstructorAvailable()){
                     showInstructorDialog();
                 }
             }

@@ -195,7 +195,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         final String password = editTextPassword.getText().toString();
         final String fullAddress = registerFullAddress.getText().toString();
         final String phoneNo = registerPhoneNumber.getText().toString();
-        if (name.equals("") || email.equals("") || password.equals("")) {
+        if (name.equals("") || email.equals("") || password.equals("") || fullAddress.equals("") || userType.equals("")) {
             Toast.makeText(getApplicationContext(), "Fields cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
             auth.createUserWithEmailAndPassword(email, password)
