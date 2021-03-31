@@ -66,7 +66,7 @@ public class CreateBookingFragment extends Fragment  {
         view = inflater.inflate(R.layout.fragment_create_booking_fragment, container, false);
 
         currentDate = new Date();
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
         cal.setTime(currentDate);
         day = cal.get(Calendar.DATE);
         month = cal.get(Calendar.MONTH) + 1;
@@ -108,7 +108,7 @@ public class CreateBookingFragment extends Fragment  {
 
     //method to set the start and end date shown on the calendar
     private void setUpPicker(){
-        dayPicker.setStartDate(10, month, year);
+        dayPicker.setStartDate(day, month, year);
         dayPicker.setEndDate(day,month + 6,year);
     }
 
@@ -182,10 +182,6 @@ public class CreateBookingFragment extends Fragment  {
                     if(bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).pupilId.equals(userId)){
                         Toast.makeText(getContext(), "You have a booking already on that day", Toast.LENGTH_SHORT).show();
                         canBookLesson = false;
-                    }else if (bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).bookingTime.equals(timeString)
-                            && bookingsFromFirebase.get(i).instructorName.equals(getInstName())){
-                        Toast.makeText(getContext(), "Your instructor already has a booking at that time", Toast.LENGTH_SHORT).show();
-                        canBookLesson = false;
                     }
                 }
 
@@ -195,7 +191,7 @@ public class CreateBookingFragment extends Fragment  {
                     if(dateString == null || timeString == null || dateDay == null){
                         Toast.makeText(getContext(), "Make sure you have chosen a date and time", Toast.LENGTH_SHORT).show();
                     }else if(getInstName().equals("not chosen")){
-                        Toast.makeText(getContext(), "Please choose an instructor on the home screen before booking", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Please choose an instructor from the details screen before booking", Toast.LENGTH_SHORT).show();
                     }else{
                         databaseCreateBookingRef.push().setValue(bookingObj)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
