@@ -273,29 +273,5 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         Toast.makeText(getActivity(), "SMS reminder sent ", Toast.LENGTH_SHORT).show();
     }
 
-    private void noPhoneNumberAlertDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(getString(R.string.user_has_no_number));
-        builder.setPositiveButton(
-                "Compose email",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        sendBookingReminderEmail();
-                    }
-                });
-        builder.setNegativeButton(
-                "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog updateAlert = builder.create();
-        updateAlert.show();
-        updateAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.negative_alert_button));
-        updateAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.positive_alert_button));
-
-    }
-
 
 }
