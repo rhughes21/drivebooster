@@ -54,8 +54,9 @@ public class CreateBookingFragment extends Fragment  {
         boolean canBookLesson, canUseTime;
         Date currentDate;
         int day, month, year;
-        final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
+        List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
         final List<String> instructorScheduleFromFirebase = new ArrayList<String>();
+        ArrayAdapter<String> adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -117,7 +118,6 @@ public class CreateBookingFragment extends Fragment  {
         dayPicker.getSelectedDate(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@Nullable Date date) {
-
                 if(date != null){
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
                     SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
@@ -125,6 +125,7 @@ public class CreateBookingFragment extends Fragment  {
                     dateDay = sdf.format(date);
                     datePickedText.setText(dateDay);
                     instructorScheduleFromFirebase.clear();
+
                     checkInstructorHasTimes();
                 }
             }
@@ -134,7 +135,7 @@ public class CreateBookingFragment extends Fragment  {
 
     //method to set up the ListView using the times array
     public void setUpListView(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, instructorScheduleFromFirebase);
+        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, instructorScheduleFromFirebase);
         timeListView.setAdapter(adapter);
     }
 
@@ -219,23 +220,8 @@ public class CreateBookingFragment extends Fragment  {
 
     //method to get all current bookings from firebase and add these to an Object array
     public void getBookings(){
-        databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
-        databaseBookingRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
-                    Iterable<DataSnapshot> children = snapshot.getChildren();
-                    for (DataSnapshot child : children) {
-                        Bookings bookings = child.getValue(Bookings.class);
-                        bookingsFromFirebase.add(bookings);
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        Bookings bookings = new Bookings();
+        bookingsFromFirebase = bookings.returnBookingsFromFirebase();
     }
 
     public void getInstructorIdFromFirebase(){
@@ -253,6 +239,7 @@ public class CreateBookingFragment extends Fragment  {
     }
 
     public void getInstructorSchedule(){
+
         databaseScheduleRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(getInstId()).child("Times").child(dateDay).child("times");
         databaseScheduleRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -283,6 +270,7 @@ public class CreateBookingFragment extends Fragment  {
                     timeListView.setVisibility(View.VISIBLE);
                     noTimeAvailableView.setVisibility(View.GONE);
                     setUpListView();
+                    adapter.notifyDataSetChanged();
                 }else if (!canUseTime){
                     noTimeAvailableView.setVisibility(View.VISIBLE);
                     timeListView.setVisibility(View.INVISIBLE);
@@ -300,7 +288,12 @@ public class CreateBookingFragment extends Fragment  {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.hasChild("Times")){
-                    getInstructorSchedule();
+                    if(snapshot.child("Times").hasChild(dateDay)){
+                        getInstructorSchedule();
+                    }else if(!snapshot.child("Times").hasChild(dateDay)){
+                        noTimeAvailableView.setVisibility(View.VISIBLE);
+                        timeListView.setVisibility(View.GONE);
+                    }
                 }else{
                     noTimeAvailableView.setVisibility(View.VISIBLE);
                 }

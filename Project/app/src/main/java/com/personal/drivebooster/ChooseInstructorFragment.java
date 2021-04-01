@@ -108,7 +108,6 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child: children){
                         Instructors instructors = child.getValue(Instructors.class);
-
                         instructorLocation.setLatitude(instructors.latitude);
                         instructorLocation.setLongitude(instructors.longitude);
                         if(pupilLocation.distanceTo(instructorLocation) < 10000 && !getInstName().equals(instructors.name)){
