@@ -24,8 +24,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +36,15 @@ import java.util.List;
 public class SetInstructorTimesFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     View view;
+    TextView chosenTimesList;
     FirebaseAuth auth;
     TimePicker timePicker;
     Button addTime, submitTimes;
     String lastTimeChosen, dayType;
     Spinner daySpinner;
-    DatabaseReference databaseTimesReference;
+    DatabaseReference databaseTimesReference, databaseCurrentTimesReference;
     List<String> myTimes = new ArrayList<>();
+    List<String> chosenTimes = new ArrayList<>();
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,6 +52,7 @@ public class SetInstructorTimesFragment extends Fragment implements AdapterView.
         view = inflater.inflate(R.layout.set_up_times_fragment, container, false);
         timePicker = view.findViewById(R.id.instructor_time_picker);
         addTime = view.findViewById(R.id.pick_time_button);
+        chosenTimesList = view.findViewById(R.id.chosen_times_list);
         submitTimes = view.findViewById(R.id.submit_times_button);
         daySpinner = view.findViewById(R.id.day_type_spinner);
         auth = FirebaseAuth.getInstance();
@@ -68,6 +74,8 @@ public class SetInstructorTimesFragment extends Fragment implements AdapterView.
             @Override
             public void onClick(View v) {
                 myTimes.add(lastTimeChosen);
+                chosenTimes.add(lastTimeChosen);
+                chosenTimesList.setText("Times selected " + chosenTimes.toString());
                 Toast.makeText(getContext(), "Time chosen  " + lastTimeChosen, Toast.LENGTH_SHORT).show();
             }
         });
@@ -113,9 +121,5 @@ public class SetInstructorTimesFragment extends Fragment implements AdapterView.
                         }
                     }
                 });
-    }
-
-    public void checkTimesExists(){
-
     }
 }
