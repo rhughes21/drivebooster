@@ -3,28 +3,28 @@
     android:id="@+id/animation_list_splash"
     android:oneshot="true">
     <item
-        android:drawable="@drawable/db_splash_blue"
+        android:drawable="@drawable/db_splash_blue_copy"
         android:duration="250" />
     <item
-        android:drawable="@drawable/db_splash_white"
+        android:drawable="@drawable/db_splash_white_copy"
         android:duration="250" />
     <item
-        android:drawable="@drawable/db_splash_blue"
+        android:drawable="@drawable/db_splash_blue_copy"
         android:duration="250" />
     <item
-        android:drawable="@drawable/db_splash_white"
+        android:drawable="@drawable/db_splash_white_copy"
         android:duration="250" />
     <item
-        android:drawable="@drawable/db_splash_blue"
+        android:drawable="@drawable/db_splash_blue_copy"
         android:duration="250" />
     <item
-        android:drawable="@drawable/db_splash_white"
+        android:drawable="@drawable/db_splash_white_copy"
         android:duration="250" />
     <item
-        android:drawable="@drawable/db_splash_blue"
+        android:drawable="@drawable/db_splash_blue_copy"
         android:duration="250" />
     <item
-        android:drawable="@drawable/db_splash_white"
+        android:drawable="@drawable/db_splash_white_copy"
         android:duration="250" />
 
 </animation-list>
