@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/instructor_bookings_header"
+        app:layout_constraintBottom_toTopOf="@id/instructor_previous_bookings_header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
