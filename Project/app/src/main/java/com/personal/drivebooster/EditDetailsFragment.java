@@ -69,6 +69,7 @@ public class EditDetailsFragment extends Fragment  {
         return view;
     }
 
+    //fragment set up for the google maps address picker
     public void autoCompleteFragSetUp(){
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
         Intent intent = new Autocomplete.IntentBuilder(
@@ -77,7 +78,7 @@ public class EditDetailsFragment extends Fragment  {
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 
-
+    //method to set the users address and name when they update
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {

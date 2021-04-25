@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
         return view;
     }
 
-
+    //getters and setters for instructos available
     public boolean isInstructorAvailable() {
         return instructorAvailable;
     }
@@ -122,6 +122,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
         this.instructorAvailable = instructorAvailable;
     }
 
+    //method to check if the database has instructors
     public void instructorsAvailable(){
 
         instructorsAvailableRef = FirebaseDatabase.getInstance().getReference().child("Instructors");
@@ -161,6 +162,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
 
     }
 
+    //method to show the dialog asking pupils to choose an instructor
     public void showInstructorDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.choose_instructor_to_continue));
@@ -177,6 +179,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
     }
 
 
+    //method to return bookings from the database, should be inherited from the bookings class but does not work by doing that
     public void getBookings(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = currentUser.getUid();
@@ -205,6 +208,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
 
     }
 
+    //method to add previous bookings to the previous bookings document and remove them from the bookings document
     public void updatePreviousBookings(){
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
@@ -266,7 +270,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
         });
     }
 
-
+    //adding the youtube videos to the manoeuvres list
     public void addManoeuvres() {
         Manoeuvres parallelPark = new Manoeuvres("FetKmuscFY8", "Parallel Parking");
         Manoeuvres bayPark = new Manoeuvres("NuDPbDkknRM", "Bay Parking");
@@ -280,6 +284,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
     }
 
 
+    //onClick for booking items, passes booking info to the booking info screen
     @Override
     public void onBookingClick(int position) {
         Bundle bundle = new Bundle();

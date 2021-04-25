@@ -69,6 +69,7 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         return view;
     }
 
+    //onClick for instructor names
     @Override
     public void onInstructorNameClick(int position) {
         setInstName(instructorsFromFirebase.get(position).name);
@@ -86,6 +87,7 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
             }
         });
     }
+    //getters and setters for instructor names
     public String getInstName(){
         return instructorName;
     }
@@ -94,7 +96,7 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         this.instructorName = instructorName;
     }
 
-
+    //method to return instructors from database
     public void getInstructorsFromFirebase(){
         databaseRef = FirebaseDatabase.getInstance().getReference().child("Instructors");
         databaseRef.addValueEventListener(new ValueEventListener() {
@@ -134,6 +136,7 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         moreThanMyLng = x + 1;
 
     }
+    //getters and setters for latitude and longitude
     public Double getLng(){
         return myLng;
     }
@@ -150,6 +153,7 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         this.myLat = myLat;
     }
 
+    //method to check if pupil has chosen an instructor
     public void checkInstructorChosen(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
@@ -175,6 +179,7 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         });
 
     }
+    //getters and setters for instructors available
     public boolean getInstructorAvailable(){
         return instructorAvailable;
     }
@@ -182,11 +187,13 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         this.instructorAvailable = instructorAvailable;
     }
 
+    //method to choose instructor and update this in the database
     public void chooseInstructor(){
         Users pickInsUserObj = new Users();
         pickInsUserObj.chooseInstructor(chooseInstructorButton, instructorRecycler, hasPickedInstructor, getInstId(), getInstName());
     }
 
+    //getters and setters for instructorId
     public String getInstId(){
         return instructorId;
     }
@@ -195,6 +202,7 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         this.instructorId = instructorId;
     }
 
+    //method to set visibility of views on this screen
     public void setChooseInstructorVisibility(){
         if(getInstName().equals("not chosen") && getInstructorAvailable()){
             chooseInstructorButton.setVisibility(View.VISIBLE);
