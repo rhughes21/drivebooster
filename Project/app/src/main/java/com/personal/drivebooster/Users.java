@@ -51,8 +51,10 @@ public class Users {
         this.phoneNumber = phoneNumber;
     }
 
+    //empty constructor for calling methods
     public Users(){}
 
+    //method to update name and address in the database
     public void updateNameAndAddress(final String name, final String address, Double latitude, Double longitude){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
@@ -80,9 +82,10 @@ public class Users {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-        updatePupilNameAndAddressInPreviousBookings(userId, name);
+        updatePupilNameInPreviousBookings(userId, name);
     }
 
+    //method to update the instructor field in the user entry when they choose a different instructor
     public void chooseInstructor(Button chooseInstructorButton, RecyclerView instructorRecycler, boolean hasPickedInstructor, String instId, String instructorName){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
@@ -94,7 +97,8 @@ public class Users {
         hasPickedInstructor = true;
     }
 
-    public void updatePupilNameAndAddressInPreviousBookings(String pupilId, final String pupilName){
+    //method to update name in previous bookings
+    public void updatePupilNameInPreviousBookings(String pupilId, final String pupilName){
         dbEditDetailsInPreviousBooking = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
         updateDetailsInPreviousBooking = dbEditDetailsInPreviousBooking.orderByChild("pupilId").equalTo(pupilId);
         updateDetailsInPreviousBooking.addValueEventListener(new ValueEventListener() {
