@@ -39,6 +39,7 @@ public class Instructors {
     public Instructors() {
     }
 
+    //update name and address in database
     public void updateNameAndAddress(String uuid, final String name, String address, Double latitude, Double longitude){
         dbEditRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(uuid);
         dbEditRef.child("name").setValue(name);
@@ -67,9 +68,9 @@ public class Instructors {
 
             }
         });
-
-
     }
+
+    //update name and address in booking entries in the database
     public void updateInstructorNameInBooking(String pupilId, final String instructorName){
         dbEditBookingNameRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         updateNameInBookings = dbEditBookingNameRef.orderByChild("pupilId").equalTo(pupilId);
@@ -91,6 +92,8 @@ public class Instructors {
             }
         });
     }
+
+    //update name in previous booking entries in the database
     public void updateInstructorNameInPreviousBooking(String pupilId, final String instructorName){
         dbEditPreviousBooking = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
         updateNameInPrevious = dbEditPreviousBooking.orderByChild("pupilId").equalTo(pupilId);

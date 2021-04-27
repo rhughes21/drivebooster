@@ -78,6 +78,7 @@ public class InstructorPupilDetailsFragment extends Fragment implements OnMapRea
         return view;
     }
 
+    //initialise views
     public void initViews(){
         BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
         navBar.setVisibility(View.GONE);
@@ -96,6 +97,7 @@ public class InstructorPupilDetailsFragment extends Fragment implements OnMapRea
 
     }
 
+    //open system email app and populate with certain data
     protected void sendEmail(){
         Log.i("Send email", "");
         String[] TO = {pupilEmail.getText().toString()};
@@ -117,6 +119,7 @@ public class InstructorPupilDetailsFragment extends Fragment implements OnMapRea
         }
     }
 
+    //if map is ready then show users address
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -125,6 +128,7 @@ public class InstructorPupilDetailsFragment extends Fragment implements OnMapRea
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(address,16));
     }
 
+    //return user location
     public LatLng getLocationFromAddress(Context context, String strAddress) {
         Geocoder coder= new Geocoder(context);
         List<Address> address;

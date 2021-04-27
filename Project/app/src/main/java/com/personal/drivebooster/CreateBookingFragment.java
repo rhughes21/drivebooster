@@ -96,6 +96,7 @@ public class CreateBookingFragment extends Fragment  {
         return view;
     }
 
+    //method to initialise the views
     private void initViews(){
         dayPicker = view.findViewById(R.id.horizontal_calendar);
         datePickedText = view.findViewById(R.id.value_text_view);
@@ -139,7 +140,7 @@ public class CreateBookingFragment extends Fragment  {
         timeListView.setAdapter(adapter);
     }
 
-    //getter and setter for instructor name from firebase
+    //getters and setters for instructor name from firebase
     public String getInstName(){
         return instructorName;
     }
@@ -148,6 +149,7 @@ public class CreateBookingFragment extends Fragment  {
         this.instructorName = instructorName;
     }
 
+    //getters and setters for instructorId
     public String getInstId(){
         return instructorId;
     }
@@ -224,6 +226,7 @@ public class CreateBookingFragment extends Fragment  {
         bookingsFromFirebase = bookings.returnBookingsFromFirebase();
     }
 
+    //method to get instructorId from database
     public void getInstructorIdFromFirebase(){
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
         dbUserRef.addValueEventListener(new ValueEventListener() {
@@ -238,6 +241,7 @@ public class CreateBookingFragment extends Fragment  {
         });
     }
 
+    //method to get the instructors schedule from database
     public void getInstructorSchedule(){
 
         databaseScheduleRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(getInstId()).child("Times").child(dateDay).child("times");
@@ -282,6 +286,7 @@ public class CreateBookingFragment extends Fragment  {
         });
     }
 
+    //method to check is the instructor has times available for the day chosen
     public void checkInstructorHasTimes(){
         databaseScheduleRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(getInstId());
         databaseScheduleRef.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -38,10 +38,7 @@ public class PupilDetailsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
-            fm.popBackStack();
-        }
+
         BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
         navBar.setVisibility(View.VISIBLE);
         view = inflater.inflate(R.layout.pupil_my_details_fragment, container, false);
@@ -76,6 +73,7 @@ public class PupilDetailsFragment extends Fragment {
         return view;
     }
 
+    //retrieve pupil details from database
     public void getUserDetails(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
@@ -97,9 +95,11 @@ public class PupilDetailsFragment extends Fragment {
         });
     }
 
+    //navigate to change instructor screen
     public void changeInstructor(){
         Navigation.findNavController(view).navigate(R.id.action_navigation_my_details_to_chooseInstructorFragment);
     }
+    //navigate to update details screen
     public void updateUserDetails(){
         Navigation.findNavController(view).navigate(R.id.action_navigation_my_details_to_editDetailsFragment);
 

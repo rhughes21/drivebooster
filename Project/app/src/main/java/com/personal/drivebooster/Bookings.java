@@ -48,11 +48,13 @@ public class Bookings {
     public Bookings(){
     }
 
+    //method to delete bookings from the database
     public void deleteBooking(String bookingKey){
         dbEditRef = FirebaseDatabase.getInstance().getReference().child("Booking").child(bookingKey);
         dbEditRef.removeValue();
     }
 
+    //method to return a bookings object from database
     public List<Bookings> returnBookingsFromFirebase(){
         getBookingsRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         getBookingsRef.addValueEventListener(new ValueEventListener() {

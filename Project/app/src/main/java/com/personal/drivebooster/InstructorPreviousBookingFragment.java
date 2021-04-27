@@ -60,6 +60,7 @@ public class InstructorPreviousBookingFragment extends Fragment {
         return view;
     }
 
+    //getter and setter for booking key
     public String getBookingKey(){
         return bookingKey;
     }
@@ -67,6 +68,8 @@ public class InstructorPreviousBookingFragment extends Fragment {
     public void setBookingKey(String bookingKey){
         this.bookingKey = bookingKey;
     }
+
+    //retrieve booking key from database
     public void retrieveBookingKeyFromFirebase(){
         dbReviewRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
         Query keyQuery = dbReviewRef.orderByChild("userAddress").equalTo(pupilAddress.getText().toString());
@@ -89,6 +92,7 @@ public class InstructorPreviousBookingFragment extends Fragment {
         });
     }
 
+    //update the lesson review in the database
     public void submitLessonReview(){
         dbReviewRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings").child(getBookingKey());
         String lessonReview = composeReview.getText().toString();

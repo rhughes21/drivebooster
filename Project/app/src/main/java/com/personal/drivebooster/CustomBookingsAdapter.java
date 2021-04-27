@@ -38,9 +38,11 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
         return new viewHolder(view, onBookingListener);
     }
 
+    //booking item click listener
     public interface onBookingListener{
         void onBookingClick(int position);
     }
+    //method to set the text for the views
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         viewHolder myViewHolder=(viewHolder)holder;
@@ -59,6 +61,7 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
         return bookingsFromFirebase.size();
     }
 
+    //method to setup the viewholder
     public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView bookingDate, bookingTime, bookingInstructor, bookingPupilName;

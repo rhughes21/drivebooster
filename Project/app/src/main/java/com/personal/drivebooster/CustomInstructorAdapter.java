@@ -43,7 +43,7 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.instructors_recycler_item, parent, false);
         return new viewHolder(view, onInstructorNameListener);
     }
-
+    //method for setting the text in items
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         viewHolder myViewHolder = (viewHolder)holder;
@@ -60,6 +60,7 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
         }
     }
 
+    //instructor name click listener
     public interface onInstructorNameListener{
         void onInstructorNameClick(int position);
     }
@@ -69,6 +70,7 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
         return instructorsFromFirebase.size();
     }
 
+    //setting up the view holder
     public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView instructorName;

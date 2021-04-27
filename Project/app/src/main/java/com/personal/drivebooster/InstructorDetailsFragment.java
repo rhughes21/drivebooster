@@ -63,6 +63,7 @@ public class InstructorDetailsFragment extends Fragment {
     }
 
 
+    //retrieve instructor details from firebase
     public void getUserDetails(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
@@ -83,9 +84,11 @@ public class InstructorDetailsFragment extends Fragment {
         });
     }
 
+    //navigate to update details fragment
     public void updateUserDetails(){
         Navigation.findNavController(view).navigate(R.id.action_instructorDetailsFragment_to_instructorUpdateDetailsFragment);
     }
+    //navigate to set instructor times fragment
     public void setUpTimesButtonClick(){
         Navigation.findNavController(view).navigate(R.id.action_instructorDetailsFragment_to_setInstructorTimesFragment);
 

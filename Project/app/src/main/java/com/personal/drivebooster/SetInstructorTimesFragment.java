@@ -93,6 +93,7 @@ public class SetInstructorTimesFragment extends Fragment implements AdapterView.
         return view;
     }
 
+    //onItemSelected for day chosen from drop down
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         dayType = parent.getItemAtPosition(position).toString();
@@ -103,6 +104,7 @@ public class SetInstructorTimesFragment extends Fragment implements AdapterView.
 
     }
 
+    //push new times to the database
     public void setInstructorTimes(List<String> times){
         times = myTimes;
         String instructorUUid = auth.getUid();

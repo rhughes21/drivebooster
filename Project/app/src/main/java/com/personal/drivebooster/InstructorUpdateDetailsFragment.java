@@ -64,6 +64,7 @@ public class InstructorUpdateDetailsFragment extends Fragment {
         return view;
     }
 
+    //set up the google maps search fragment
     public void autoCompleteFragSetUp(){
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
         Intent intent = new Autocomplete.IntentBuilder(
@@ -73,6 +74,7 @@ public class InstructorUpdateDetailsFragment extends Fragment {
     }
 
 
+    //check is request code is correct, update details
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {

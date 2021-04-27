@@ -91,6 +91,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         return view;
     }
 
+    //checks if the map is ready, display location
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -100,6 +101,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
 
     }
 
+    //gets the lat lng from the pupils address
     public LatLng getLocationFromAddress(Context context, String strAddress)
     {
         Geocoder coder= new Geocoder(context);
@@ -127,6 +129,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
 
     }
 
+    //getters and setters for the booking key
     public String getBookingKey(){
         return bookingKey;
     }
@@ -135,6 +138,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         this.bookingKey = bookingKey;
     }
 
+    //retrieves booking key from database
     public void retrieveBookingKeyFromFirebase(){
         dbKeyRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         Query keyQuery = dbKeyRef.orderByChild("userAddress").equalTo(addressBooking);
@@ -157,6 +161,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         });
     }
 
+    //dialog asking if user wants to delete the booking
     public void deleteDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.confirm_deletion));
@@ -187,6 +192,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         updateAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.positive_alert_button));
     }
 
+    //method to show system email app if no phone number exists
     @SuppressLint("LongLogTag")
     public void sendBookingDeletedEmail(){
         Log.i("Send email", "");
@@ -210,6 +216,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         }
     }
 
+    //method to show system email app for remind pupils
     @SuppressLint("LongLogTag")
     public void sendBookingReminderEmail(){
         Log.i("Send email", "");
@@ -233,6 +240,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         }
     }
 
+    //getters and setters for pupil email
     public String getPupilEmail() {
         return pupilEmail;
     }
@@ -256,6 +264,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         });
     }
 
+    //method to send sms when a booking is deleted
     protected void sendBookingDeletedSMSMessage() {
         message = "Booking on " + bookingInfoDate.getText().toString() + " has been deleted";
 
@@ -265,6 +274,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         Toast.makeText(getActivity(), "SMS sent ", Toast.LENGTH_SHORT).show();
     }
 
+    //method to send booking reminder sms
     protected void sendReminderSMSMessage() {
         message = "This is a reminder for your lesson on " + bookingInfoDate.getText().toString() + " at " + bookingInfoTime.getText().toString();
 

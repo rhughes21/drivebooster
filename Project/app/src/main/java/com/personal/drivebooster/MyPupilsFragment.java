@@ -28,9 +28,8 @@ public class MyPupilsFragment extends Fragment implements CustomPupilsAdapter.on
     View view;
     final List<Users> usersFromFirebase = new ArrayList<Users>();
     CustomPupilsAdapter customPupilAdapter;
-    DatabaseReference databaseRef, userRef;
+    DatabaseReference userRef;
     RecyclerView pupilRecycler;
-    String myName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class MyPupilsFragment extends Fragment implements CustomPupilsAdapter.on
         usersFromFirebase.clear();
         BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
         navBar.setVisibility(View.VISIBLE);
-        getMyName();
+        getMyPupils();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         pupilRecycler.setLayoutManager(linearLayoutManager);
         customPupilAdapter = new CustomPupilsAdapter(usersFromFirebase,this);
@@ -49,7 +48,10 @@ public class MyPupilsFragment extends Fragment implements CustomPupilsAdapter.on
         return view;
     }
 
+    //retrieve pupils from database
     public void getMyPupils() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = currentUser.getUid();
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -58,7 +60,7 @@ public class MyPupilsFragment extends Fragment implements CustomPupilsAdapter.on
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Users users = child.getValue(Users.class);
-                        if(users.instructorName.equals(getName())) {
+                        if(users.instructorId.equals(userId)) {
                             usersFromFirebase.add(users);
                             customPupilAdapter.notifyDataSetChanged();
                         }
@@ -68,39 +70,11 @@ public class MyPupilsFragment extends Fragment implements CustomPupilsAdapter.on
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
 
-    public void getMyName(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        final String userId = currentUser.getUid();
-        databaseRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(userId);
-        databaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if(snapshot.exists()) {
-                    setMyName(snapshot.child("name").getValue(String.class));
-                    getMyPupils();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public String getName(){
-        return myName;
-    }
-
-    public void setMyName(String myName){
-        this.myName = myName;
-    }
-
+    //navigate to pupil info screen and pass pupils data upon clicking a pupil's name
     @Override
     public void onNameClick(int position) {
         Bundle bundle = new Bundle();

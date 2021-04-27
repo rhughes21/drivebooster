@@ -110,6 +110,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
     }
 
+    //set up google map search fragment
     public void autoCompleteFragSetUp(){
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
@@ -132,6 +133,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         });
     }
 
+    //getters and setters for latitude and longitude
     public Double getLatitude() {
         return latitude;
     }
@@ -148,6 +150,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         this.longitude = longitude;
     }
 
+    //check for location permission on start up
     @Override
     protected void onStart(){
         super.onStart();
@@ -158,6 +161,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
+    //ask for location permission if not already granted
     private void askLocationPermission(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){

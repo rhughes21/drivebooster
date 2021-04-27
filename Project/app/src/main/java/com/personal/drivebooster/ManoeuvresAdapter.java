@@ -43,9 +43,6 @@ public class ManoeuvresAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         viewHolder myViewHolder=(viewHolder)holder;
-
-//        myViewHolder.cardViewLayout.setMinimumWidth(Resources.getSystem().getDisplayMetrics().widthPixels);
-
         sizeOfView = sizeOfView +1;
         myViewHolder.title.setText((CharSequence) manoeuvres.get(position).title);
         myViewHolder.youTubePlayerView.getYouTubePlayerWhenReady(new YouTubePlayerCallback() {
