@@ -53,6 +53,7 @@ public class PupilPreviousBookingsFragment extends Fragment implements PreviousB
         return view;
     }
 
+    //retrieve previous bookings from database
     public void getPreviousBookings(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = currentUser.getUid();
@@ -79,6 +80,7 @@ public class PupilPreviousBookingsFragment extends Fragment implements PreviousB
         });
     }
 
+    //onClick for a previous booking item, shows booking review
     @Override
     public void onPreviousBookingClick(int position) {
         dbReviewRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
@@ -103,6 +105,7 @@ public class PupilPreviousBookingsFragment extends Fragment implements PreviousB
             }
         });
     }
+    //getter and setter for bookinh key
     public String getBookingKey(){
         return bookingKey;
     }

@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    //show links to gov.uk is user is a pupil
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         return if(userIsPupil){
             val inflater: MenuInflater = menuInflater
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //item selections listener for gov links
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
         return when (item.itemId) {
@@ -83,7 +85,7 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp() = findNavController(R.id.main_navigation_fragment).navigateUp()
 
 
-    //method to set up the bottom navigation
+    //method to set up the bottom navigation and choose start destination based off user type
     private fun setUpNavigation(){
 
         val navHostFragment = main_navigation_fragment as NavHostFragment

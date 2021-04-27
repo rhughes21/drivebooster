@@ -135,6 +135,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
         dayPicker.setEndDate(day,month + 6,year);
     }
 
+    //update booking date, time and day in database
     public void updateBooking(){
         dbEditRef = FirebaseDatabase.getInstance().getReference().child("Booking").child(getBookingKey());
         dbEditRef.child("bookingDate").setValue(dateString);
@@ -150,6 +151,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
         bookingTime.setText(timeString);
         bookingDay.setText(dateDay);
     }
+    //get the date value selected and show instructor schedule for chosen day
     private String getDateValue(String dStr){
         dayPicker.getSelectedDate(new OnDateSelectedListener() {
             @Override
@@ -167,6 +169,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
         });
         return dateString;
     }
+    //show booking edit views
     public void showEditViews(){
 
         currentDate = calendar.getTime();
@@ -190,6 +193,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
     }
 
 
+    //get bookings from database
     public void getBookings(){
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
@@ -209,10 +213,12 @@ public class PupilUpcomingBookingFragment extends Fragment {
             }
         });
     }
+    //set up the instructor schedule list
     public void setUpListView(){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, instructorScheduleFromFirebase);
         timeListView.setAdapter(adapter);
     }
+    //get instructor schedule from database
     public void getInstructorSchedule(){
         databaseScheduleRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(getInstId()).child("Times").child(dateDay).child("times");
         databaseScheduleRef.addValueEventListener(new ValueEventListener() {
@@ -253,6 +259,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
         });
     }
 
+    //getter and setter for instructor ID
     public String getInstId(){
         return instructorId;
     }
@@ -261,7 +268,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
         this.instructorId = instructorId;
     }
 
-
+    //retrieve instructor ID from database
     public void getInstructorIdFromFirebase(){
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userId = currentUser.getUid();
@@ -277,13 +284,15 @@ public class PupilUpcomingBookingFragment extends Fragment {
         });
     }
 
+    //getter and setter for booking key
     public String getBookingKey(){
         return bookingKey;
     }
-
     public void setBookingKey(String bookingKey){
         this.bookingKey = bookingKey;
     }
+
+    //retrieve booking key from database
     public void retrieveBookingKeyFromFirebase(){
         dbKeyRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         Query keyQuery = dbKeyRef.orderByChild("userAddress").equalTo(userAddress.getText().toString());
@@ -306,6 +315,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
         });
     }
 
+    //show confirm deletion dialog
     public void deleteDialog(){
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(getString(R.string.confirm_deletion));
@@ -330,6 +340,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
             updateAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.positive_alert_button));
     }
 
+    //show the default buttons when pupil choose not to edit the booking
     public void showDefaultButtons(){
         dayPicker.setVisibility(View.GONE);
         timeListView.setVisibility(View.GONE);

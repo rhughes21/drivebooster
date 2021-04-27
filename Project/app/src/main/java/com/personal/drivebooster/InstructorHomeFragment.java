@@ -74,6 +74,7 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
         return view;
     }
 
+    //retrieve upcoming bookings from firebase
     public void getBookings(){
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
@@ -99,6 +100,7 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
         });
     }
 
+    //retrieve previous bookings from firebase
     public void getPreviousBookings(){
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
@@ -124,6 +126,7 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
         });
     }
 
+    //retrieve instructor name from firebase
     public void getMyName(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = currentUser.getUid();
@@ -141,6 +144,8 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
             }
         });
     }
+
+    //getters and setters for instructor name
     public String getInstName(){
         return instructorName;
     }
@@ -150,6 +155,7 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
     }
 
 
+    //navigate to booking info fragment and pass booking information
     @Override
     public void onBookingClick(int position) {
         Bundle bundle = new Bundle();
@@ -163,6 +169,7 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
 
     }
 
+    //navigate to previous booking fragment and pass previous booking information
     @Override
     public void onPreviousBookingClick(int position) {
         Bundle bundle = new Bundle();
