@@ -6,11 +6,11 @@ public class TimeSlot {
 
     public List<String> times;
 
-    public TimeSlot( List<String> times) {
+    public TimeSlot(List<String> times) {
         this.times = times;
     }
 
-    public TimeSlot(){
+    public TimeSlot() {
 
     }
 }

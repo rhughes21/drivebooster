@@ -28,10 +28,11 @@ public class ManoeuvresAdapter extends RecyclerView.Adapter {
 
     int sizeOfView;
 
-    public ManoeuvresAdapter(List<Manoeuvres> manoeuvres, Lifecycle lifecycle){
+    public ManoeuvresAdapter(List<Manoeuvres> manoeuvres, Lifecycle lifecycle) {
         this.manoeuvres = manoeuvres;
         this.lifecycle = lifecycle;
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,8 +43,8 @@ public class ManoeuvresAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        viewHolder myViewHolder=(viewHolder)holder;
-        sizeOfView = sizeOfView +1;
+        viewHolder myViewHolder = (viewHolder) holder;
+        sizeOfView = sizeOfView + 1;
         myViewHolder.title.setText((CharSequence) manoeuvres.get(position).title);
         myViewHolder.youTubePlayerView.getYouTubePlayerWhenReady(new YouTubePlayerCallback() {
             @Override
@@ -59,12 +60,13 @@ public class ManoeuvresAdapter extends RecyclerView.Adapter {
         return manoeuvres.size();
     }
 
-    public class viewHolder extends RecyclerView.ViewHolder{
+    public class viewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
         YouTubePlayerView youTubePlayerView;
         CardView cardViewLayout;
         ConstraintLayout constraintLayout;
+
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);

@@ -111,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
     //set up google map search fragment
-    public void autoCompleteFragSetUp(){
+    public void autoCompleteFragSetUp() {
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
@@ -152,21 +152,21 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
     //check for location permission on start up
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //getLocation();
-        }else{
+        } else {
             askLocationPermission();
         }
     }
 
     //ask for location permission if not already granted
-    private void askLocationPermission(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+    private void askLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
             }
         }
@@ -175,13 +175,13 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == REQUEST_LOCATION){
-            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == REQUEST_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //getLocation();
-            }else{
+            } else {
                 Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
@@ -233,7 +233,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         password = editTextPassword.getText().toString();
         fullAddress = registerFullAddress.getText().toString();
         phoneNo = registerPhoneNumber.getText().toString();
-        if(phoneNo.equals("")){
+        if (phoneNo.equals("")) {
             phoneNo = "Unavailable";
         }
         instructorName = "not chosen";
@@ -286,9 +286,9 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
         userType = item;
-        if(userType.equals("Pupil")){
+        if (userType.equals("Pupil")) {
             registerPhoneNumber.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             registerPhoneNumber.setVisibility(View.GONE);
         }
     }
@@ -303,7 +303,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location != null){
+                if (location != null) {
                     registerFullAddress.setText(getAddress(location.getLatitude(), location.getLongitude()));
                 }
             }

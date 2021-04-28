@@ -40,7 +40,7 @@ public class Instructors {
     }
 
     //update name and address in database
-    public void updateNameAndAddress(String uuid, final String name, String address, Double latitude, Double longitude){
+    public void updateNameAndAddress(String uuid, final String name, String address, Double latitude, Double longitude) {
         dbEditRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(uuid);
         dbEditRef.child("name").setValue(name);
         dbEditRef.child("fullAddress").setValue(address);
@@ -52,8 +52,8 @@ public class Instructors {
         updateNameInUserTables.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()){
-                    for(DataSnapshot userSnap: snapshot.getChildren()){
+                if (snapshot.hasChildren()) {
+                    for (DataSnapshot userSnap : snapshot.getChildren()) {
                         Log.i("USERKEY", userSnap.getKey());
                         dbUpdateNameRef.child(userSnap.getKey()).child("instructorName").setValue(name);
                         updateInstructorNameInBooking(userSnap.getKey(), name);
@@ -71,14 +71,14 @@ public class Instructors {
     }
 
     //update name and address in booking entries in the database
-    public void updateInstructorNameInBooking(String pupilId, final String instructorName){
+    public void updateInstructorNameInBooking(String pupilId, final String instructorName) {
         dbEditBookingNameRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         updateNameInBookings = dbEditBookingNameRef.orderByChild("pupilId").equalTo(pupilId);
         updateNameInBookings.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()){
-                    for(DataSnapshot userSnap: snapshot.getChildren()){
+                if (snapshot.hasChildren()) {
+                    for (DataSnapshot userSnap : snapshot.getChildren()) {
                         Log.i("USERKEY", userSnap.getKey());
                         dbEditBookingNameRef.child(userSnap.getKey()).child("instructorName").setValue(instructorName);
                     }
@@ -94,14 +94,14 @@ public class Instructors {
     }
 
     //update name in previous booking entries in the database
-    public void updateInstructorNameInPreviousBooking(String pupilId, final String instructorName){
+    public void updateInstructorNameInPreviousBooking(String pupilId, final String instructorName) {
         dbEditPreviousBooking = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
         updateNameInPrevious = dbEditPreviousBooking.orderByChild("pupilId").equalTo(pupilId);
         updateNameInPrevious.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()){
-                    for(DataSnapshot userSnap: snapshot.getChildren()){
+                if (snapshot.hasChildren()) {
+                    for (DataSnapshot userSnap : snapshot.getChildren()) {
                         Log.i("USERKEY", userSnap.getKey());
                         dbEditPreviousBooking.child(userSnap.getKey()).child("instructorName").setValue(instructorName);
                     }

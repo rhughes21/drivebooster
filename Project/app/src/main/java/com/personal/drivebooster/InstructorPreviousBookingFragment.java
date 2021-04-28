@@ -32,8 +32,9 @@ public class InstructorPreviousBookingFragment extends Fragment {
     EditText composeReview;
     DatabaseReference dbReviewRef;
     Button submitReview;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.instructor_previous_booking_fragment, container, false);
 
         bookingInfoDate = view.findViewById(R.id.previous_booking_info_date);
@@ -61,25 +62,25 @@ public class InstructorPreviousBookingFragment extends Fragment {
     }
 
     //getter and setter for booking key
-    public String getBookingKey(){
+    public String getBookingKey() {
         return bookingKey;
     }
 
-    public void setBookingKey(String bookingKey){
+    public void setBookingKey(String bookingKey) {
         this.bookingKey = bookingKey;
     }
 
     //retrieve booking key from database
-    public void retrieveBookingKeyFromFirebase(){
+    public void retrieveBookingKeyFromFirebase() {
         dbReviewRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
         Query keyQuery = dbReviewRef.orderByChild("userAddress").equalTo(pupilAddress.getText().toString());
         final String date = bookingInfoDate.getText().toString();
         keyQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     String dateSnapshot = childSnapshot.child("bookingDate").getValue(String.class);
-                    if(dateSnapshot.equals(date)){
+                    if (dateSnapshot.equals(date)) {
                         setBookingKey(childSnapshot.getKey());
                     }
 
@@ -93,7 +94,7 @@ public class InstructorPreviousBookingFragment extends Fragment {
     }
 
     //update the lesson review in the database
-    public void submitLessonReview(){
+    public void submitLessonReview() {
         dbReviewRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings").child(getBookingKey());
         String lessonReview = composeReview.getText().toString();
         dbReviewRef.child("lessonReview").setValue(lessonReview)

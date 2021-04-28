@@ -27,8 +27,9 @@ public class InstructorDetailsFragment extends Fragment {
     TextView userNameView, userEmailView, addressView;
     Button editDetailsButton, logoutButton, setUpTimesButton;
     DatabaseReference dbUserRef;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.instructor_my_details_fragment, container, false);
         BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
         navBar.setVisibility(View.VISIBLE);
@@ -64,7 +65,7 @@ public class InstructorDetailsFragment extends Fragment {
 
 
     //retrieve instructor details from firebase
-    public void getUserDetails(){
+    public void getUserDetails() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(userId);
@@ -85,11 +86,12 @@ public class InstructorDetailsFragment extends Fragment {
     }
 
     //navigate to update details fragment
-    public void updateUserDetails(){
+    public void updateUserDetails() {
         Navigation.findNavController(view).navigate(R.id.action_instructorDetailsFragment_to_instructorUpdateDetailsFragment);
     }
+
     //navigate to set instructor times fragment
-    public void setUpTimesButtonClick(){
+    public void setUpTimesButtonClick() {
         Navigation.findNavController(view).navigate(R.id.action_instructorDetailsFragment_to_setInstructorTimesFragment);
 
     }

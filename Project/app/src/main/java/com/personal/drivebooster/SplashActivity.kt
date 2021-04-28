@@ -56,7 +56,6 @@ class SplashActivity : Activity() {
     }
 
 
-
     //method to check whether the user is a pupil. Checks that the UID exists in the users table
     fun getUserType() {
         dbReference = FirebaseDatabase.getInstance().reference.child("Users")

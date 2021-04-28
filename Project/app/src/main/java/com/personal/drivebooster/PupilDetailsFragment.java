@@ -33,8 +33,9 @@ public class PupilDetailsFragment extends Fragment {
     View view;
     TextView userNameView;
     TextView userInstructorTextView, userEmailView, addressView;
-    DatabaseReference  dbUserRef;
+    DatabaseReference dbUserRef;
     Button logoutButton, updateDetailsButton, changeInstructorButton;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class PupilDetailsFragment extends Fragment {
     }
 
     //retrieve pupil details from database
-    public void getUserDetails(){
+    public void getUserDetails() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
@@ -96,11 +97,12 @@ public class PupilDetailsFragment extends Fragment {
     }
 
     //navigate to change instructor screen
-    public void changeInstructor(){
+    public void changeInstructor() {
         Navigation.findNavController(view).navigate(R.id.action_navigation_my_details_to_chooseInstructorFragment);
     }
+
     //navigate to update details screen
-    public void updateUserDetails(){
+    public void updateUserDetails() {
         Navigation.findNavController(view).navigate(R.id.action_navigation_my_details_to_editDetailsFragment);
 
     }

@@ -57,8 +57,9 @@ public class PupilUpcomingBookingFragment extends Fragment {
     DatabaseReference databaseBookingRef, databaseScheduleRef, dbUserRef, dbKeyRef, dbEditRef;
     final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
     final List<String> instructorScheduleFromFirebase = new ArrayList<String>();
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.pupil_edit_booking_fragment, container, false);
         initViews();
         bookingDay.setText(getArguments().getString("dateDay"));
@@ -112,7 +113,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
         return view;
     }
 
-    public void initViews(){
+    public void initViews() {
         bookingDate = view.findViewById(R.id.pupil_booking_info_date);
         bookingDay = view.findViewById(R.id.pupil_booking_info_date_day);
         bookingTime = view.findViewById(R.id.pupil_booking_info_time);
@@ -130,13 +131,13 @@ public class PupilUpcomingBookingFragment extends Fragment {
     }
 
     //method to set the start and end date shown on the calendar
-    private void setUpPicker(){
+    private void setUpPicker() {
         dayPicker.setStartDate(10, month, year);
-        dayPicker.setEndDate(day,month + 6,year);
+        dayPicker.setEndDate(day, month + 6, year);
     }
 
     //update booking date, time and day in database
-    public void updateBooking(){
+    public void updateBooking() {
         dbEditRef = FirebaseDatabase.getInstance().getReference().child("Booking").child(getBookingKey());
         dbEditRef.child("bookingDate").setValue(dateString);
         dbEditRef.child("bookingTime").setValue(timeString);
@@ -151,13 +152,14 @@ public class PupilUpcomingBookingFragment extends Fragment {
         bookingTime.setText(timeString);
         bookingDay.setText(dateDay);
     }
+
     //get the date value selected and show instructor schedule for chosen day
-    private String getDateValue(String dStr){
+    private String getDateValue(String dStr) {
         dayPicker.getSelectedDate(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@Nullable Date date) {
 
-                if(date != null){
+                if (date != null) {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
                     SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
                     dateString = dateFormat.format(date);
@@ -169,24 +171,25 @@ public class PupilUpcomingBookingFragment extends Fragment {
         });
         return dateString;
     }
+
     //show booking edit views
-    public void showEditViews(){
+    public void showEditViews() {
 
         currentDate = calendar.getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
         try {
             final Date bDate = dateFormat.parse(bookingDate.getText().toString());
-                    if(bDate.equals(currentDate)) {
-                        noTimeAvailableView.setVisibility(View.VISIBLE);
-                    }else if(bDate.after(currentDate)){
-                        dayPicker.setVisibility(View.VISIBLE);
-                        getDateValue(dateString);
-                        editBookingButton.setVisibility(View.GONE);
-                        timeListView.setVisibility(View.VISIBLE);
-                        cancelEdit.setVisibility(View.VISIBLE);
-                        submitEditButton.setVisibility(View.VISIBLE);
-                        deleteButton.setVisibility(View.GONE);
-                    }
+            if (bDate.equals(currentDate)) {
+                noTimeAvailableView.setVisibility(View.VISIBLE);
+            } else if (bDate.after(currentDate)) {
+                dayPicker.setVisibility(View.VISIBLE);
+                getDateValue(dateString);
+                editBookingButton.setVisibility(View.GONE);
+                timeListView.setVisibility(View.VISIBLE);
+                cancelEdit.setVisibility(View.VISIBLE);
+                submitEditButton.setVisibility(View.VISIBLE);
+                deleteButton.setVisibility(View.GONE);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -194,12 +197,12 @@ public class PupilUpcomingBookingFragment extends Fragment {
 
 
     //get bookings from database
-    public void getBookings(){
+    public void getBookings() {
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Bookings bookings = child.getValue(Bookings.class);
@@ -207,29 +210,32 @@ public class PupilUpcomingBookingFragment extends Fragment {
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
     }
+
     //set up the instructor schedule list
-    public void setUpListView(){
+    public void setUpListView() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, instructorScheduleFromFirebase);
         timeListView.setAdapter(adapter);
     }
+
     //get instructor schedule from database
-    public void getInstructorSchedule(){
+    public void getInstructorSchedule() {
         databaseScheduleRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(getInstId()).child("Times").child(dateDay).child("times");
         databaseScheduleRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()){
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         String t = child.getValue(String.class);
                         canUseTime = true;
-                        for(int i = 0; i< bookingsFromFirebase.size(); i++){
+                        for (int i = 0; i < bookingsFromFirebase.size(); i++) {
                             if (bookingsFromFirebase.get(i).bookingDate.equals(dateString)) {
                                 if (bookingsFromFirebase.get(i).instructorName.equals(instructorName.getText().toString()) && bookingsFromFirebase.get(i).bookingTime.equals(t)) {
                                     Log.i("INSTRUCTOR HAS THE TIME", t);
@@ -241,18 +247,19 @@ public class PupilUpcomingBookingFragment extends Fragment {
                                 }
                             }
                         }
-                        if(canUseTime){
+                        if (canUseTime) {
                             instructorScheduleFromFirebase.add(t);
                         }
                     }
                     timeListView.setVisibility(View.VISIBLE);
                     noTimeAvailableView.setVisibility(View.GONE);
                     setUpListView();
-                }else{
+                } else {
                     noTimeAvailableView.setVisibility(View.VISIBLE);
                     timeListView.setVisibility(View.INVISIBLE);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -260,16 +267,16 @@ public class PupilUpcomingBookingFragment extends Fragment {
     }
 
     //getter and setter for instructor ID
-    public String getInstId(){
+    public String getInstId() {
         return instructorId;
     }
 
-    public void setInstId(String instructorId){
+    public void setInstId(String instructorId) {
         this.instructorId = instructorId;
     }
 
     //retrieve instructor ID from database
-    public void getInstructorIdFromFirebase(){
+    public void getInstructorIdFromFirebase() {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userId = currentUser.getUid();
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
@@ -278,6 +285,7 @@ public class PupilUpcomingBookingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 setInstId(snapshot.child("instructorId").getValue(String.class));
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -285,24 +293,25 @@ public class PupilUpcomingBookingFragment extends Fragment {
     }
 
     //getter and setter for booking key
-    public String getBookingKey(){
+    public String getBookingKey() {
         return bookingKey;
     }
-    public void setBookingKey(String bookingKey){
+
+    public void setBookingKey(String bookingKey) {
         this.bookingKey = bookingKey;
     }
 
     //retrieve booking key from database
-    public void retrieveBookingKeyFromFirebase(){
+    public void retrieveBookingKeyFromFirebase() {
         dbKeyRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         Query keyQuery = dbKeyRef.orderByChild("userAddress").equalTo(userAddress.getText().toString());
         final String date = bookingDate.getText().toString();
         keyQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     String dateSnapshot = childSnapshot.child("bookingDate").getValue(String.class);
-                    if(dateSnapshot.equals(date)){
+                    if (dateSnapshot.equals(date)) {
                         setBookingKey(childSnapshot.getKey());
                     }
 
@@ -316,32 +325,32 @@ public class PupilUpcomingBookingFragment extends Fragment {
     }
 
     //show confirm deletion dialog
-    public void deleteDialog(){
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle(getString(R.string.confirm_deletion));
-            builder.setPositiveButton(
-                    "Yes",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Bookings b = new Bookings();
-                            b.deleteBooking(getBookingKey());
-                        }
-                    });
-            builder.setNegativeButton(
-                    "No",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog updateAlert = builder.create();
-            updateAlert.show();
-            updateAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.negative_alert_button));
-            updateAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.positive_alert_button));
+    public void deleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.confirm_deletion));
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Bookings b = new Bookings();
+                        b.deleteBooking(getBookingKey());
+                    }
+                });
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog updateAlert = builder.create();
+        updateAlert.show();
+        updateAlert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.negative_alert_button));
+        updateAlert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.positive_alert_button));
     }
 
     //show the default buttons when pupil choose not to edit the booking
-    public void showDefaultButtons(){
+    public void showDefaultButtons() {
         dayPicker.setVisibility(View.GONE);
         timeListView.setVisibility(View.GONE);
         cancelEdit.setVisibility(View.GONE);

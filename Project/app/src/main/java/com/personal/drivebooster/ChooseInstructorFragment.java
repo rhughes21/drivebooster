@@ -42,7 +42,7 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
     final List<Instructors> instructorsFromFirebase = new ArrayList<Instructors>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.choose_instructor_fragment, container, false);
         instructorsFromFirebase.clear();
         checkInstructorChosen();
@@ -78,46 +78,48 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         databaseQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     setInstId(childSnapshot.getKey());
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
+
     //getters and setters for instructor names
-    public String getInstName(){
+    public String getInstName() {
         return instructorName;
     }
 
-    public void setInstName(String instructorName){
+    public void setInstName(String instructorName) {
         this.instructorName = instructorName;
     }
 
     //method to return instructors from database
-    public void getInstructorsFromFirebase(){
+    public void getInstructorsFromFirebase() {
         databaseRef = FirebaseDatabase.getInstance().getReference().child("Instructors");
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()){
+                if (snapshot.hasChildren()) {
                     noInstructorsText.setVisibility(View.GONE);
                     setInstructorAvailable(true);
                     checkInstructorChosen();
                     //getMyLongitudeDifference();
                     Iterable<DataSnapshot> children = snapshot.getChildren();
-                    for (DataSnapshot child: children){
+                    for (DataSnapshot child : children) {
                         Instructors instructors = child.getValue(Instructors.class);
                         instructorLocation.setLatitude(instructors.latitude);
                         instructorLocation.setLongitude(instructors.longitude);
-                        if(pupilLocation.distanceTo(instructorLocation) < 10000 && !getInstName().equals(instructors.name)){
+                        if (pupilLocation.distanceTo(instructorLocation) < 10000 && !getInstName().equals(instructors.name)) {
                             instructorsFromFirebase.add(instructors);
                             customInstructorAdapter.notifyDataSetChanged();
                         }
                     }
-                }else if(!snapshot.hasChildren()){
+                } else if (!snapshot.hasChildren()) {
                     setInstructorAvailable(false);
                     noInstructorsText.setVisibility(View.VISIBLE);
                 }
@@ -129,32 +131,34 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
             }
         });
     }
-    public void getMyLongitudeDifference(){
+
+    public void getMyLongitudeDifference() {
         double x = getLng();
 
         lessThanMyLng = x - 1;
         moreThanMyLng = x + 1;
 
     }
+
     //getters and setters for latitude and longitude
-    public Double getLng(){
+    public Double getLng() {
         return myLng;
     }
 
-    public void setMyLng(Double myLng){
+    public void setMyLng(Double myLng) {
         this.myLng = myLng;
     }
 
-    public Double getLat(){
+    public Double getLat() {
         return myLat;
     }
 
-    public void setMyLat(Double myLat){
+    public void setMyLat(Double myLat) {
         this.myLat = myLat;
     }
 
     //method to check if pupil has chosen an instructor
-    public void checkInstructorChosen(){
+    public void checkInstructorChosen() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
@@ -162,56 +166,58 @@ public class ChooseInstructorFragment extends Fragment implements CustomInstruct
         dbUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!snapshot.equals(null)) {
+                if (!snapshot.equals(null)) {
                     setInstName(snapshot.child("instructorName").getValue(String.class));
                     setMyLng(snapshot.child("longitude").getValue(Double.class));
                     setMyLat(snapshot.child("latitude").getValue(Double.class));
                     pupilLocation.setLongitude(getLng());
                     pupilLocation.setLatitude(getLat());
                     setChooseInstructorVisibility();
-                }else if(snapshot.equals(null)){
+                } else if (snapshot.equals(null)) {
                     Toast.makeText(getContext(), "You are an instructor", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
 
     }
+
     //getters and setters for instructors available
-    public boolean getInstructorAvailable(){
+    public boolean getInstructorAvailable() {
         return instructorAvailable;
     }
-    public void setInstructorAvailable(boolean instructorAvailable){
+
+    public void setInstructorAvailable(boolean instructorAvailable) {
         this.instructorAvailable = instructorAvailable;
     }
 
     //method to choose instructor and update this in the database
-    public void chooseInstructor(){
+    public void chooseInstructor() {
         Users pickInsUserObj = new Users();
         pickInsUserObj.chooseInstructor(chooseInstructorButton, instructorRecycler, hasPickedInstructor, getInstId(), getInstName());
     }
 
     //getters and setters for instructorId
-    public String getInstId(){
+    public String getInstId() {
         return instructorId;
     }
 
-    public void setInstId(String instructorId){
+    public void setInstId(String instructorId) {
         this.instructorId = instructorId;
     }
 
     //method to set visibility of views on this screen
-    public void setChooseInstructorVisibility(){
-        if(getInstName().equals("not chosen") && getInstructorAvailable()){
+    public void setChooseInstructorVisibility() {
+        if (getInstName().equals("not chosen") && getInstructorAvailable()) {
             chooseInstructorButton.setVisibility(View.VISIBLE);
             instructorRecycler.setVisibility(View.VISIBLE);
-        }else if(getInstructorAvailable()){
+        } else if (getInstructorAvailable()) {
             chooseInstructorButton.setVisibility(View.VISIBLE);
             instructorRecycler.setVisibility(View.VISIBLE);
-        }
-        else if(!getInstructorAvailable()){
+        } else if (!getInstructorAvailable()) {
             noInstructorsText.setVisibility(View.VISIBLE);
             chooseInstructorButton.setVisibility(View.GONE);
             instructorRecycler.setVisibility(View.GONE);

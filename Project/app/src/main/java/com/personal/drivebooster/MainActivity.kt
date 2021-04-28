@@ -23,16 +23,17 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-var userIsPupil : Boolean = false
+var userIsPupil: Boolean = false
 
 var userId: String? = null
 var user = FirebaseAuth.getInstance().currentUser
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if(!user!!.equals(null)){
+        if (!user!!.equals(null)) {
             Log.i("User id", user!!.uid)
             userId = user!!.uid
         }
@@ -52,12 +53,11 @@ class MainActivity : AppCompatActivity() {
 
     //show links to gov.uk is user is a pupil
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        return if(userIsPupil){
+        return if (userIsPupil) {
             val inflater: MenuInflater = menuInflater
             inflater.inflate(R.menu.gov_links_menu, menu)
             true
-        }
-        else{
+        } else {
             false
         }
     }
@@ -81,20 +81,21 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     //method to determine what the back button does on this screen
     override fun onSupportNavigateUp() = findNavController(R.id.main_navigation_fragment).navigateUp()
 
 
     //method to set up the bottom navigation and choose start destination based off user type
-    private fun setUpNavigation(){
+    private fun setUpNavigation() {
 
         val navHostFragment = main_navigation_fragment as NavHostFragment
         val navController = Navigation.findNavController(this, R.id.main_navigation_fragment)
         val graphInflater = navHostFragment.navController.navInflater
         val navGraph = navController.graph
         val destination = R.id.dummy_frag
-        navGraph.startDestination =  destination
-        val  dbReference = FirebaseDatabase.getInstance().reference.child("Users")
+        navGraph.startDestination = destination
+        val dbReference = FirebaseDatabase.getInstance().reference.child("Users")
         dbReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.hasChild(userId.toString())) {
@@ -127,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onCancelled(error: DatabaseError) {}
         })
-        Log.i("destination" , destination.toString())
+        Log.i("destination", destination.toString())
 
     }
 }

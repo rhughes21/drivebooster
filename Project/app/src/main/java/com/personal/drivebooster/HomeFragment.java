@@ -46,14 +46,14 @@ import java.util.Map;
 
 import javax.xml.transform.dom.DOMLocator;
 
-public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onBookingListener {
+public class HomeFragment extends Fragment implements CustomBookingsAdapter.onBookingListener {
 
     View view;
     RecyclerView bookingsRecycler, manoeuvreRecycler;
     FirebaseAuth auth;
     Button previousBookingsButton;
     TextView noInstructorsText, myBookingsText, noBookingsText;
-    DatabaseReference  dbUserRef,databaseBookingRef, previousBookingsReference, instructorsAvailableRef;
+    DatabaseReference dbUserRef, databaseBookingRef, previousBookingsReference, instructorsAvailableRef;
     boolean instructorAvailable;
     String instructorName;
     CustomBookingsAdapter customBookingsAdapter;
@@ -66,11 +66,11 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
     Lifecycle lifecycle = getLifecycle();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.home_fragment, container, false);
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
+        for (int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
         checkInstructorChosen();
@@ -123,15 +123,15 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
     }
 
     //method to check if the database has instructors
-    public void instructorsAvailable(){
+    public void instructorsAvailable() {
 
         instructorsAvailableRef = FirebaseDatabase.getInstance().getReference().child("Instructors");
         instructorsAvailableRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()){
+                if (snapshot.hasChildren()) {
                     setInstructorAvailable(true);
-                }else{
+                } else {
                     setInstructorAvailable(false);
                 }
             }
@@ -142,8 +142,9 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
             }
         });
     }
+
     //method to get if the user has picked an instructor or not
-    public void checkInstructorChosen(){
+    public void checkInstructorChosen() {
         instructorsAvailable();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
@@ -151,10 +152,11 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
         dbUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("instructorName").getValue().equals("not chosen") && isInstructorAvailable()){
+                if (snapshot.child("instructorName").getValue().equals("not chosen") && isInstructorAvailable()) {
                     showInstructorDialog();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -163,7 +165,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
     }
 
     //method to show the dialog asking pupils to choose an instructor
-    public void showInstructorDialog(){
+    public void showInstructorDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.choose_instructor_to_continue));
         builder.setNeutralButton(
@@ -180,18 +182,18 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
 
 
     //method to return bookings from the database, should be inherited from the bookings class but does not work by doing that
-    public void getBookings(){
+    public void getBookings() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = currentUser.getUid();
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Bookings bookings = child.getValue(Bookings.class);
-                        if(bookings.pupilId.equals(userId) ) {
+                        if (bookings.pupilId.equals(userId)) {
                             bookingsFromFirebase.add(bookings);
                             customBookingsAdapter.notifyDataSetChanged();
                             noBookingsText.setVisibility(View.GONE);
@@ -200,6 +202,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -209,24 +212,24 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
     }
 
     //method to add previous bookings to the previous bookings document and remove them from the bookings document
-    public void updatePreviousBookings(){
+    public void updatePreviousBookings() {
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Bookings bookingsP = child.getValue(Bookings.class);
                         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
                         try {
                             Date bDate = dateFormat.parse(bookingsP.bookingDate);
-                            if(currentDate.after(bDate)) {
+                            if (currentDate.after(bDate)) {
                                 Query removeOutdatedBookings = databaseBookingRef.orderByChild("bookingDate").equalTo(bookingsP.bookingDate);
                                 removeOutdatedBookings.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for(DataSnapshot bookingSnap: snapshot.getChildren()){
+                                        for (DataSnapshot bookingSnap : snapshot.getChildren()) {
                                             bookingSnap.getRef().removeValue();
                                             break;
                                         }
@@ -252,7 +255,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
 
 
                                 break;
-                            }else{
+                            } else {
                                 //do nothing
                             }
 
@@ -263,6 +266,7 @@ public class HomeFragment extends Fragment implements  CustomBookingsAdapter.onB
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
