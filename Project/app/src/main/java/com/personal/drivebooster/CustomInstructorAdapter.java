@@ -32,7 +32,8 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
     int rowindex;
 
     int sizeOfView;
-    public CustomInstructorAdapter(List<Instructors> instructorsFromFirebase, onInstructorNameListener onInstructorNameListener){
+
+    public CustomInstructorAdapter(List<Instructors> instructorsFromFirebase, onInstructorNameListener onInstructorNameListener) {
         this.instructorsFromFirebase = instructorsFromFirebase;
         this.onInstructorNameListener = onInstructorNameListener;
     }
@@ -43,14 +44,15 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.instructors_recycler_item, parent, false);
         return new viewHolder(view, onInstructorNameListener);
     }
+
     //method for setting the text in items
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        viewHolder myViewHolder = (viewHolder)holder;
+        viewHolder myViewHolder = (viewHolder) holder;
 
-        if(!instructorsFromFirebase.get(position).latitude.equals("")){
-                myViewHolder.instructorName.setText(instructorsFromFirebase.get(position).name);
-        }else{
+        if (!instructorsFromFirebase.get(position).latitude.equals("")) {
+            myViewHolder.instructorName.setText(instructorsFromFirebase.get(position).name);
+        } else {
             Log.d("DIDN'T WORK", "BLAH BLAH");
         }
         if (rowindex == position) {
@@ -61,7 +63,7 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
     }
 
     //instructor name click listener
-    public interface onInstructorNameListener{
+    public interface onInstructorNameListener {
         void onInstructorNameClick(int position);
     }
 
@@ -71,11 +73,12 @@ public class CustomInstructorAdapter extends RecyclerView.Adapter {
     }
 
     //setting up the view holder
-    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView instructorName;
         CardView instructorCardView;
         onInstructorNameListener onInstructorNameListener;
+
         public viewHolder(@NonNull View itemView, onInstructorNameListener onInstructorNameListener) {
             super(itemView);
             instructorName = itemView.findViewById(R.id.recycler_instructor_name);

@@ -24,10 +24,11 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
     int rowindex;
     int sizeOfView;
 
-    public CustomBookingsAdapter(List<Bookings> bookingsFromFirebase, onBookingListener onBookingListener){
+    public CustomBookingsAdapter(List<Bookings> bookingsFromFirebase, onBookingListener onBookingListener) {
         this.bookingsFromFirebase = bookingsFromFirebase;
         this.onBookingListener = onBookingListener;
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,19 +40,20 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
     }
 
     //booking item click listener
-    public interface onBookingListener{
+    public interface onBookingListener {
         void onBookingClick(int position);
     }
+
     //method to set the text for the views
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        viewHolder myViewHolder=(viewHolder)holder;
+        viewHolder myViewHolder = (viewHolder) holder;
 
-            sizeOfView = sizeOfView +1;
-            myViewHolder.bookingDate.setText((CharSequence) bookingsFromFirebase.get(position).bookingDate);
-            myViewHolder.bookingTime.setText(((CharSequence) bookingsFromFirebase.get(position).bookingTime));
-            myViewHolder.bookingInstructor.setText(((CharSequence) bookingsFromFirebase.get(position).instructorName));
-            myViewHolder.bookingPupilName.setText(bookingsFromFirebase.get(position).userName);
+        sizeOfView = sizeOfView + 1;
+        myViewHolder.bookingDate.setText((CharSequence) bookingsFromFirebase.get(position).bookingDate);
+        myViewHolder.bookingTime.setText(((CharSequence) bookingsFromFirebase.get(position).bookingTime));
+        myViewHolder.bookingInstructor.setText(((CharSequence) bookingsFromFirebase.get(position).instructorName));
+        myViewHolder.bookingPupilName.setText(bookingsFromFirebase.get(position).userName);
 
 
     }
@@ -62,11 +64,12 @@ public class CustomBookingsAdapter extends RecyclerView.Adapter {
     }
 
     //method to setup the viewholder
-    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView bookingDate, bookingTime, bookingInstructor, bookingPupilName;
         ConstraintLayout bookingConstraintLayout;
         onBookingListener onBookingListener;
+
         public viewHolder(@NonNull View itemView, onBookingListener onBookingListener) {
             super(itemView);
             bookingConstraintLayout = itemView.findViewById(R.id.booking_constraint_layout);

@@ -41,27 +41,28 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class CreateBookingFragment extends Fragment  {
-        View view;
-        FirebaseUser currentUser;
-        String userId;
-        DatabaseReference dbUserRef,databaseBookingRef, databaseCreateBookingRef, databaseScheduleRef;
-        DayScrollDatePicker dayPicker;
-        TextView datePickedText, timePickedText, noTimeAvailableView;
-        ListView timeListView;
-        String dateString, timeString, instructorName, dateDay, instructorId;
-        Button createBookingButton;
-        boolean canBookLesson, canUseTime;
-        Date currentDate;
-        int day, month, year;
-        List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
-        final List<String> instructorScheduleFromFirebase = new ArrayList<String>();
-        ArrayAdapter<String> adapter;
+public class CreateBookingFragment extends Fragment {
+    View view;
+    FirebaseUser currentUser;
+    String userId;
+    DatabaseReference dbUserRef, databaseBookingRef, databaseCreateBookingRef, databaseScheduleRef;
+    DayScrollDatePicker dayPicker;
+    TextView datePickedText, timePickedText, noTimeAvailableView;
+    ListView timeListView;
+    String dateString, timeString, instructorName, dateDay, instructorId;
+    Button createBookingButton;
+    boolean canBookLesson, canUseTime;
+    Date currentDate;
+    int day, month, year;
+    List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
+    final List<String> instructorScheduleFromFirebase = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        for(int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
+        for (int i = 0; i < ((FragmentManager) fm).getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
         view = inflater.inflate(R.layout.fragment_create_booking_fragment, container, false);
@@ -97,7 +98,7 @@ public class CreateBookingFragment extends Fragment  {
     }
 
     //method to initialise the views
-    private void initViews(){
+    private void initViews() {
         dayPicker = view.findViewById(R.id.horizontal_calendar);
         datePickedText = view.findViewById(R.id.value_text_view);
         timeListView = view.findViewById(R.id.time_list_view);
@@ -109,17 +110,17 @@ public class CreateBookingFragment extends Fragment  {
     }
 
     //method to set the start and end date shown on the calendar
-    private void setUpPicker(){
+    private void setUpPicker() {
         dayPicker.setStartDate(day, month, year);
-        dayPicker.setEndDate(day,month + 6,year);
+        dayPicker.setEndDate(day, month + 6, year);
     }
 
     //method to get the date chosen by user
-    private String getDateValue(String dStr){
+    private String getDateValue(String dStr) {
         dayPicker.getSelectedDate(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@Nullable Date date) {
-                if(date != null){
+                if (date != null) {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
                     SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
                     dateString = dateFormat.format(date);
@@ -135,33 +136,32 @@ public class CreateBookingFragment extends Fragment  {
     }
 
     //method to set up the ListView using the times array
-    public void setUpListView(){
+    public void setUpListView() {
         adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, instructorScheduleFromFirebase);
         timeListView.setAdapter(adapter);
     }
 
     //getters and setters for instructor name from firebase
-    public String getInstName(){
+    public String getInstName() {
         return instructorName;
     }
 
-    public void setInstName(String instructorName){
+    public void setInstName(String instructorName) {
         this.instructorName = instructorName;
     }
 
     //getters and setters for instructorId
-    public String getInstId(){
+    public String getInstId() {
         return instructorId;
     }
 
-    public void setInstId(String instructorId){
+    public void setInstId(String instructorId) {
         this.instructorId = instructorId;
     }
 
 
-
     //method used to create a booking and push to firebase. Also include checks for bookings already in the database.
-    public void createBooking(){
+    public void createBooking() {
 
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
 
@@ -181,21 +181,21 @@ public class CreateBookingFragment extends Fragment  {
                 String pupilPhoneNumber = phoneNo.getValue(String.class);
                 setInstName(ds.getValue(String.class));
                 canBookLesson = true;
-                for(int i=0; i < bookingsFromFirebase.size(); i++){
-                    if(bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).pupilId.equals(userId)){
+                for (int i = 0; i < bookingsFromFirebase.size(); i++) {
+                    if (bookingsFromFirebase.get(i).bookingDate.equals(dateString) && bookingsFromFirebase.get(i).pupilId.equals(userId)) {
                         Toast.makeText(getContext(), "You have a booking already on that day", Toast.LENGTH_SHORT).show();
                         canBookLesson = false;
                     }
                 }
 
-                if(canBookLesson){
+                if (canBookLesson) {
                     Bookings bookingObj = new Bookings(userId, userName, getInstName(), timeString, dateString, userAddress, dateDay, review, pupilPhoneNumber);
 
-                    if(dateString == null || timeString == null || dateDay == null){
+                    if (dateString == null || timeString == null || dateDay == null) {
                         Toast.makeText(getContext(), "Make sure you have chosen a date and time", Toast.LENGTH_SHORT).show();
-                    }else if(getInstName().equals("not chosen")){
+                    } else if (getInstName().equals("not chosen")) {
                         Toast.makeText(getContext(), "Please choose an instructor from the details screen before booking", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         databaseCreateBookingRef.push().setValue(bookingObj)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -211,6 +211,7 @@ public class CreateBookingFragment extends Fragment  {
 
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -221,13 +222,13 @@ public class CreateBookingFragment extends Fragment  {
 
 
     //method to get all current bookings from firebase and add these to an Object array
-    public void getBookings(){
+    public void getBookings() {
         Bookings bookings = new Bookings();
         bookingsFromFirebase = bookings.returnBookingsFromFirebase();
     }
 
     //method to get instructorId from database
-    public void getInstructorIdFromFirebase(){
+    public void getInstructorIdFromFirebase() {
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
         dbUserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -235,6 +236,7 @@ public class CreateBookingFragment extends Fragment  {
                 setInstId(snapshot.child("instructorId").getValue(String.class));
                 setInstName(snapshot.child("instructorName").getValue(String.class));
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -242,19 +244,19 @@ public class CreateBookingFragment extends Fragment  {
     }
 
     //method to get the instructors schedule from database
-    public void getInstructorSchedule(){
+    public void getInstructorSchedule() {
 
         databaseScheduleRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(getInstId()).child("Times").child(dateDay).child("times");
         databaseScheduleRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()){
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         String t = child.getValue(String.class);
                         String[] arrayString = t.split(":");
                         canUseTime = true;
-                        for(int i = 0; i< bookingsFromFirebase.size(); i++){
+                        for (int i = 0; i < bookingsFromFirebase.size(); i++) {
                             if (bookingsFromFirebase.get(i).bookingDate.equals(dateString)) {
                                 if (bookingsFromFirebase.get(i).instructorName.equals(getInstName()) && bookingsFromFirebase.get(i).bookingTime.contains(arrayString[0])) {
                                     Log.i("INSTRUCTOR HAS THE TIME", t);
@@ -266,7 +268,7 @@ public class CreateBookingFragment extends Fragment  {
                                 }
                             }
                         }
-                        if(canUseTime){
+                        if (canUseTime) {
                             instructorScheduleFromFirebase.add(t);
                         }
                     }
@@ -275,11 +277,12 @@ public class CreateBookingFragment extends Fragment  {
                     noTimeAvailableView.setVisibility(View.GONE);
                     setUpListView();
                     adapter.notifyDataSetChanged();
-                }else if (!canUseTime){
+                } else if (!canUseTime) {
                     noTimeAvailableView.setVisibility(View.VISIBLE);
                     timeListView.setVisibility(View.INVISIBLE);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -287,19 +290,19 @@ public class CreateBookingFragment extends Fragment  {
     }
 
     //method to check is the instructor has times available for the day chosen
-    public void checkInstructorHasTimes(){
+    public void checkInstructorHasTimes() {
         databaseScheduleRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(getInstId());
         databaseScheduleRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChild("Times")){
-                    if(snapshot.child("Times").hasChild(dateDay)){
+                if (snapshot.hasChild("Times")) {
+                    if (snapshot.child("Times").hasChild(dateDay)) {
                         getInstructorSchedule();
-                    }else if(!snapshot.child("Times").hasChild(dateDay)){
+                    } else if (!snapshot.child("Times").hasChild(dateDay)) {
                         noTimeAvailableView.setVisibility(View.VISIBLE);
                         timeListView.setVisibility(View.GONE);
                     }
-                }else{
+                } else {
                     noTimeAvailableView.setVisibility(View.VISIBLE);
                 }
             }

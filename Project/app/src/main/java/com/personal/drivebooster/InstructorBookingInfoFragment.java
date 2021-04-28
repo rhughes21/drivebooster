@@ -45,14 +45,15 @@ import java.util.List;
 public class InstructorBookingInfoFragment extends Fragment implements OnMapReadyCallback {
 
     View view;
-    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0;
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
     TextView bookingInfoDate, bookingInfoTime;
     Button remindButton, deleteButton;
     DatabaseReference dbKeyRef, dbUserRef;
-    String bookingDate, addressBooking, userName,bookingKey, phoneNo, pupilEmail, pupilId, message, pupilPhoneNumber;
+    String bookingDate, addressBooking, userName, bookingKey, phoneNo, pupilEmail, pupilId, message, pupilPhoneNumber;
     GoogleMap mMap;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.booking_info_fragment, container, false);
         bookingInfoDate = view.findViewById(R.id.booking_info_date);
         bookingInfoTime = view.findViewById(R.id.booking_info_time);
@@ -71,9 +72,9 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         remindButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!pupilPhoneNumber.equals("Unavailable")){
+                if (!pupilPhoneNumber.equals("Unavailable")) {
                     sendReminderSMSMessage();
-                } else{
+                } else {
                     sendBookingReminderEmail();
                 }
             }
@@ -97,22 +98,19 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         mMap = googleMap;
         LatLng address = getLocationFromAddress(getContext(), addressBooking);
         mMap.addMarker(new MarkerOptions().position(address).title(userName));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(address,16));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(address, 16));
 
     }
 
     //gets the lat lng from the pupils address
-    public LatLng getLocationFromAddress(Context context, String strAddress)
-    {
-        Geocoder coder= new Geocoder(context);
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
+        Geocoder coder = new Geocoder(context);
         List<Address> address;
         LatLng p1 = null;
 
-        try
-        {
+        try {
             address = coder.getFromLocationName(strAddress, 5);
-            if(address==null)
-            {
+            if (address == null) {
                 return null;
             }
             Address location = address.get(0);
@@ -120,9 +118,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
             location.getLongitude();
 
             p1 = new LatLng(location.getLatitude(), location.getLongitude());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return p1;
@@ -130,25 +126,25 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
     }
 
     //getters and setters for the booking key
-    public String getBookingKey(){
+    public String getBookingKey() {
         return bookingKey;
     }
 
-    public void setBookingKey(String bookingKey){
+    public void setBookingKey(String bookingKey) {
         this.bookingKey = bookingKey;
     }
 
     //retrieves booking key from database
-    public void retrieveBookingKeyFromFirebase(){
+    public void retrieveBookingKeyFromFirebase() {
         dbKeyRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         Query keyQuery = dbKeyRef.orderByChild("userAddress").equalTo(addressBooking);
         final String date = bookingInfoDate.getText().toString();
         keyQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     String dateSnapshot = childSnapshot.child("bookingDate").getValue(String.class);
-                    if(dateSnapshot.equals(date)){
+                    if (dateSnapshot.equals(date)) {
                         setBookingKey(childSnapshot.getKey());
                     }
 
@@ -162,7 +158,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
     }
 
     //dialog asking if user wants to delete the booking
-    public void deleteDialog(){
+    public void deleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.confirm_deletion));
         builder.setPositiveButton(
@@ -171,9 +167,9 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
                     public void onClick(DialogInterface dialog, int id) {
                         Bookings b = new Bookings();
                         b.deleteBooking(getBookingKey());
-                        if(!pupilPhoneNumber.equals("Unavailable")){
+                        if (!pupilPhoneNumber.equals("Unavailable")) {
                             sendBookingDeletedSMSMessage();
-                        }else {
+                        } else {
                             sendBookingDeletedEmail();
                         }
 
@@ -194,7 +190,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
 
     //method to show system email app if no phone number exists
     @SuppressLint("LongLogTag")
-    public void sendBookingDeletedEmail(){
+    public void sendBookingDeletedEmail() {
         Log.i("Send email", "");
         String[] TO = {getPupilEmail()};
         String[] CC = {""};
@@ -218,7 +214,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
 
     //method to show system email app for remind pupils
     @SuppressLint("LongLogTag")
-    public void sendBookingReminderEmail(){
+    public void sendBookingReminderEmail() {
         Log.i("Send email", "");
         String[] TO = {getPupilEmail()};
         String[] CC = {""};
@@ -229,7 +225,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Booking reminder");
-        emailIntent.putExtra(Intent.EXTRA_TEXT,  userName + " this is a reminder for your booking on " + bookingDate + " at " + bookingInfoTime.getText().toString());
+        emailIntent.putExtra(Intent.EXTRA_TEXT, userName + " this is a reminder for your booking on " + bookingDate + " at " + bookingInfoTime.getText().toString());
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
@@ -249,7 +245,7 @@ public class InstructorBookingInfoFragment extends Fragment implements OnMapRead
         this.pupilEmail = pupilEmail;
     }
 
-    public void getEmailFromFirebase(){
+    public void getEmailFromFirebase() {
         dbUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(pupilId);
         dbUserRef.addValueEventListener(new ValueEventListener() {
             @Override

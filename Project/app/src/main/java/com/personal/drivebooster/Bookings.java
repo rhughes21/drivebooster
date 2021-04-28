@@ -31,6 +31,7 @@ public class Bookings {
     public String phoneNumber;
     DatabaseReference dbEditRef, getBookingsRef;
     final List<Bookings> bookingsFromFirebase = new ArrayList<Bookings>();
+
     //Booking constructor, takes pupilid, instructors name, booking time and date
     public Bookings(String pupilId, String userName, String instructorName, String bookingTime, String bookingDate, String userAddress, String dateDay, String lessonReview, String phoneNumber) {
         this.pupilId = pupilId;
@@ -45,22 +46,22 @@ public class Bookings {
     }
 
     //empty constructor for creating object array of bookings from firebase
-    public Bookings(){
+    public Bookings() {
     }
 
     //method to delete bookings from the database
-    public void deleteBooking(String bookingKey){
+    public void deleteBooking(String bookingKey) {
         dbEditRef = FirebaseDatabase.getInstance().getReference().child("Booking").child(bookingKey);
         dbEditRef.removeValue();
     }
 
     //method to return a bookings object from database
-    public List<Bookings> returnBookingsFromFirebase(){
+    public List<Bookings> returnBookingsFromFirebase() {
         getBookingsRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         getBookingsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Bookings bookings = child.getValue(Bookings.class);
@@ -68,6 +69,7 @@ public class Bookings {
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

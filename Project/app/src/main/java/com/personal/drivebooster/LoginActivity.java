@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.email_edit_text);
         editTextPassword = findViewById(R.id.password_input_edit_text);
         buttonRegister = findViewById(R.id.no_account_button);
-        loginButton= findViewById(R.id.user_login_button);
+        loginButton = findViewById(R.id.user_login_button);
         auth = FirebaseAuth.getInstance();
     }
 
@@ -50,19 +50,19 @@ public class LoginActivity extends AppCompatActivity {
     }*/
 
     //method used to login. Check is the user exists in firebase authentication
-    public void loginUser(View v){
-        if(editTextEmail.getText().toString().equals("") || editTextPassword.getText().toString().equals("")){
+    public void loginUser(View v) {
+        if (editTextEmail.getText().toString().equals("") || editTextPassword.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Fields cannot be empty", Toast.LENGTH_SHORT).show();
-        } else{
+        } else {
             auth.signInWithEmailAndPassword(editTextEmail.getText().toString(), editTextPassword.getText().toString())
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 userId = auth.getUid();
                                 getUserType();
                                 Toast.makeText(getApplicationContext(), "Successfully signed in", Toast.LENGTH_SHORT).show();
-                            }else{
+                            } else {
                                 Toast.makeText(getApplicationContext(), "Unable to sign in", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -72,22 +72,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //method called when user taps the no account button
-    public void showRegistrationScreen(View v){
+    public void showRegistrationScreen(View v) {
         startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
     }
 
     //method to check whether the user is a pupil. Checks that the UID exists in the users table
-    public void getUserType(){
+    public void getUserType() {
         dbReference = FirebaseDatabase.getInstance().getReference().child("Users");
         dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChild(userId)){
+                if (snapshot.hasChild(userId)) {
                     userIsPupil = true;
                     Intent i = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(i);
                     LoginActivity.this.finish();
-                }else if(!snapshot.hasChild(userId)){
+                } else if (!snapshot.hasChild(userId)) {
                     userIsPupil = false;
                     Intent j = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(j);

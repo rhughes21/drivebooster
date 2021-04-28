@@ -13,7 +13,7 @@ public class Manoeuvres {
     }
 
     //empty constructor for creating object array of manoeuvres
-    public Manoeuvres(){
+    public Manoeuvres() {
     }
 
 }

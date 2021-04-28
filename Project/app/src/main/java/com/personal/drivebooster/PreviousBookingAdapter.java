@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
-public class PreviousBookingAdapter extends RecyclerView.Adapter{
+public class PreviousBookingAdapter extends RecyclerView.Adapter {
 
     List<Bookings> bookingsFromFirebase;
     String currentUserId;
@@ -23,7 +23,7 @@ public class PreviousBookingAdapter extends RecyclerView.Adapter{
     int rowindex;
     int sizeOfView;
 
-    public PreviousBookingAdapter(List<Bookings> bookingsFromFirebase, PreviousBookingAdapter.onPreviousBookingListener onPreviousBookingListener){
+    public PreviousBookingAdapter(List<Bookings> bookingsFromFirebase, PreviousBookingAdapter.onPreviousBookingListener onPreviousBookingListener) {
         this.bookingsFromFirebase = bookingsFromFirebase;
         this.onPreviousBookingListener = onPreviousBookingListener;
     }
@@ -38,14 +38,15 @@ public class PreviousBookingAdapter extends RecyclerView.Adapter{
         return new PreviousBookingAdapter.viewHolder(view, onPreviousBookingListener);
     }
 
-    public interface onPreviousBookingListener{
+    public interface onPreviousBookingListener {
         void onPreviousBookingClick(int position);
     }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        PreviousBookingAdapter.viewHolder myViewHolder=(PreviousBookingAdapter.viewHolder)holder;
+        PreviousBookingAdapter.viewHolder myViewHolder = (PreviousBookingAdapter.viewHolder) holder;
 
-        sizeOfView = sizeOfView +1;
+        sizeOfView = sizeOfView + 1;
         myViewHolder.bookingDate.setText((CharSequence) bookingsFromFirebase.get(position).bookingDate);
         myViewHolder.bookingTime.setText(((CharSequence) bookingsFromFirebase.get(position).bookingTime));
         myViewHolder.bookingInstructor.setText(((CharSequence) bookingsFromFirebase.get(position).instructorName));
@@ -59,11 +60,12 @@ public class PreviousBookingAdapter extends RecyclerView.Adapter{
         return bookingsFromFirebase.size();
     }
 
-    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView bookingDate, bookingTime, bookingInstructor, bookingPupilName;
         ConstraintLayout bookingConstraintLayout;
         PreviousBookingAdapter.onPreviousBookingListener onPreviousBookingListener;
+
         public viewHolder(@NonNull View itemView, PreviousBookingAdapter.onPreviousBookingListener onPreviousBookingListener) {
             super(itemView);
             bookingConstraintLayout = itemView.findViewById(R.id.booking_constraint_layout);

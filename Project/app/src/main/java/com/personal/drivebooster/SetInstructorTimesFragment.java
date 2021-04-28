@@ -45,6 +45,7 @@ public class SetInstructorTimesFragment extends Fragment implements AdapterView.
     DatabaseReference databaseTimesReference, databaseCurrentTimesReference;
     List<String> myTimes = new ArrayList<>();
     List<String> chosenTimes = new ArrayList<>();
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class SetInstructorTimesFragment extends Fragment implements AdapterView.
             @SuppressLint("SetTextI18n")
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                lastTimeChosen = String.format("%02d:%02d", timePicker.getHour() , timePicker.getMinute());
+                lastTimeChosen = String.format("%02d:%02d", timePicker.getHour(), timePicker.getMinute());
 
             }
         });
@@ -105,7 +106,7 @@ public class SetInstructorTimesFragment extends Fragment implements AdapterView.
     }
 
     //push new times to the database
-    public void setInstructorTimes(List<String> times){
+    public void setInstructorTimes(List<String> times) {
         times = myTimes;
         String instructorUUid = auth.getUid();
 

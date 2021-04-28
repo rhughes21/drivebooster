@@ -26,7 +26,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PupilPreviousBookingsFragment extends Fragment implements PreviousBookingAdapter.onPreviousBookingListener{
+public class PupilPreviousBookingsFragment extends Fragment implements PreviousBookingAdapter.onPreviousBookingListener {
 
     View view;
     TextView review, reviewHeader;
@@ -35,8 +35,9 @@ public class PupilPreviousBookingsFragment extends Fragment implements PreviousB
     PreviousBookingAdapter previousBookingAdapter;
     DatabaseReference databaseBookingRef, dbReviewRef;
     String bookingKey;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.pupil_previous_bookings_fragment, container, false);
 
         getPreviousBookings();
@@ -54,18 +55,18 @@ public class PupilPreviousBookingsFragment extends Fragment implements PreviousB
     }
 
     //retrieve previous bookings from database
-    public void getPreviousBookings(){
+    public void getPreviousBookings() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = currentUser.getUid();
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Bookings bookings = child.getValue(Bookings.class);
-                        if(bookings.pupilId.equals(userId) ) {
+                        if (bookings.pupilId.equals(userId)) {
                             previousBookingsFromFirebase.add(bookings);
 
                             previousBookingAdapter.notifyDataSetChanged();
@@ -73,6 +74,7 @@ public class PupilPreviousBookingsFragment extends Fragment implements PreviousB
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -89,10 +91,10 @@ public class PupilPreviousBookingsFragment extends Fragment implements PreviousB
         keyQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     String dateSnapshot = childSnapshot.child("bookingDate").getValue(String.class);
                     String reviewSnap = childSnapshot.child("lessonReview").getValue(String.class);
-                    if(dateSnapshot.equals(date)){
+                    if (dateSnapshot.equals(date)) {
                         setBookingKey(childSnapshot.getKey());
                         review.setText(reviewSnap + "\n" + getString(R.string.remember_to_book));
                     }
@@ -105,12 +107,13 @@ public class PupilPreviousBookingsFragment extends Fragment implements PreviousB
             }
         });
     }
+
     //getter and setter for bookinh key
-    public String getBookingKey(){
+    public String getBookingKey() {
         return bookingKey;
     }
 
-    public void setBookingKey(String bookingKey){
+    public void setBookingKey(String bookingKey) {
         this.bookingKey = bookingKey;
     }
 

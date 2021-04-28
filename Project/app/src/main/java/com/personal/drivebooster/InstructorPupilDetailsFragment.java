@@ -51,7 +51,7 @@ import java.util.Locale;
 
 import static com.personal.drivebooster.Constants.REQUEST_LOCATION;
 
-public class InstructorPupilDetailsFragment extends Fragment implements OnMapReadyCallback{
+public class InstructorPupilDetailsFragment extends Fragment implements OnMapReadyCallback {
 
     View view;
     TextView pupilName, pupilAddress, pupilEmail;
@@ -61,8 +61,9 @@ public class InstructorPupilDetailsFragment extends Fragment implements OnMapRea
     DatabaseReference dbRef;
     SupportMapFragment mapFragment;
     GoogleMap mMap;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.instructor_pupil_details_fragment, container, false);
         initViews();
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.pupil_details_map);
@@ -79,7 +80,7 @@ public class InstructorPupilDetailsFragment extends Fragment implements OnMapRea
     }
 
     //initialise views
-    public void initViews(){
+    public void initViews() {
         BottomNavigationView navBar = getActivity().findViewById(R.id.bottom_tab_navigation);
         navBar.setVisibility(View.GONE);
         pupilName = view.findViewById(R.id.pupil_details_name);
@@ -98,7 +99,7 @@ public class InstructorPupilDetailsFragment extends Fragment implements OnMapRea
     }
 
     //open system email app and populate with certain data
-    protected void sendEmail(){
+    protected void sendEmail() {
         Log.i("Send email", "");
         String[] TO = {pupilEmail.getText().toString()};
         String[] CC = {""};
@@ -125,20 +126,18 @@ public class InstructorPupilDetailsFragment extends Fragment implements OnMapRea
         mMap = googleMap;
         LatLng address = getLocationFromAddress(getContext(), pupilAddressString);
         mMap.addMarker(new MarkerOptions().position(address).title(pupilName.getText().toString()));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(address,16));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(address, 16));
     }
 
     //return user location
     public LatLng getLocationFromAddress(Context context, String strAddress) {
-        Geocoder coder= new Geocoder(context);
+        Geocoder coder = new Geocoder(context);
         List<Address> address;
         LatLng p1 = null;
 
-        try
-        {
+        try {
             address = coder.getFromLocationName(strAddress, 5);
-            if(address==null)
-            {
+            if (address == null) {
                 return null;
             }
             Address location = address.get(0);
@@ -146,9 +145,7 @@ public class InstructorPupilDetailsFragment extends Fragment implements OnMapRea
             location.getLongitude();
 
             p1 = new LatLng(location.getLatitude(), location.getLongitude());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return p1;

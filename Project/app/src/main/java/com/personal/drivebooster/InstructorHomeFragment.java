@@ -31,7 +31,7 @@ import java.util.List;
 
 import static androidx.core.os.BundleKt.bundleOf;
 
-public class InstructorHomeFragment extends Fragment implements  CustomBookingsAdapter.onBookingListener, PreviousBookingAdapter.onPreviousBookingListener{
+public class InstructorHomeFragment extends Fragment implements CustomBookingsAdapter.onBookingListener, PreviousBookingAdapter.onPreviousBookingListener {
 
     View view;
     TextView upcomingBookingsHeader, previousBookingHeader, noUpcomingBookings, noPreviousBookings;
@@ -75,16 +75,16 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
     }
 
     //retrieve upcoming bookings from firebase
-    public void getBookings(){
+    public void getBookings() {
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("Booking");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Bookings bookings = child.getValue(Bookings.class);
-                        if(bookings.instructorName.equals(getInstName()) ) {
+                        if (bookings.instructorName.equals(getInstName())) {
                             bookingsFromFirebase.add(bookings);
                             upcomingBookingsAdapter.notifyDataSetChanged();
                             noUpcomingBookings.setVisibility(View.GONE);
@@ -93,6 +93,7 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -101,16 +102,16 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
     }
 
     //retrieve previous bookings from firebase
-    public void getPreviousBookings(){
+    public void getPreviousBookings() {
         databaseBookingRef = FirebaseDatabase.getInstance().getReference().child("PreviousBookings");
         databaseBookingRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Bookings bookings = child.getValue(Bookings.class);
-                        if(bookings.instructorName.equals(getInstName()) ) {
+                        if (bookings.instructorName.equals(getInstName())) {
                             previousBookingsFromFirebase.add(bookings);
                             previousBookingAdapter.notifyDataSetChanged();
                             noPreviousBookings.setVisibility(View.GONE);
@@ -119,6 +120,7 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -127,17 +129,18 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
     }
 
     //retrieve instructor name from firebase
-    public void getMyName(){
+    public void getMyName() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = currentUser.getUid();
         instructorRef = FirebaseDatabase.getInstance().getReference().child("Instructors").child(userId);
         instructorRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!snapshot.equals(null)){
+                if (!snapshot.equals(null)) {
                     setInstName(snapshot.child("name").getValue(String.class));
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -146,11 +149,11 @@ public class InstructorHomeFragment extends Fragment implements  CustomBookingsA
     }
 
     //getters and setters for instructor name
-    public String getInstName(){
+    public String getInstName() {
         return instructorName;
     }
 
-    public void setInstName(String instructorName){
+    public void setInstName(String instructorName) {
         this.instructorName = instructorName;
     }
 

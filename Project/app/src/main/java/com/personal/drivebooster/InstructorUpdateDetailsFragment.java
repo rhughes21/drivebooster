@@ -42,8 +42,9 @@ public class InstructorUpdateDetailsFragment extends Fragment {
     Button updateDetails;
     FirebaseAuth auth;
     TextView userAddress;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.instructor_update_details_fragment, container, false);
         userNameView = view.findViewById(R.id.edit_instructor_name);
         updateDetails = view.findViewById(R.id.update_instructor_details_button);
@@ -65,7 +66,7 @@ public class InstructorUpdateDetailsFragment extends Fragment {
     }
 
     //set up the google maps search fragment
-    public void autoCompleteFragSetUp(){
+    public void autoCompleteFragSetUp() {
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
         Intent intent = new Autocomplete.IntentBuilder(
                 AutocompleteActivityMode.FULLSCREEN, fields).setCountry("UK")

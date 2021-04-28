@@ -24,7 +24,7 @@ import com.personal.drivebooster.Adapter.CustomPupilsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyPupilsFragment extends Fragment implements CustomPupilsAdapter.onNameListener{
+public class MyPupilsFragment extends Fragment implements CustomPupilsAdapter.onNameListener {
     View view;
     final List<Users> usersFromFirebase = new ArrayList<Users>();
     CustomPupilsAdapter customPupilAdapter;
@@ -42,7 +42,7 @@ public class MyPupilsFragment extends Fragment implements CustomPupilsAdapter.on
         getMyPupils();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         pupilRecycler.setLayoutManager(linearLayoutManager);
-        customPupilAdapter = new CustomPupilsAdapter(usersFromFirebase,this);
+        customPupilAdapter = new CustomPupilsAdapter(usersFromFirebase, this);
         customPupilAdapter.notifyDataSetChanged();
         pupilRecycler.setAdapter(customPupilAdapter);
         return view;
@@ -56,11 +56,11 @@ public class MyPupilsFragment extends Fragment implements CustomPupilsAdapter.on
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChildren()) {
+                if (snapshot.hasChildren()) {
                     Iterable<DataSnapshot> children = snapshot.getChildren();
                     for (DataSnapshot child : children) {
                         Users users = child.getValue(Users.class);
-                        if(users.instructorId.equals(userId)) {
+                        if (users.instructorId.equals(userId)) {
                             usersFromFirebase.add(users);
                             customPupilAdapter.notifyDataSetChanged();
                         }
